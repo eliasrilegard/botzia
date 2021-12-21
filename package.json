@@ -1,0 +1,23 @@
+{
+  "name": "chronos",
+  "version": "1.0.0",
+  "description": "A Discord bot created by Chronozia#1815",
+  "main": "shard.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliasrilegard/chronos.git"
+  },
+  "author": "Chronozia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eliasrilegard/chronos/issues"
+  },
+  "homepage": "https://github.com/eliasrilegard/chronos#readme",
+  "dependencies": {
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0"
+  }
+}
