@@ -15,8 +15,8 @@ class Reload extends Command {
 
     if (!command) {
       const embed = new MessageEmbed()
-        .setColor("cc0000")
-        .setTitle("Comand not found")
+        .setColor('cc0000')
+        .setTitle('Comand not found')
         .setDescription(`There is no command with name or alias \`${commandName}\`.`);
       return message.channel.send({ embeds: [embed] });
     }
@@ -35,18 +35,18 @@ class Reload extends Command {
       client.commands.set(newCommand.name, newCommand);
 
       const embed = new MessageEmbed()
-        .setColor("00cc00")
-        .setTitle("Command reloaded")
+        .setColor('00cc00')
+        .setTitle('Command reloaded')
         .setDescription(`Command \`${command.name}\` was reloaded.`);
       message.channel.send({ embeds: [embed] });
     }
     catch (error) {
       console.log(error);
       const embed = new MessageEmbed()
-        .setColor("cc0000")
-        .setTitle("Error")
+        .setColor('cc0000')
+        .setTitle('Error')
         .setDescription(`Command \`${command.name}\` could not be reloaded.`)
-        .addField("Error message:", `\`${error.message}\``);
+        .addField('Error message:', `\`${error.message}\``);
       message.channel.send({ embeds: [embed] });
     }
   }

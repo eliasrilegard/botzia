@@ -1,4 +1,5 @@
 const Event = require('../bot/event.js');
+const { MessageEmbed, DMChannel } = require('discord.js');
 
 class Message extends Event {
   constructor() {
@@ -11,8 +12,13 @@ class Message extends Event {
 
     const prefix = client.prefix(); // Pass message here when server prefixes are set up
 
-    if (message.content.startsWith(`<@!${client.user.id}>`))
-      return message.reply({ content: `Use \`${prefix}help\` to get started!`});
+    if (message.content.startsWith(`<@!${client.user.id}>`)) {
+      const embed = new MessageEmbed()
+        .setColor('00cc00')
+        .setTitle('Getting started')
+        .setDescription(`Use \`${prefix}help\` to get started!`);
+      return message.reply({ embeds: [embed] });
+    }
 
     if (!message.content.startsWith(prefix)) return; // Ignore non-commands
     
@@ -24,7 +30,11 @@ class Message extends Event {
     if (!command) return;
 
     if (command.guildOnly && message.channel instanceof DMChannel) {
-      return message.channel.send("This command cannot be executed inside of DMs."); // WIP
+      const embed = new MessageEmbed()
+        .setColor('cc0000')
+        .setTitle('Server-only command')
+        .setDescription('This command cannot be executed inside of DMs.');
+      return message.channel.send({ embeds: [embed] });
     }
 
     if (command.devOnly && !client.isDev(message.author.id)) return; // Ignore other attempts to trigger dev commands
@@ -32,13 +42,24 @@ class Message extends Event {
     if (command.permissions) {
       const authorPerms = message.channel.permissionsFor(message.author);
       if ((!authorPerms || !authorPerms.has(command.permissions)) && (!client.isDev(message.author.id))) {
-        return message.channel.send("You do not have permisssion to issue this command."); // WIP
+        const embed = new MessageEmbed()
+          .setColor('cc0000')
+          .setTitle('Insufficient permissions')
+          .setDescription('You do not have permission to issue this command.');
+        return message.channel.send({ embeds: [embed] });
       }
     }
 
     if (command.args && !args.length) {
-      return message.channel.send("No arguments were given."); // WIP
-      // if (command.usage) message.channel.send(command.usageEmbed(prefix));
+      const embed = new MessageEmbed()
+        .setColor('cc0000')
+        .setTitle('No arguments given');
+      if (command.usage) {
+        embed
+          .addField('Usage: ', `\`${prefix}${command.name} ${command.usage}\``)
+          .addField('Description: ', command.description);
+      }
+      return message.channel.send({ embeds: [embed] });
     }
 
     const now = Date.now();
@@ -46,7 +67,11 @@ class Message extends Event {
       const expirationTime = command.cooldowns.get(message.author.id) + command.cooldown;
       if (expirationTime - now > 0) {
         const timeLeft = (expirationTime - now) / 1000;
-        return message.channel.send(`Please wait ${timeLeft.toFixed(1)} more second(s) before using the \`${command.name}\` command again`) // WIP - embed
+        const embed = new MessageEmbed()
+          .setColor('cc6600')
+          .setTitle('Too hasty')
+          .setDescription(`Please wait ${timeLeft.toFixed(1)} more second(s) before using \`${command.name}\` again`);
+        return message.channel.send({ embeds: [embed] })
           .then(msg => setTimeout(() => msg.delete(), 7000));
       }
     }
