@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Client, Intents, Collection, MessageEmbed, DMChannel } = require('discord.js');
+const { Client, Collection } = require('discord.js');
 const config = require('../config.json');
 
 class Bot extends Client {
