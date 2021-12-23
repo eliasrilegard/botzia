@@ -21,6 +21,10 @@ class Command {
     this.cooldown = options['cooldown'];
     this.cooldowns = new Map();
   }
+
+  howTo(prefix, codeblock = false) {
+    return `${codeblock ? '\`' : ''}${prefix}${this.name} ${this.usage}${codeblock ? '\`' : ''}`;
+  }
 }
 
 module.exports = Command;
