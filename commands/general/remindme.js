@@ -42,6 +42,7 @@ class RemindMe extends Command {
       .setTimestamp();
     if (reminderMessage) embed.addField('Message:', reminderMessage);
     message.channel.send({ embeds: [embed] });
+    delete embed.fields;
 
     embed
       .setColor('0066cc')
