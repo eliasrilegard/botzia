@@ -6,7 +6,7 @@ class Ready extends Event {
     super('ready', true);
   }
 
-  execute(client) {  /*  
+  async execute(client) {  /*  
     // Grab OTDB Token on startup
     this.generateOTDBtoken(client)
       .catch(error => {

@@ -6,7 +6,7 @@ class Message extends Event {
     super('messageCreate', false);
   }
 
-  execute(message, client) {
+  async execute(message, client) {
     // Ignore bots
     if (message.author.bot) return;
 

@@ -7,7 +7,7 @@ class Reload extends Command {
     super('reload', 'Reloads a command', '<command name>', { devOnly: true });
   }
 
-  execute(message, args, client) {
+  async execute(message, args, client) {
     // Get command name or alias
     const commandName = args[0].toLowerCase();
     const command = client.commands.get(commandName)

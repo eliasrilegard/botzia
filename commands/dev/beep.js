@@ -5,7 +5,7 @@ class Beep extends Command {
     super('beep', 'boop!', '<usage>', { args: false });
   }
 
-  execute(message) {
+  async execute(message) {
     message.channel.send('boop!');
   }
 }
