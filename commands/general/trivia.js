@@ -46,7 +46,7 @@ class Trivia extends Command {
     let allAnswers = new Array();
     allAnswers.push(data.correct_answer);
     data.incorrect_answers.forEach(entry => allAnswers.push(entry));
-    allAnswers = allAnswers.length == 2 ? this.shuffle(allAnswers) : allAnswers.sort().reverse(); // Sort if true/false, shuffle otherwise
+    allAnswers = allAnswers.length == 2 ? allAnswers.sort().reverse() : this.shuffle(allAnswers); // Sort if true/false, shuffle otherwise
 
     const allEmotes = ["🍎","🍓","🍐","🍒","🍇","🍊","🍉","🍋","🍌","🥥","🥑","🌶️","🌽","🥝","🍍"];
     const emotes = this.shuffle(allEmotes).slice(0, allAnswers.length);
