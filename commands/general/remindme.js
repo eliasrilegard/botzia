@@ -22,16 +22,7 @@ class RemindMe extends Command {
     });
     
     const time = (timeData[0] * 24 * 60 + timeData[1] * 60 + timeData[2]) * 60000;
-    if (!time > 0) {
-      const embed = new MessageEmbed()
-        .setColor('cc0000')
-        .setTitle('Invalid time')
-        .setDescription('Maybe check your arguments?')
-        .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
-        .addField('\u200b', 'd, day, days\nh, hour, hours\nm, min, mins, minute, minutes', true)
-        .addField('Command usage', this.howTo(client.prefix(), true));
-      return message.channel.send({ embeds: [embed] });
-    }
+    if (!time > 0) return message.channel.send({ embeds: [ this.helpMessage(client) ] });
     
     const UIWords = ['days', 'hours', 'minutes'];
     let UIArray = new Array();
@@ -53,6 +44,16 @@ class RemindMe extends Command {
       .setDescription('Here\'s your reminder!')
     
     setTimeout(() => message.reply({ embeds: [embed] }), time);
+  }
+  
+  helpMessage(client) {
+    return new MessageEmbed()
+      .setColor('cc0000')
+      .setTitle('Invalid time')
+      .setDescription('Maybe check your arguments?')
+      .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
+      .addField('\u200b', 'd, day, days\nh, hour, hours\nm, min, mins, minute, minutes', true)
+      .addField('Command usage', this.howTo(client.prefix(), true));
   }
 }
 
