@@ -27,7 +27,7 @@ class Trivia extends Command {
       const embed = new MessageEmbed()
         .setColor('0066cc')
         .setTitle('All categories')
-        .addField(`Here's a list of all categories:`, categories.slice(0, Math.ceil(categories.length / 2)).join('\n'), true)
+        .addField('Here\'s a list of all categories:', categories.slice(0, Math.ceil(categories.length / 2)).join('\n'), true)
         .addField('\u200b', categories.slice(Math.ceil(categories.length / 2), categories.length).join('\n'), true);
       return message.channel.send({ embeds: [embed] });
     }
