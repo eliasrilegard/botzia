@@ -9,7 +9,7 @@ class RemindMe extends Command {
   async execute(message, args, client) {
     const indexMessageStart = args.indexOf(args.filter(arg => arg.includes(';'))[0]) + 1; // -1 + 1 if no match
     const reminderMessage = indexMessageStart ? args.slice(indexMessageStart, args.length).join(' ') : '';
-    const timeArgs = indexMessageStart ? [...args.slice(0, indexMessageStart - 1), args[indexMessageStart - 1].slice(0, -1)] : args.slice(0, indexMessageStart);
+    const timeArgs = indexMessageStart ? [...args.slice(0, indexMessageStart - 1), args[indexMessageStart - 1].slice(0, -1)] : args;
 
     let timeData = [0, 0, 0]; // Days, Hours, Minutes
     const acceptedWords = ['day', 'hour', 'min'];
@@ -26,7 +26,8 @@ class RemindMe extends Command {
     });
     
     const time = (timeData[0] * 24 * 60 + timeData[1] * 60 + timeData[2]) * 60000;
-    if (!time > 0) return message.channel.send({ embeds: [ this.helpMessage(client) ] });
+    if (!time > 0) return message.channel.send({ embeds: [this.helpMessage(client)] });
+    if (time > 2073600000) return message.channel.send({ embeds: [this.tooLong()] });
     
     const UIWords = ['days', 'hours', 'minutes'];
     let UIArray = new Array();
@@ -60,6 +61,13 @@ class RemindMe extends Command {
       .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
       .addField('\u200b', 'd, day, days\nh, hour, hours\nm, min, mins, minute, minutes', true)
       .addField('Command usage', this.howTo(client.prefix(), true));
+  }
+
+  tooLong() {
+    return new MessageEmbed()
+      .setColor('cc0000')
+      .setTitle('Invalid time')
+      .setDescription('Reminders have an upper time limit of 24 days.')
   }
 }
 
