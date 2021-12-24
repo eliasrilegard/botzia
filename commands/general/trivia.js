@@ -229,7 +229,8 @@ class Trivia extends Command {
       [/&#138;/g, "Š"],[/&#154;/g, "š"],[/&Ugrave;/g, "Ù"],[/&Uacute;/g, "Ú"],[/&Ucirc;/g, "Û"],[/&Uuml;/g, "Ü"],
       [/&ugrave;/g, "ù"],[/&uacute;/g, "ú"],[/&ucirc;/g, "û"],[/&uuml;/g, "ü"],[/&#181;/g, "µ"],[/&Yacute;/g, "Ý"],
       [/&#159;/g, "Ÿ"],[/&yacute;/g, "ý"],[/&yuml;/g, "ÿ"],[/&deg;/g, "°"], [/&amp;/g, "&"], [/&ldquo;/g, "“"],
-      [/&rdquo;/g, "”"], [/&reg;/g, "®"], [/&trade;/g, "™"]];
+      [/&rdquo;/g, "”"], [/&reg;/g, "®"], [/&trade;/g, "™"], [/&lt;/g, "<"], [/&gt;/g, ">"], [/&le;/g, "≤"],
+      [/&ge;/g, "≥"]];
   
     for (let c of all) {
       str = str.replace(c[0], c[1]);
