@@ -23,7 +23,7 @@ class Reload extends Command {
 
     const commandsDir = __dirname.slice(0,-4);
     const commandFolders = fs.readdirSync(commandsDir);
-    const folderName = commandFolders.find(folder => fs.readdirSync(`${commandsDir}/${folder}`).includes(`${commandName}.js`));
+    const folderName = commandFolders.find(folder => fs.readdirSync(`${commandsDir}/${folder}`).includes(`${command.name}.js`));
 
     // Delete
     delete require.cache[require.resolve(`${commandsDir}/${folderName}/${command.name}.js`)];
