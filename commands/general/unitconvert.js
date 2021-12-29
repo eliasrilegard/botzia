@@ -37,7 +37,7 @@ class UnitConvert extends Command {
     const embed = new MessageEmbed().setColor('cc0000');
 
     const valueBase = args[0];
-    if (!valueBase.match(/^\d+(\.\d+)?$/g)) {
+    if (!valueBase.match(/^-?\d+(\.\d+)?$/g)) {
       embed
         .setTitle('Invalid value')
         .setDescription('Unable to resolve the value.')
