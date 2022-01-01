@@ -61,7 +61,7 @@ class Trivia extends Command {
       .setDescription(description)
       .addField('Question', this.cleanup(data.question))
       .addField('Choices', this.cleanup(answerString))
-      .setFooter('Answer by reacting to the corresponding emote')
+      .setFooter({ text: 'Answer by reacting to the corresponding emote' })
       .setTimestamp();
 
     // Set embed color depending on difficulty
@@ -100,7 +100,7 @@ class Trivia extends Command {
           .setColor('cc0000')
           .setTitle('Incorrect')
           .setDescription(`Sorry, but that's incorrect. The right answer was ${this.cleanup(data.correct_answer)}.`)
-          .setFooter('Better luck next time!');
+          .setFooter({ text: 'Better luck next time!' });
       }
       return message.channel.send({ embeds: [embedAns] });
     });

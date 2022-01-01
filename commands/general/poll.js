@@ -31,7 +31,7 @@ class Poll extends Command {
       .setAuthor(`${message.member.displayName} created a poll`, message.member.displayAvatarURL())
       .setTitle(question)
       .addField('Choices', choicesString.trim())
-      .setFooter('React with your vote below!')
+      .setFooter({ text: 'React with your vote below!' })
       .setTimestamp();
     
     const pollMessage = await message.channel.send({ embeds: [embed] });

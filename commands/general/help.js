@@ -12,8 +12,8 @@ class Help extends Command {
     if (!args.length) {
       embed
         .setTitle('Commands')
-        .addField('Here\'s a list of all avalible commands.', client.commands.filter(cmd => !cmd.devOnly).map(cmd => cmd.name).sort((a, b) => a.localeCompare(b)).join(', '))
-        .setFooter(`You can send ${this.howTo(client.prefix())} to get info on a specific command.`);
+        .addField('Here\'s a list of all avalible commands.', `\`${client.commands.filter(cmd => !cmd.devOnly).map(cmd => cmd.name).sort((a, b) => a.localeCompare(b)).join('\`, \`')}\``)
+        .setFooter({ text: `You can send ${this.howTo(client.prefix())} to get info on a specific command.` });
       return message.channel.send({ embeds: [embed] });
     }
 
