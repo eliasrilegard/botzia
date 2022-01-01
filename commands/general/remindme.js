@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 
 class RemindMe extends Command {
   constructor() {
-    super('remindme', 'Remind you of a message after a given time!', '[Time before reminder]; [Optional message]');
+    super('remindme', 'Remind you of a message after a given time!', '[time until reminder]; [optional message]');
   }
 
   async execute(message, args, client) {
@@ -59,7 +59,7 @@ class RemindMe extends Command {
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
       .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
-      .addField('\u200b', 'd, day, days\nh, hour, hours\nm, min, mins, minute, minutes', true)
+      .addField('\u200b', 'd, day(s)\nh, hour(s)\nm, min(s), minute(s)', true)
       .addField('Command usage', this.howTo(client.prefix(), true));
   }
 
