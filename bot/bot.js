@@ -18,12 +18,12 @@ class Bot extends Client {
   }
 
   loadEvents(dir) {
-    const eventFiles = fs.readdirSync(dir).filter(file => file.endsWith(".js"));
-    for (let file of eventFiles) {
+    const eventFiles = fs.readdirSync(dir).filter(file => file.endsWith('.js'));
+    for (const file of eventFiles) {
       const eventClass = require(`${dir}/${file}`);
       const event = new eventClass();
-      if (event.once) this.once(event.name, (...args) => event.execute(...args, client));
-      else this.on(event.name, (...args) => event.execute(...args, client));
+      if (event.once) this.once(event.name, (...args) => event.execute(...args, this));
+      else this.on(event.name, (...args) => event.execute(...args, this));
     }
   }
 

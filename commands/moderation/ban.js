@@ -25,13 +25,13 @@ class Ban extends Command {
       return message.channel.send({ embeds: [embed] });
     }
     if (member.id == client.user.id) {
-      embed.setTitle('I can\'t ban myself')
+      embed.setTitle('I can\'t ban myself');
       return message.channel.send({ embeds: [embed] });
     }
     if (client.isDev(member.id)) {
       embed
         .setTitle('You may not ban my dev')
-        .setFooter({ text: 'Don\'t even think about it >:c'});
+        .setFooter({ text: 'Don\'t even think about it >:c' });
       return message.channel.send({ embeds: [embed] });
     }
     if (this.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
@@ -49,7 +49,7 @@ class Ban extends Command {
     if (!member.bannable) { // Failsafe
       embed
         .setTitle('Can\'t ban member')
-        .setDescription(`<@${member.user.id}> cannot be kicked.`)
+        .setDescription(`<@${member.user.id}> cannot be kicked.`);
       return message.channel.send({ embeds: [embed] });
     }
 

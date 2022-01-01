@@ -21,7 +21,7 @@ class Reload extends Command {
       return message.channel.send({ embeds: [embed] });
     }
 
-    const commandsDir = __dirname.slice(0,-4);
+    const commandsDir = __dirname.slice(0, -4);
     const commandFolders = fs.readdirSync(commandsDir);
     const folderName = commandFolders.find(folder => fs.readdirSync(`${commandsDir}/${folder}`).includes(`${command.name}.js`));
 

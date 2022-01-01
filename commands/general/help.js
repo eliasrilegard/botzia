@@ -31,8 +31,8 @@ class Help extends Command {
 
     embed.setTitle(`Command info: ${command.name}`);
 
-    let desc = new Array();
-    let data = new Array();
+    const desc = new Array();
+    const data = new Array();
 
     if (command.aliases.length) {
       desc.push('**Aliases**\n');

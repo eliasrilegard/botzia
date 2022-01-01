@@ -25,13 +25,13 @@ class Kick extends Command {
       return message.channel.send({ embeds: [embed] });
     }
     if (member.id == client.user.id) {
-      embed.setTitle('I can\'t kick myself')
+      embed.setTitle('I can\'t kick myself');
       return message.channel.send({ embeds: [embed] });
     }
     if (client.isDev(member.id)) {
       embed
         .setTitle('You may not kick my dev')
-        .setFooter({ text: 'Don\'t even think about it >:c'});
+        .setFooter({ text: 'Don\'t even think about it >:c' });
       return message.channel.send({ embeds: [embed] });
     }
     if (this.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
@@ -49,7 +49,7 @@ class Kick extends Command {
     if (!member.kickable) { // Failsafe
       embed
         .setTitle('Can\'t kick member')
-        .setDescription(`<@${member.user.id}> cannot be kicked.`)
+        .setDescription(`<@${member.user.id}> cannot be kicked.`);
       return message.channel.send({ embeds: [embed] });
     }
 

@@ -6,22 +6,22 @@ const units = new Map([
   ['C', {
     name: 'Celsius',
     conversions: [
-      { unit: 'F', name: 'Fahrenheit', conversion: t => t * 9/5 + 32 },
+      { unit: 'F', name: 'Fahrenheit', conversion: t => t * 9 / 5 + 32 },
       { unit: 'K', name: 'Kelvin', conversion: t => Number(t) + 272.15 }
     ]
   }],
   ['F', {
     name: 'Fahrenheit',
     conversions: [
-      { unit: 'C', name: 'Celsius', conversion: t => (t - 32) * 5/9 },
-      { unit: 'K', name: 'Kelvin', conversion: t => (t - 32) * 5/9 + 272.15 }
+      { unit: 'C', name: 'Celsius', conversion: t => (t - 32) * 5 / 9 },
+      { unit: 'K', name: 'Kelvin', conversion: t => (t - 32) * 5 / 9 + 272.15 }
     ]
   }],
   ['K', {
     name: 'Kelvin',
     conversions: [
       { unit: 'C', name: 'Celsius', conversion: t => t - 272.15 },
-      { unit: 'F', name: 'Fahrenheit', conversion: t => (t - 272.15) * 9/5 + 32 }
+      { unit: 'F', name: 'Fahrenheit', conversion: t => (t - 272.15) * 9 / 5 + 32 }
     ]
   }]
 ]);
@@ -53,7 +53,7 @@ class UnitConvert extends Command {
       embed
         .setTitle('Invalid base unit')
         .setDescription('Unable to identify base unit.')
-        .addField('Command usage', this.howTo(client.prefix(), true))
+        .addField('Command usage', this.howTo(client.prefix(), true));
       return message.channel.send({ embeds: [embed] });
     }
       
@@ -64,7 +64,7 @@ class UnitConvert extends Command {
       embed
         .setTitle('Invalid goal unit')
         .setDescription('Unable to identify goal unit.')
-        .addField('Command usage', this.howTo(client.prefix(), true))
+        .addField('Command usage', this.howTo(client.prefix(), true));
       return message.channel.send({ embeds: [embed] });
     }
 
@@ -74,7 +74,7 @@ class UnitConvert extends Command {
 
     embed
       .setColor('0066cc')
-      .setTitle(`${valueBase} ${baseName} is ${valueConverted} ${goalName}`)
+      .setTitle(`${valueBase} ${baseName} is ${valueConverted} ${goalName}`);
     message.channel.send({ embeds: [embed] });
   }
 }

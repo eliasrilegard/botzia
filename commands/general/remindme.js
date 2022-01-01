@@ -2,7 +2,7 @@ const Command = require('../../bot/command.js');
 const { MessageEmbed } = require('discord.js');
 
 class RemindMe extends Command {
-  constructor() {
+  constructor() {
     super('remindme', 'Remind you of a message after a given time!', '[Time before reminder]; [Optional message]');
   }
 
@@ -11,7 +11,7 @@ class RemindMe extends Command {
     const reminderMessage = indexMessageStart ? args.slice(indexMessageStart, args.length).join(' ') : '';
     const timeArgs = indexMessageStart ? [...args.slice(0, indexMessageStart - 1), args[indexMessageStart - 1].slice(0, -1)] : args;
 
-    let timeData = [0, 0, 0]; // Days, Hours, Minutes
+    const timeData = [0, 0, 0]; // Days, Hours, Minutes
     const acceptedWords = ['day', 'hour', 'min'];
 
     timeArgs.forEach((arg, i) => {
@@ -30,7 +30,7 @@ class RemindMe extends Command {
     if (time > 2073600000) return message.channel.send({ embeds: [this.tooLong()] });
     
     const UIWords = ['days', 'hours', 'minutes'];
-    let UIArray = new Array();
+    const UIArray = new Array();
     timeData.forEach((data, i) => {
       if (data) UIArray.push(`${data} ${data == 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
     });
@@ -48,7 +48,7 @@ class RemindMe extends Command {
     embed
       .setColor('0066cc')
       .setTitle(`${reminderMessage ? 'Here\'s your reminder!' : 'Ding!'}`)
-      .setDescription(`${reminderMessage ? reminderMessage : 'Here\'s your reminder!'}`)
+      .setDescription(`${reminderMessage ? reminderMessage : 'Here\'s your reminder!'}`);
     
     setTimeout(() => message.reply({ embeds: [embed] }), time);
   }
@@ -67,7 +67,7 @@ class RemindMe extends Command {
     return new MessageEmbed()
       .setColor('cc0000')
       .setTitle('Invalid time')
-      .setDescription('Reminders have an upper time limit of 24 days.')
+      .setDescription('Reminders have an upper time limit of 24 days.');
   }
 }
 

@@ -6,13 +6,15 @@ class Ready extends Event {
     super('ready', true);
   }
 
-  async execute(client) {  /*  
+  async execute(client) { /*  
     // Grab OTDB Token on startup
     this.generateOTDBtoken(client)
       .catch(error => {
         console.log(`There was an error generating new token. Response code: ${error.message}`);
       });
 */
+    client.user.setActivity('your every move', { type: 'WATCHING' });
+
     console.log(`Ready! Logged in as ${client.user.tag}`);
   }
 

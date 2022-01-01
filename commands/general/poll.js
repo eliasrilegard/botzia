@@ -19,7 +19,7 @@ class Poll extends Command {
       return message.channel.send({ embeds: [embed] });
     }
 
-    const allEmotes = ['🍎','🍓','🍐','🍒','🍇','🥕','🍊','🍉','🍋','🍌','🥥','🥑','🥦','🌶️','🌽','🥝','🧄','🍍','🥬','<:kekw:743962015411732510>'];
+    const allEmotes = ['🍎', '🍓', '🍐', '🍒', '🍇', '🥕', '🍊', '🍉', '🍋', '🍌', '🥥', '🥑', '🥦', '🌶️', '🌽', '🥝', '🧄', '🍍', '🥬', '<:kekw:743962015411732510>'];
 
     const emotes = this.shuffle(allEmotes).slice(0, pollOptions.length);
 
