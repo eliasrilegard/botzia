@@ -4,10 +4,36 @@ const { MessageEmbed } = require('discord.js');
 
 class Reload extends Command {
   constructor() {
-    super('reload', 'Reloads a command', '<command name>', { devOnly: true });
+    super('reload', 'Reloads a command', '[command name] OR -b, --build [command folder] [file name]', { devOnly: true });
   }
 
   async execute(message, args, client) {
+    const commandsDir = __dirname.slice(0, -4);
+
+    // Build commands without rebooting
+    if (['-b', '--build'].includes(args[0])) {
+      const commandFolder = args[1];
+      const fileName = args[2];
+      const embed = new MessageEmbed();
+      try {
+        const commandClass = require(`${commandsDir}/${commandFolder}/${fileName}.js`);
+        const command = new commandClass();
+        client.commands.set(command.name, command);
+        embed
+          .setColor('00cc00')
+          .setTitle('Command added')
+          .setDescription(`Successfully built the command \`commands/${commandFolder}/${fileName}.js\`.`);
+      }
+      catch (error) {
+        embed
+          .setColor('cc0000')
+          .setTitle('No such file')
+          .setDescription(`The file \`commands/${commandFolder}/${fileName}.js\` couldn't be located.`)
+          .addField('Error message', error.message);
+      }
+      return message.channel.send({ embeds: [embed] });
+    }
+
     // Get command name or alias
     const commandName = args[0].toLowerCase();
     const command = client.commands.get(commandName)
@@ -21,7 +47,6 @@ class Reload extends Command {
       return message.channel.send({ embeds: [embed] });
     }
 
-    const commandsDir = __dirname.slice(0, -4);
     const commandFolders = fs.readdirSync(commandsDir);
     const folderName = commandFolders.find(folder => fs.readdirSync(`${commandsDir}/${folder}`).includes(`${command.name}.js`));
 
