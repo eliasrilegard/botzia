@@ -13,8 +13,8 @@ class Purge extends Command {
       const embed = new MessageEmbed()
         .setColor('cc0000')
         .setTitle('Invalid argument')
-        .setDescription('Specify a number between 1 and 1000.');
-      return message.channel.send(embed);
+        .setDescription('Specify a number between 1 and 100.');
+      return message.channel.send({ embeds: [embed] });
     }
 
     await message.channel.bulkDelete(count)
@@ -24,7 +24,7 @@ class Purge extends Command {
           .setColor('cc0000')
           .setTitle('Error')
           .setDescription('An error was encountered while trying to delete messages.');
-        message.channel.send(embed);
+        message.channel.send({ embeds: [embed] });
       });
     const successEmbed = new MessageEmbed()
       .setColor('00cc00')
