@@ -34,9 +34,12 @@ class Trivia extends Command {
 
     let categoryId = -1;
     for (const arg of args) {
-      const nameMatches = this.triviaCategories.filter(category => category.name.match(new RegExp(`\\b${arg}\\b`, 'gi')));
-      if (nameMatches.length) categoryId = nameMatches[Math.floor(Math.random() * nameMatches.length)].id; // Should we have multiple matches (shouldn't happen), just pick one at random lol
-      if (nameMatches.length == 1) break;
+      let nameMatches = this.triviaCategories.filter(category => category.name.match(new RegExp(`\\b${arg}\\b`, 'gi')));
+      if (!nameMatches.length) nameMatches = this.triviaCategories.filter(category => category.name.match(new RegExp(`\\b${arg}`, 'gi')));
+      if (nameMatches.length == 1) {
+        categoryId = nameMatches[0].id;
+        break;
+      }
     }
 
     const data = await this.getQuestion(message, categoryId, client)
