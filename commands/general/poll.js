@@ -15,7 +15,7 @@ class Poll extends Command {
         .setColor('cc0000')
         .setTitle('Check arguments')
         .setDescription('A poll needs at least 2 and a most 20 options.')
-        .addField('Command usage:', this.howTo(await client.prefix(message)/*prefix*/, true));
+        .addField('Command usage:', this.howTo(await client.prefix(message), true));
       return message.channel.send({ embeds: [embed] });
     }
 
