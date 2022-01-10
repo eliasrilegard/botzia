@@ -10,7 +10,7 @@ class Message extends Event {
     // Ignore bots
     if (message.author.bot) return;
 
-    const prefix = client.prefix(); // Pass message here when server prefixes are set up
+    const prefix = await client.prefix(message);
 
     if (message.content.startsWith(`<@!${client.user.id}>`)) {
       const embed = new MessageEmbed()
@@ -20,7 +20,7 @@ class Message extends Event {
       return message.reply({ embeds: [embed] });
     }
 
-    if (!message.content.startsWith(prefix)) return; // Ignore non-commands
+    if (!(message.content.startsWith(prefix) || message.content.startsWith(client.config['bot']['defaultPrefix']))) return; // Ignore non-commands
     
     const args = message.content.slice(prefix.length).trim().split(/ +/); // Split every word of message into list
     const commandName = args.shift().toLowerCase(); // Extract command name and finalize args list

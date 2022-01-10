@@ -1,20 +1,22 @@
 const fs = require('fs');
 const { Client, Collection } = require('discord.js');
-const config = require('../config.json');
 
 class Bot extends Client {
-  constructor() {
+  constructor(config) {
     super({
       intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INVITES', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS'],
       partials: ['CHANNEL']
     });
+    this.config = config;
     this.commands = new Collection();
     this.tokens = new Collection();
   }
 
-  prefix(message = undefined) {
-    const prefix = config['bot']['defaultPrefix'];
+  async prefix(message = undefined) {
+    const prefix = this.config['bot']['defaultPrefix'] ? this.config['bot']['defaultPrefix'] : '>';
     if (!message) return prefix;
+    const customPrefix = await this.apiClient.getCustomPrefix(message.guildId);
+    return customPrefix ? customPrefix : prefix;
   }
 
   loadEvents(dir) {
@@ -41,7 +43,7 @@ class Bot extends Client {
 
   isDev(id) {
     const devs = [
-      config['users']['chrono_id']
+      this.config['users']['chrono_id']
     ];
     return devs.includes(id);
   }
