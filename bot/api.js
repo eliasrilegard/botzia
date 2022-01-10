@@ -5,6 +5,8 @@ class ApiClient {
     this.dir = dir;
     this.serverPrefixes = new Datastore({ filename: `${this.dir}/discord/server_prefixes.db`, autoload: true });
     // this.serverPrefixes.ensureIndex({ fieldName: 'id', unique: true }); // Make the id field unique to each entry
+
+    // setInterval(() => this.serverPrefixes.loadDatabase(), 36000000); // Refresh database every hour
   }
 
   async getCustomPrefix(serverId) {
