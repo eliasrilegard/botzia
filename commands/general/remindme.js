@@ -26,7 +26,7 @@ class RemindMe extends Command {
     });
     
     const time = (timeData[0] * 24 * 60 + timeData[1] * 60 + timeData[2]) * 60000;
-    if (!time > 0) return message.channel.send({ embeds: [this.helpMessage(client)] });
+    if (!time > 0) return message.channel.send({ embeds: [this.helpMessage(await client.prefix(message))] });
     if (time > 2073600000) return message.channel.send({ embeds: [this.tooLong()] });
     
     const UIWords = ['days', 'hours', 'minutes'];
@@ -53,14 +53,14 @@ class RemindMe extends Command {
     setTimeout(() => message.reply({ embeds: [embed] }), time);
   }
   
-  helpMessage(client) {
+  helpMessage(prefix) {
     return new MessageEmbed()
       .setColor('cc0000')
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
       .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
       .addField('\u200b', 'd, day(s)\nh, hour(s)\nm, min(s), minute(s)', true)
-      .addField('Command usage', this.howTo(client.prefix(), true));
+      .addField('Command usage', this.howTo(prefix, true));
   }
 
   tooLong() {

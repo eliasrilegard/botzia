@@ -34,6 +34,7 @@ class UnitConvert extends Command {
   async execute(message, args, client) {
     // Maybe check args.length?
 
+    const prefix = await client.prefix(message);
     const embed = new MessageEmbed().setColor('cc0000');
 
     const valueBase = args[0];
@@ -41,7 +42,7 @@ class UnitConvert extends Command {
       embed
         .setTitle('Invalid value')
         .setDescription('Unable to resolve the value.')
-        .addField('Command usage', this.howTo(client.prefix(), true));
+        .addField('Command usage', this.howTo(prefix, true));
       return message.channel.send({ embeds: [embed] });
     }
 
@@ -53,7 +54,7 @@ class UnitConvert extends Command {
       embed
         .setTitle('Invalid base unit')
         .setDescription('Unable to identify base unit.')
-        .addField('Command usage', this.howTo(client.prefix(), true));
+        .addField('Command usage', this.howTo(prefix, true));
       return message.channel.send({ embeds: [embed] });
     }
       
@@ -64,7 +65,7 @@ class UnitConvert extends Command {
       embed
         .setTitle('Invalid goal unit')
         .setDescription('Unable to identify goal unit.')
-        .addField('Command usage', this.howTo(client.prefix(), true));
+        .addField('Command usage', this.howTo(prefix, true));
       return message.channel.send({ embeds: [embed] });
     }
 

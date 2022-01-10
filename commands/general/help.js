@@ -7,13 +7,14 @@ class Help extends Command {
   }
 
   async execute(message, args, client) {
+    const prefix = await client.prefix(message);
     const embed = new MessageEmbed().setColor('0066cc');
 
     if (!args.length) {
       embed
         .setTitle('Commands')
         .addField('Here\'s a list of all avalible commands.', `\`${client.commands.filter(cmd => !cmd.devOnly).map(cmd => cmd.name).sort((a, b) => a.localeCompare(b)).join('\`, \`')}\``)
-        .setFooter({ text: `You can send ${this.howTo(client.prefix())} to get info on a specific command.` });
+        .setFooter({ text: `You can send ${this.howTo(prefix)} to get info on a specific command.` });
       return message.channel.send({ embeds: [embed] });
     }
 
@@ -42,7 +43,7 @@ class Help extends Command {
     data.push(`${command.description} \n`);
 
     desc.push('**Usage**\n');
-    data.push(command.howTo(client.prefix(), true));
+    data.push(command.howTo(prefix, true));
 
     embed.addFields(
       { name: '\u200b', value: desc.join(''), inline: true },

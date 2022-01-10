@@ -9,12 +9,13 @@ class Timeout extends Command {
   async execute(message, args, client) {
     const member = message.mentions.members.first();
 
+    const prefix = await client.prefix(message);
     const embed = new MessageEmbed().setColor('cc0000');
 
     if (!member) {
       embed
         .setTitle('No user targeted')
-        .addField('Command usage', this.howTo(client.prefix(), true));
+        .addField('Command usage', this.howTo(prefix, true));
       return message.channel.send({ embeds: [embed] });
     }
     if (member.id == message.author.id) {
@@ -87,7 +88,7 @@ class Timeout extends Command {
     
     const time = (timeData[0] * 24 * 60 * 60 + timeData[1] * 60 * 60 + timeData[2] * 60 + timeData[3]) * 1000;
     
-    if (!time > 0) return message.channel.send({ embeds: [this.helpMessage(client)] });
+    if (!time > 0) return message.channel.send({ embeds: [this.helpMessage(prefix)] });
 
     member.disableCommunicationUntil(Date.now() + time, reasonMessage);
 
@@ -111,14 +112,14 @@ class Timeout extends Command {
     return memberLow.roles.highest.comparePositionTo(memberHigh.roles.highest) < 1;
   }
 
-  helpMessage(client) {
+  helpMessage(prefix) {
     return new MessageEmbed()
       .setColor('cc0000')
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
       .addField('Arguments', '**Days:\nHours:\nMinutes:\nSeconds:**', true)
       .addField('\u200b', 'd, day(s)\nh, hour(s)\nm, min(s), minute(s)\ns, sec, second(s)', true)
-      .addField('Command usage', this.howTo(client.prefix(), true));
+      .addField('Command usage', this.howTo(prefix, true));
   }
 }
 

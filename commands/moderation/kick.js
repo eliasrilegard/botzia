@@ -15,7 +15,7 @@ class Kick extends Command {
     if (!member) {
       embed
         .setTitle('No user targeted')
-        .addField('Command usage', this.howTo(client.prefix(), true));
+        .addField('Command usage', this.howTo(await client.prefix(message), true));
       return message.channel.send({ embeds: [embed] });
     }
     if (member.id == message.author.id) {
