@@ -26,12 +26,13 @@ class SetPrefix extends Command {
       const embed = new MessageEmbed()
         .setColor('cc0000')
         .setTitle('Prefix too long')
-        .setDescription('New prefix is too long - maximum length is 6 characters.');
+        .setDescription('New prefix is too long - maximum length is 6 characters.')
+        .setFooter({ text: 'Though I suggest sticking to 2 characters at max.' });
       return message.channel.send({ embeds: [embed] });
     }
 
     // Is user trying to reset prefix?
-    if (requestedPrefix == defaultPrefix && serverPrefix) {
+    if ([defaultPrefix, 'reset'].includes(requestedPrefix) && serverPrefix) {
       client.apiClient.removeCustomPrefix(message.guild.id);
       const embed = new MessageEmbed()
         .setColor('00cc00')
