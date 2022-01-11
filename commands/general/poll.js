@@ -28,7 +28,7 @@ class Poll extends Command {
 
     const embed = new MessageEmbed()
       .setColor(message.member.displayHexColor)
-      .setAuthor(`${message.member.displayName} created a poll`, message.member.displayAvatarURL())
+      .setAuthor({ name: `${message.member.displayName} created a poll`, iconURL: message.member.displayAvatarURL() })
       .setTitle(question)
       .addField('Choices', choicesString.trim())
       .setFooter({ text: 'React with your vote below!' })
