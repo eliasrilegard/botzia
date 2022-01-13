@@ -20,7 +20,7 @@ class Message extends Event {
       return message.reply({ embeds: [embed] });
     }
 
-    if (!(message.content.startsWith(prefix) || message.content.startsWith(client.config['bot']['defaultPrefix']))) return; // Ignore non-commands
+    if (!(message.content.startsWith(prefix) || message.content.startsWith(client.config.bot.defaultPrefix))) return; // Ignore non-commands
     
     const args = message.content.slice(prefix.length).trim().split(/ +/); // Split every word of message into list
     const commandName = args.shift().toLowerCase(); // Extract command name and finalize args list

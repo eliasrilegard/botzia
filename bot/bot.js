@@ -13,7 +13,7 @@ class Bot extends Client {
   }
 
   async prefix(message = undefined) {
-    const prefix = this.config['bot']['defaultPrefix'] ? this.config['bot']['defaultPrefix'] : '>';
+    const prefix = this.config.bot.defaultPrefix ? this.config.bot.defaultPrefix : '>';
     if (!message) return prefix;
     const customPrefix = await this.apiClient.getCustomPrefix(message.guildId);
     return customPrefix ? customPrefix : prefix;
@@ -43,7 +43,7 @@ class Bot extends Client {
 
   isDev(id) {
     const devs = [
-      this.config['users']['chrono_id']
+      this.config.users.chrono_id
     ];
     return devs.includes(id);
   }

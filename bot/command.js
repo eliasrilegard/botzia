@@ -13,12 +13,12 @@ class Command {
     this.name = name;
     this.description = description;
     this.usage = `${usage}`;
-    this.args = options['args'];
-    this.devOnly = options['devOnly'];
-    this.aliases = options['aliases'];
-    this.permissions = options['permissions'];
-    this.guildOnly = options['guildOnly'];
-    this.cooldown = options['cooldown'];
+    this.args = options.args;
+    this.devOnly = options.devOnly;
+    this.aliases = options.aliases;
+    this.permissions = options.permissions;
+    this.guildOnly = options.guildOnly;
+    this.cooldown = options.cooldown;
     this.cooldowns = new Map();
   }
 

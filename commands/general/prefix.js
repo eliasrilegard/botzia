@@ -7,7 +7,7 @@ class SetPrefix extends Command {
   }
 
   async execute(message, args, client) {
-    const defaultPrefix = client.config['bot']['defaultPrefix'];
+    const defaultPrefix = client.config.bot.defaultPrefix;
 
     const serverPrefix = await client.apiClient.getCustomPrefix(message.guild.id);
 
