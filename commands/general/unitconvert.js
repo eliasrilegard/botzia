@@ -45,6 +45,14 @@ class UnitConvert extends Command {
         .addField('Command usage', this.howTo(prefix, true));
       return message.channel.send({ embeds: [embed] });
     }
+    
+    if (args.length != 3) {
+      embed
+        .setTitle('Invalid arguments')
+        .setDescription('This command takes 3 arguments.')
+        .addField('Command usage', this.howTo(prefix, true));
+      return message.channel.send({ embeds: [embed] });
+    }
 
     const unitBase = args[1];
     const unitGoal = args[2];
