@@ -31,14 +31,14 @@ class Bot extends Client {
 
   loadCommands(parentDir) {
     const commandFolders = fs.readdirSync(parentDir);
-    commandFolders.forEach(folder => {
+    for (const folder of commandFolders) {
       const commandFiles = fs.readdirSync(`${parentDir}/${folder}`).filter(file => file.endsWith('.js'));
-      commandFiles.forEach(file => {
+      for (const file of commandFiles) {
         const commandClass = require(`${parentDir}/${folder}/${file}`);
         const command = new commandClass();
         this.commands.set(command.name, command);
-      });
-    });
+      }
+    }
   }
 
   isDev(id) {
