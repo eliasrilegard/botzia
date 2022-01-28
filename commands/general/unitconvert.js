@@ -1,41 +1,26 @@
 const Command = require('../../bot/command.js');
 const { MessageEmbed } = require('discord.js');
 
-const units = new Map([
-  // Temperature
-  ['C', {
-    name: 'Celsius',
-    conversions: [
-      { unit: 'F', name: 'Fahrenheit', conversion: t => t * 9 / 5 + 32 },
-      { unit: 'K', name: 'Kelvin', conversion: t => Number(t) + 272.15 }
-    ]
-  }],
-  ['F', {
-    name: 'Fahrenheit',
-    conversions: [
-      { unit: 'C', name: 'Celsius', conversion: t => (t - 32) * 5 / 9 },
-      { unit: 'K', name: 'Kelvin', conversion: t => (t - 32) * 5 / 9 + 272.15 }
-    ]
-  }],
-  ['K', {
-    name: 'Kelvin',
-    conversions: [
-      { unit: 'C', name: 'Celsius', conversion: t => t - 272.15 },
-      { unit: 'F', name: 'Fahrenheit', conversion: t => (t - 272.15) * 9 / 5 + 32 }
-    ]
-  }]
-]);
-
 class UnitConvert extends Command {
   constructor() {
-    super('unitconvert', 'Convert a measure from one unit to another!', '[value] [unit from] [unit to]', { aliases: ['convert'] });
+    super('unitconvert', 'Convert a measure from one unit to another!', '[value] [unit from] [unit to] OR --list', { aliases: ['convert'] });
   }
   
   async execute(message, args, client) {
     // Maybe check args.length?
-
+    
     const prefix = await client.prefix(message);
     const embed = new MessageEmbed().setColor('cc0000');
+
+    if (args[0] == '--list') {
+      const unitList = new Array();
+      units.forEach(unit => unitList.push(unit.name));
+      embed
+        .setColor('0066cc')
+        .setTitle('Avalible units')
+        .addField('Here\'s a list of all supported units.', `\`${unitList.join('\`, \`')}\``);
+      return message.channel.send({ embeds: [embed] });
+    }
 
     const valueBase = args[0];
     if (!valueBase.match(/^-?\d+(\.\d+)?$/g)) {
@@ -56,7 +41,7 @@ class UnitConvert extends Command {
 
     const unitBase = args[1];
     const unitGoal = args[2];
-    const baseObj = units.get(unitBase.toUpperCase());
+    const baseObj = units.get(unitBase.toLowerCase());
 
     if (!baseObj) {
       embed
@@ -67,7 +52,7 @@ class UnitConvert extends Command {
     }
       
     const baseName = baseObj.name;
-    const goalMatches = baseObj.conversions.filter(obj => obj.unit == unitGoal.toUpperCase());
+    const goalMatches = baseObj.conversions.filter(obj => obj.unit == unitGoal.toLowerCase());
     
     if (goalMatches.length == 0) {
       embed
@@ -87,5 +72,63 @@ class UnitConvert extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
+
+const units = new Map([
+  // Temperature
+  ['c', {
+    name: 'Celsius',
+    conversions: [
+      { unit: 'f', name: 'Fahrenheit', conversion: t => t * 9 / 5 + 32 },
+      { unit: 'k', name: 'Kelvin', conversion: t => Number(t) + 272.15 }
+    ]
+  }],
+  ['f', {
+    name: 'Fahrenheit',
+    conversions: [
+      { unit: 'c', name: 'Celsius', conversion: t => (t - 32) * 5 / 9 },
+      { unit: 'k', name: 'Kelvin', conversion: t => (t - 32) * 5 / 9 + 272.15 }
+    ]
+  }],
+  ['k', {
+    name: 'Kelvin',
+    conversions: [
+      { unit: 'c', name: 'Celsius', conversion: t => t - 272.15 },
+      { unit: 'f', name: 'Fahrenheit', conversion: t => (t - 272.15) * 9 / 5 + 32 }
+    ]
+  }],
+  // Length
+  ['m', {
+    name: 'Meters',
+    conversions: [
+      { unit: 'km', name: 'Kilometers', conversion: l => l * 0.001 },
+      { unit: 'ft', name: 'Feet', conversion: l => l / 0.3048 },
+      { unit: 'mi', name: 'Miles', conversion: l => l / 1609.344 }
+    ]
+  }],
+  ['km', {
+    name: 'Kilometers',
+    conversions: [
+      { unit: 'm', name: 'Meters', conversion: l => l * 1000 },
+      { unit: 'ft', name: 'Feet', conversion: l => l / 0.0003048 },
+      { unit: 'mi', name: 'Miles', conversion: l => l / 1.609344 }
+    ]
+  }],
+  ['ft', {
+    name: 'Feet',
+    conversions: [
+      { unit: 'm', name: 'Meters', conversion: l => l * 0.3048 },
+      { unit: 'km', name: 'Kilometers', conversion: l => l * 0.0003048 },
+      { unit: 'mi', name: 'Miles', conversion: l => l / 5280 }
+    ]
+  }],
+  ['mi', {
+    name: 'Miles',
+    conversions: [
+      { unit: 'm', name: 'Meters', conversion: l => l * 1609.344 },
+      { unit: 'km', name: 'Kilometers', conversion: l => l * 1.609344 },
+      { unit: 'ft', name: 'Feet', conversion: l => l * 5280 }
+    ]
+  }]
+]);
 
 module.exports = UnitConvert;
