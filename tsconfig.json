@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "outDir": "dist",
+    "watch": true,
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"]
+}
