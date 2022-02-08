@@ -7,7 +7,7 @@ class Remindme extends Command {
     super('remindme', 'Remind you of a message after a given time!', '[time until reminder]; [optional message]');
   }
 
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const indexMessageStart = args.indexOf(args.filter(arg => arg.includes(';'))[0]) + 1; // -1 + 1 if no match
     const reminderMessage = indexMessageStart ? args.slice(indexMessageStart, args.length).join(' ') : '';
     const timeArgs = indexMessageStart ? [...args.slice(0, indexMessageStart - 1), args[indexMessageStart - 1].slice(0, -1)] : args;

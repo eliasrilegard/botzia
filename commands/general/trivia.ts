@@ -25,7 +25,7 @@ class Trivia extends Command {
     this.getTriviaCategories().then(categories => this.triviaCategories = categories);
   }
   
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args[0] == '--reset' && args.length == 1) {
       const token = client.tokens.get('OTDB');
       if (token) {

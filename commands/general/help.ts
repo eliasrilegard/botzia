@@ -7,7 +7,7 @@ class Help extends Command {
     super('help', 'List all commands or get info on a specific command.', '[command name]', { args: false, aliases: ['commands'] });
   }
 
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const prefix = await client.prefix(message);
     const embed = new MessageEmbed().setColor('#0066cc');
 

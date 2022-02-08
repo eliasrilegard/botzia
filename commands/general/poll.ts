@@ -7,7 +7,7 @@ class Poll extends Command {
     super('poll', 'Make a poll about something!', '[Question]; [Option1]; [Option2] ...', { guildOnly: true });
   }
 
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const pollOptions = args.join(' ').split(';').map(str => str.trim());
     const question = pollOptions.shift();
 

@@ -6,7 +6,7 @@ class Purge extends Command {
     super('purge', 'Clears a specified number of messages.', '[# of messages to purge]', { permissions: 'MANAGE_MESSAGES', guildOnly: true });
   }
 
-  public async execute(message: Message, args: string[]): Promise<void> {
+  public async execute(message: Message, args: Array<string>): Promise<void> {
     const count = parseInt(args[0]) + 1;
 
     if (count < 2 || count > 100 || isNaN(count)) {

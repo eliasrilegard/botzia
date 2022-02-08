@@ -7,7 +7,7 @@ class Ban extends Command {
     super('ban', 'Ban a member', '[member] [optional reason]', { guildOnly: true, permissions: 'BAN_MEMBERS' });
   }
 
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const member = message.mentions.members.first();
     const reason = args.slice(1).join(' ');
 

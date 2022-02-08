@@ -7,7 +7,7 @@ class Kick extends Command {
     super('kick', 'Kick a member', '[member] [optional reason]', { guildOnly: true, permissions: 'KICK_MEMBERS' });
   }
 
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const member = message.mentions.members.first();
     const reason = args.slice(1).join(' ');
 

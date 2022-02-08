@@ -8,7 +8,7 @@ class Reload extends Command {
     super('reload', 'Reloads a command!', '[command name] OR -b, --build [command folder] [file name]', { devOnly: true });
   }
 
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const commandsDir = client.root.concat('commands');
 
     if (['-b', '--build'].includes(args[0])) {

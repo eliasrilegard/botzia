@@ -7,7 +7,7 @@ class Timeout extends Command {
     super('timeout', 'Give a user a timeout', '[user] [duration]; [optional reason] OR [user] [remove]', { permissions: 'MODERATE_MEMBERS' });
   }
 
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const member = message.mentions.members.first();
 
     const prefix = await client.prefix(message);

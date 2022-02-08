@@ -19,7 +19,7 @@ class ApiClient {
 
   public async getCustomPrefix(serverId: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.serverPrefixes.find({ id: serverId }, (err: Error, docs: Docs[]) => {
+      this.serverPrefixes.find({ id: serverId }, (err: Error, docs: Array<Docs>) => {
         if (err) reject(err.message); // Shouldn't ever happen
         docs.length ? resolve(docs[0].prefix) : resolve(null);
       });

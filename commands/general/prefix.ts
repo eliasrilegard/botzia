@@ -7,7 +7,7 @@ class Prefix extends Command {
     super('prefix', 'View the current prefix, or set a custom prefix for this server only', '[new prefix]', { args: false, aliases: ['setprefix'], guildOnly: true });
   }
 
-  public async execute(message: Message, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const defaultPrefix = client.config.bot.defaultPrefix;
 
     const serverPrefix = await client.apiClient.getCustomPrefix(message.guild.id);

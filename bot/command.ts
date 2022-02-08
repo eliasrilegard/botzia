@@ -4,7 +4,7 @@ import Bot from './bot';
 interface ClientOptions {
   args?: boolean;
   devOnly?: boolean;
-  aliases?: string[];
+  aliases?: Array<string>;
   permissions?: string;
   guildOnly?: boolean;
   cooldown?: number;
@@ -13,7 +13,7 @@ interface ClientOptions {
 const defaultOptions: ClientOptions = {
   args: true,
   devOnly: false,
-  aliases: [],
+  aliases: new Array(),
   permissions: '',
   guildOnly: false,
   cooldown: 3000
@@ -50,7 +50,7 @@ class Command {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public execute(_message: Message, _args: string[], _client: Bot): void {
+  public execute(_message: Message, _args: Array<string>, _client: Bot): void {
     throw new Error('Method not implemented.');
   }
 }
