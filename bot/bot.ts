@@ -15,11 +15,11 @@ interface ClientConfig {
 }
 
 class Bot extends Client {
-  root: string;
-  config: ClientConfig;
-  commands: Collection<string, Command>;
-  tokens: Collection<string, string>;
-  apiClient: ApiClient;
+  public root: string;
+  public config: ClientConfig;
+  public commands: Collection<string, Command>;
+  public tokens: Collection<string, string>;
+  public apiClient: ApiClient;
 
   public constructor(dirname: string, config: ClientConfig) {
     super({

@@ -18,7 +18,7 @@ interface TriviaQuestion {
 }
 
 class Trivia extends Command {
-  triviaCategories: Array<TriviaCategory>;
+  private triviaCategories: Array<TriviaCategory>;
 
   public constructor() {
     super('trivia', 'Play a game of trivia!', '[category] OR --categories to list all', { args: false });

@@ -1,6 +1,6 @@
 class ClientEvent {
-  name: string;
-  once: boolean;
+  public name: string;
+  public once: boolean;
 
   protected constructor(name: string, once: boolean) {
     this.name = name;

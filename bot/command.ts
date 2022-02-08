@@ -20,16 +20,16 @@ const defaultOptions: ClientOptions = {
 };
 
 class Command {
-  name: string;
-  description: string;
-  usage: string;
-  args: boolean;
-  devOnly: boolean;
-  aliases: Array<string>;
-  permissions: string;
-  guildOnly: boolean;
-  cooldown: number;
-  cooldowns: Map<string, number>;
+  public name: string;
+  public description: string;
+  public usage: string;
+  public args: boolean;
+  public devOnly: boolean;
+  public aliases: Array<string>;
+  public permissions: string;
+  public guildOnly: boolean;
+  public cooldown: number;
+  public cooldowns: Map<string, number>;
 
   protected constructor(name: string, description: string, usage: string, customOptions?: ClientOptions) {
     const options = { ...defaultOptions, ...customOptions };
@@ -50,7 +50,7 @@ class Command {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public execute(_message: Message, _args: Array<string>, _client: Bot): void {
+  public execute(message: Message, args: Array<string>, client: Bot): void {
     throw new Error('Method not implemented.');
   }
 }
