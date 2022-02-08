@@ -54,9 +54,10 @@ class Trivia extends Command {
     for (const arg of args) {
       let nameMatches = this.triviaCategories.filter(category => category.name.match(new RegExp(`\\b${arg}\\b`, 'gi')));
       if (!nameMatches.length) nameMatches = this.triviaCategories.filter(category => category.name.match(new RegExp(`\\b${arg}`, 'gi')));
-      if (nameMatches.length == 1) {
-        categoryId = nameMatches[0].id;
-        break;
+      if (nameMatches.length) {
+        const index = Math.floor(Math.random() * nameMatches.length); // Select a random category from the avalible matches
+        categoryId = nameMatches[index].id;
+        if (nameMatches.length == 1) break; // If we matched to exactly one category we can safely stop searching
       }
     }
     
