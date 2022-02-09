@@ -11,7 +11,7 @@ class UnitConvert extends Command {
     const prefix = await client.prefix(message);
     const embed = new MessageEmbed().setColor('#cc0000');
 
-    if (args[0] == '--list') {
+    if (args[0] === '--list') {
       const unitList = new Array();
       units.forEach(unit => unitList.push(unit.name));
       embed
@@ -55,9 +55,9 @@ class UnitConvert extends Command {
     }
       
     const baseName = baseObj.name;
-    const goalMatches = baseObj.conversions.filter(obj => obj.unit == unitGoal.toLowerCase());
+    const goalMatches = baseObj.conversions.filter(obj => obj.unit === unitGoal.toLowerCase());
     
-    if (goalMatches.length == 0) {
+    if (goalMatches.length === 0) {
       embed
         .setTitle('Invalid goal unit')
         .setDescription('Unable to identify goal unit.')

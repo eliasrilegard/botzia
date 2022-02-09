@@ -26,7 +26,7 @@ class Trivia extends Command {
   }
   
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
-    if (args[0] == '--reset' && args.length == 1) {
+    if (args[0] === '--reset' && args.length === 1) {
       const token = client.tokens.get('OTDB');
       if (token) {
         try { return this.resetToken(message, client) }
@@ -37,7 +37,7 @@ class Trivia extends Command {
         catch (error) { this.postErrorMessage(message, error.message) }
       }
     }
-    else if (args[0] == '--categories' && args.length == 1) {
+    else if (args[0] === '--categories' && args.length === 1) {
       const categories = new Array();
       this.triviaCategories.forEach(category => categories.push(category.name));
       categories.sort();
@@ -57,7 +57,7 @@ class Trivia extends Command {
       if (nameMatches.length) {
         const index = Math.floor(Math.random() * nameMatches.length); // Select a random category from the avalible matches
         categoryId = nameMatches[index].id;
-        if (nameMatches.length == 1) break; // If we matched to exactly one category we can safely stop searching
+        if (nameMatches.length === 1) break; // If we matched to exactly one category we can safely stop searching
       }
     }
     
@@ -70,12 +70,12 @@ class Trivia extends Command {
       return;
     }
 
-    const description = `${data.difficulty == 'easy' ? 'An' : 'A'} ${this.capitalize(data.difficulty)} one from the category ${data.category}.`;
+    const description = `${data.difficulty === 'easy' ? 'An' : 'A'} ${this.capitalize(data.difficulty)} one from the category ${data.category}.`;
     
     let allAnswers = new Array();
     allAnswers.push(data.correct_answer);
     data.incorrect_answers.forEach((entry: string) => allAnswers.push(entry));
-    allAnswers = allAnswers.length == 2 ? allAnswers.sort().reverse() : this.shuffle(allAnswers); // Sort if true/false, shuffle otherwise
+    allAnswers = allAnswers.length === 2 ? allAnswers.sort().reverse() : this.shuffle(allAnswers); // Sort if true/false, shuffle otherwise
 
     const allEmotes = ['🍎', '🍓', '🍐', '🍒', '🍇', '🥕', '🍊', '🍉', '🍋', '🍌', '🥥', '🥑', '🥦', '🌶️', '🌽', '🥝', '🧄', '🍍', '🥬'];
     const emotes = this.shuffle(allEmotes).slice(0, allAnswers.length);
@@ -110,7 +110,7 @@ class Trivia extends Command {
     emotes.forEach(emote => triviaMessage.react(emote));
 
     // Compact notation for function
-    const filter = (reaction: MessageReaction, user: User) => user.id == message.author.id && emotes.includes(reaction.emoji.name);
+    const filter = (reaction: MessageReaction, user: User) => user.id === message.author.id && emotes.includes(reaction.emoji.name);
 
     const collector = triviaMessage.createReactionCollector({ filter, max: 1, time: 25000 });
     let reacted = false;
@@ -118,7 +118,7 @@ class Trivia extends Command {
 
     collector.on('collect', reaction => {
       reacted = true;
-      if (reaction.emoji.name == correctEmote) {
+      if (reaction.emoji.name === correctEmote) {
         embedAns
           .setColor('#00cc00')
           .setTitle('Correct answer!')
@@ -200,7 +200,7 @@ class Trivia extends Command {
     const response = await fetch('https://opentdb.com/api_token.php?command=request');
     const data = await response.json();
 
-    if (data.response_code == 0) {
+    if (data.response_code === 0) {
       embed
         .setColor('#00cc00')
         .setTitle('Token recieved');
@@ -216,7 +216,7 @@ class Trivia extends Command {
     if (token) {
       const respose = await fetch(`https://opentdb.com/api_token.php?command=reset&token=${token}`);
       const data = await respose.json();
-      if (data.response_code == 0) {
+      if (data.response_code === 0) {
         const embed = new MessageEmbed()
           .setColor('#00cc00')
           .setTitle('Token reset');
@@ -248,7 +248,7 @@ class Trivia extends Command {
   }
 
   private capitalize(str: string): string {
-    return typeof str == 'string' ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    return typeof str === 'string' ? str.charAt(0).toUpperCase() + str.slice(1) : '';
   }
 
   private cleanup(str: string): string {  

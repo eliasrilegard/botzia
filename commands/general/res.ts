@@ -19,14 +19,14 @@ class Res extends Command {
 
     let armorLevel = 1, levelsSpent = 0;
  
-    const canUp = (res: number, lvl: number) => (res < 22 || (lvl + 1) % 10 == 0) && res < 29;
+    const canUp = (res: number, lvl: number) => (res < 22 || (lvl + 1) % 10 === 0) && res < 29;
     const getUpAmount = (res: number) => res < 22 ? Math.max(Math.trunc(0.15 * Math.abs(res)), 1) : 1;
     const upBestTarget = () => {
       for (let i = 0; i < resists.length; i++) {
         if (canUp(resists[i], armorLevel)) {
           levelsSpent++;
           resists[i] += getUpAmount(resists[i]);
-          if (resists[i] == 0) resists[i]++;
+          if (resists[i] === 0) resists[i]++;
           return;
         }
       }

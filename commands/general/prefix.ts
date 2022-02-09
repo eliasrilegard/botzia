@@ -46,7 +46,7 @@ class Prefix extends Command {
     }
 
     // Is the requested prefix already in use, or is the user trying to set the prefix from default to default?
-    if (requestedPrefix == serverPrefix || (!serverPrefix && requestedPrefix == defaultPrefix)) {
+    if (requestedPrefix === serverPrefix || (!serverPrefix && requestedPrefix === defaultPrefix)) {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('Invalid prefix')

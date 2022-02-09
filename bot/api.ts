@@ -28,7 +28,7 @@ class ApiClient {
 
   public async setCustomPrefix(serverId: string, newPrefix: string): Promise<void> {
     this.serverPrefixes.insert({ id: serverId, prefix: newPrefix }, err => {
-      if (err && err['errorType'] == 'uniqueViolated') {
+      if (err && err['errorType'] === 'uniqueViolated') {
         this.serverPrefixes.update({ id: serverId }, { $set: { prefix: newPrefix } });
       }
     });

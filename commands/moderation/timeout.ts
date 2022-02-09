@@ -20,14 +20,14 @@ class Timeout extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (member.id == message.author.id) {
+    if (member.id === message.author.id) {
       embed
         .setTitle('You can\'t timeout yourself')
         .setDescription('Ask someone else to do it if you really want');
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (member.id == client.user.id) {
+    if (member.id === client.user.id) {
       embed
         .setTitle('I can\'t timeout myself')
         .setFooter({ text: 'How dare you' });
@@ -64,7 +64,7 @@ class Timeout extends Command {
     }
 
     if (member.communicationDisabledUntilTimestamp > Date.now()) { // Workaround for isCommunicationDisabled()
-      if (args[1] == 'remove') {
+      if (args[1] === 'remove') {
         embed
           .setColor('#00cc00')
           .setTitle('Timeout removal successful')
@@ -87,11 +87,11 @@ class Timeout extends Command {
 
     timeArgs.forEach((arg, i) => {
       if (arg.match(/^\d+[dhms]$/i)) {
-        const index = Number(arg.slice(-1).toLowerCase() == 'h') + Number(arg.slice(-1).toLowerCase() == 'm') * 2 + Number(arg.slice(-1).toLowerCase() == 's') * 3;
+        const index = Number(arg.slice(-1).toLowerCase() === 'h') + Number(arg.slice(-1).toLowerCase() === 'm') * 2 + Number(arg.slice(-1).toLowerCase() === 's') * 3;
         timeData[index] = Math.abs(parseInt(arg.slice(0, -1)));
       }
       else if (acceptedWords.some(word => arg.toLowerCase().startsWith(word)) && args[i - 1].match(/^\d+$/)) {
-        const index = Number(arg.slice(0, 1).toLowerCase() == 'h') + Number(arg.slice(0, 1).toLowerCase() == 'm') * 2 + Number(arg.slice(0, 1).toLowerCase() == 's') * 3;
+        const index = Number(arg.slice(0, 1).toLowerCase() === 'h') + Number(arg.slice(0, 1).toLowerCase() === 'm') * 2 + Number(arg.slice(0, 1).toLowerCase() === 's') * 3;
         timeData[index] = Math.abs(parseInt(timeArgs[i - 1]));
       }
     });
@@ -108,7 +108,7 @@ class Timeout extends Command {
     const UIWords = ['days', 'hours', 'minutes', 'seconds'];
     const UIArray = new Array();
     timeData.forEach((data, i) => {
-      if (data) UIArray.push(`${data} ${data == 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
+      if (data) UIArray.push(`${data} ${data === 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
     });
     const UIString = UIArray.join(', ').replace(/,([^,]*)$/, ' and$1');
 

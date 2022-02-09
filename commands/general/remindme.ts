@@ -17,11 +17,11 @@ class Remindme extends Command {
 
     timeArgs.forEach((arg, i) => {
       if (arg.match(/^\d+[dhm]$/i)) {
-        const index = Number(arg.slice(-1).toLowerCase() == 'h') + Number(arg.slice(-1).toLowerCase() == 'm') * 2;
+        const index = Number(arg.slice(-1).toLowerCase() === 'h') + Number(arg.slice(-1).toLowerCase() === 'm') * 2;
         timeData[index] = Math.abs(parseInt(arg.slice(0, -1)));
       }
       else if (acceptedWords.some(word => arg.toLowerCase().startsWith(word)) && args[i - 1].match(/^\d+$/)) {
-        const index = Number(arg.slice(0, 1).toLowerCase() == 'h') + Number(arg.slice(0, 1).toLowerCase() == 'm') * 2;
+        const index = Number(arg.slice(0, 1).toLowerCase() === 'h') + Number(arg.slice(0, 1).toLowerCase() === 'm') * 2;
         timeData[index] = Math.abs(parseInt(timeArgs[i - 1]));
       }
     });
@@ -39,7 +39,7 @@ class Remindme extends Command {
     const UIWords = ['days', 'hours', 'minutes'];
     const UIArray = new Array();
     timeData.forEach((data, i) => {
-      if (data) UIArray.push(`${data} ${data == 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
+      if (data) UIArray.push(`${data} ${data === 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
     });
     const UIString = UIArray.join(', ').replace(/,([^,]*)$/, ' and$1'); // Replace last ', ' with ' and '
     

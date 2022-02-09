@@ -20,14 +20,14 @@ class Ban extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (member.id == message.author.id) {
+    if (member.id === message.author.id) {
       embed
         .setTitle('You can\'t ban yourself')
         .setFooter({ text: 'Just leave 4Head' });
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (member.id == client.user.id) {
+    if (member.id === client.user.id) {
       embed.setTitle('I can\'t ban myself');
       message.channel.send({ embeds: [embed] });
       return;
