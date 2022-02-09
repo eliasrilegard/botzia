@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import Bot from '../bot/bot';
 import ClientEvent from '../bot/event';
 
 class Ready extends ClientEvent {
@@ -6,7 +6,7 @@ class Ready extends ClientEvent {
     super('ready', true);
   }
 
-  public execute(client: Client) {
+  public execute(client: Bot) {
     console.log(`Ready! Logged in as ${client.user.tag}`);
   }
 }

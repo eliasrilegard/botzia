@@ -7,7 +7,7 @@ class MessageCreate extends ClientEvent {
     super('messageCreate', false);
   }
 
-  public async execute(message: Message, client: Bot): Promise<void> {
+  public async execute(client: Bot, message: Message): Promise<void> {
     // Ignore bots
     if (message.author.bot) return;
 

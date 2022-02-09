@@ -2,6 +2,7 @@ import { readdirSync } from 'fs';
 import { Client, Collection } from 'discord.js';
 import Command from './command';
 import ApiClient from './api';
+import ClientEvent from './event';
 
 interface ClientConfig {
   bot: { // Sort of a tempfix hehe
@@ -42,9 +43,9 @@ class Bot extends Client {
     const eventFiles = readdirSync(this.root.concat('events')).filter(file => file.endsWith('.js'));
     for (const file of eventFiles) {
       const { default: eventClass } = await import(this.root.concat(`events/${file}`));
-      const event = new eventClass();
-      if (event.once) this.once(event.name, (...args) => event.execute(...args, this));
-      else this.on(event.name, (...args) => event.execute(...args, this));
+      const event: ClientEvent = new eventClass();
+      if (event.once) this.once(event.name, (...args) => event.execute(this, ...args));
+      else this.on(event.name, (...args) => event.execute(this, ...args));
     }
   }
 
@@ -54,7 +55,7 @@ class Bot extends Client {
       const commandFiles = readdirSync(this.root.concat(`commands/${folder}`)).filter(file => file.endsWith('.js'));
       for (const file of commandFiles) {
         const { default: commandClass } = await import(this.root.concat(`commands/${folder}/${file}`));
-        const command = new commandClass();
+        const command: Command = new commandClass();
         this.commands.set(command.name, command);
       }
     }
