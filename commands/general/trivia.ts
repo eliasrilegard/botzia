@@ -157,7 +157,7 @@ class Trivia extends Command {
     const token = client.tokens.get('OTDB');
     if (token) {
       let URL = 'https://opentdb.com/api.php?amount=1';
-      if (categoryId != -1) URL += `&category=${categoryId}`;
+      if (categoryId !== -1) URL += `&category=${categoryId}`;
       URL += `&token=${token}`;
 
       const response = await fetch(URL);

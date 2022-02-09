@@ -32,7 +32,7 @@ class UnitConvert extends Command {
       return;
     }
     
-    if (args.length != 3) {
+    if (args.length !== 3) {
       embed
         .setTitle('Invalid arguments')
         .setDescription('This command takes 3 arguments.')
