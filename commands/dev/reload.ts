@@ -12,23 +12,23 @@ class Reload extends Command {
     const commandsDir = client.root.concat('commands');
 
     if (['-b', '--build'].includes(args[0])) {
-      const commandFolder = args[1];
-      const fileName = args[2];
+      if (args.length !== 2) return;
       const embed = new MessageEmbed();
+      const pathToFile = args[1];
       try {
-        const commandClass = require(`${commandsDir}/${commandFolder}/${fileName}.js`).default;
-        const command = new commandClass();
+        const { default: commandClass } = await import(`${commandsDir}/${pathToFile}.js`);
+        const command: Command = new commandClass();
         client.commands.set(command.name, command);
         embed
           .setColor('#00cc00')
           .setTitle('Command added')
-          .setDescription(`Successfully built the command \`commands/${commandFolder}/${fileName}.js\`.`);
+          .setDescription(`Successfully built the command \`commands/${pathToFile}.js\`.`);
       }
       catch (error) {
         embed
           .setColor('#cc0000')
           .setTitle('No such file')
-          .setDescription(`The file \`commands/${commandFolder}/${fileName}.js\` couldn't be located.`)
+          .setDescription(`The file \`commands/${pathToFile}.js\` couldn't be located.`)
           .addField('Error message', error.message);
       }
       message.channel.send({ embeds: [embed] });
@@ -57,8 +57,8 @@ class Reload extends Command {
 
     // Re-require the file
     try {
-      const newCommandClass = require(`${commandsDir}/${folderName}/${command.name}.js`).default;
-      const newCommand = new newCommandClass();
+      const { default: newCommandClass } = await import(`${commandsDir}/${folderName}/${command.name}.js`);
+      const newCommand: Command = new newCommandClass();
       client.commands.set(newCommand.name, newCommand);
 
       const embed = new MessageEmbed()
