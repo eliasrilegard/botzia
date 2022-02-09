@@ -41,7 +41,7 @@ class Remindme extends Command {
     timeData.forEach((data, i) => {
       if (data) UIArray.push(`${data} ${data === 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
     });
-    const UIString = UIArray.join(', ').replace(/,([^,]*)$/, ' and$1'); // Replace last ', ' with ' and '
+    const UIString = UIArray.join(', ').replace(/,(?=[^,]*$)/, ' and'); // Replace last ', ' with ' and '
     
     const embed = new MessageEmbed()
       .setColor('#00cc00')
