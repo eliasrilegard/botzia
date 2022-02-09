@@ -33,22 +33,27 @@ class Bot extends Client {
     this.tokens = new Collection();
 
     this.apiClient = new ApiClient(this.root.slice(0, -5).concat('database'));
-    
-    // Load events
+
+    this.loadEvents();
+    this.loadCommands();
+  }
+
+  private async loadEvents() {
     const eventFiles = readdirSync(this.root.concat('events')).filter(file => file.endsWith('.js'));
     for (const file of eventFiles) {
-      const eventClass = require(this.root.concat(`events/${file}`)).default;
+      const { default: eventClass } = await import(this.root.concat(`events/${file}`));
       const event = new eventClass();
       if (event.once) this.once(event.name, (...args) => event.execute(...args, this));
       else this.on(event.name, (...args) => event.execute(...args, this));
     }
+  }
 
-    // Load commands
+  private async loadCommands() {
     const commandFolders = readdirSync(this.root.concat('commands'));
     for (const folder of commandFolders) {
       const commandFiles = readdirSync(this.root.concat(`commands/${folder}`)).filter(file => file.endsWith('.js'));
       for (const file of commandFiles) {
-        const commandClass = require(this.root.concat(`commands/${folder}/${file}`)).default;
+        const { default: commandClass } = await import(this.root.concat(`commands/${folder}/${file}`));
         const command = new commandClass();
         this.commands.set(command.name, command);
       }
