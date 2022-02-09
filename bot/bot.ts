@@ -1,4 +1,5 @@
-import { readdirSync } from 'fs';
+import { readdir } from 'fs/promises';
+import { resolve } from 'path';
 import { Client, Collection } from 'discord.js';
 import Command from './command';
 import ApiClient from './api';
@@ -40,9 +41,8 @@ class Bot extends Client {
   }
 
   private async loadEvents(): Promise<void> {
-    const eventFiles = readdirSync(this.root.concat('events')).filter(file => file.endsWith('.js'));
-    for (const file of eventFiles) {
-      const { default: eventClass } = await import(this.root.concat(`events/${file}`));
+    for await (const file of this.getFiles(this.root.concat('events'))) {
+      const { default: eventClass } = await import(file);
       const event: ClientEvent = new eventClass();
       if (event.once) this.once(event.name, (...args) => event.execute(this, ...args));
       else this.on(event.name, (...args) => event.execute(this, ...args));
@@ -50,14 +50,20 @@ class Bot extends Client {
   }
 
   private async loadCommands(): Promise<void> {
-    const commandFolders = readdirSync(this.root.concat('commands'));
-    for (const folder of commandFolders) {
-      const commandFiles = readdirSync(this.root.concat(`commands/${folder}`)).filter(file => file.endsWith('.js'));
-      for (const file of commandFiles) {
-        const { default: commandClass } = await import(this.root.concat(`commands/${folder}/${file}`));
-        const command: Command = new commandClass();
-        this.commands.set(command.name, command);
-      }
+    for await (const file of this.getFiles(this.root.concat('commands'))) {
+      const { default: commandClass } = await import(file);
+      const command: Command = new commandClass();
+      this.commands.set(command.name, command);
+    }
+  }
+
+  // Generator method to recursively get all files within a directory
+  private async *getFiles(rootPath: string): AsyncGenerator<string> {
+    const fileNames = await readdir(rootPath, { withFileTypes: true });
+    for (const fileName of fileNames) {
+      const path = resolve(rootPath, fileName.name);
+      if (fileName.isDirectory()) yield* this.getFiles(path);
+      else yield path;
     }
   }
 
