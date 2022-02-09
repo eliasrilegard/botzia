@@ -38,7 +38,7 @@ class Bot extends Client {
     this.loadCommands();
   }
 
-  private async loadEvents() {
+  private async loadEvents(): Promise<void> {
     const eventFiles = readdirSync(this.root.concat('events')).filter(file => file.endsWith('.js'));
     for (const file of eventFiles) {
       const { default: eventClass } = await import(this.root.concat(`events/${file}`));
@@ -48,7 +48,7 @@ class Bot extends Client {
     }
   }
 
-  private async loadCommands() {
+  private async loadCommands(): Promise<void> {
     const commandFolders = readdirSync(this.root.concat('commands'));
     for (const folder of commandFolders) {
       const commandFiles = readdirSync(this.root.concat(`commands/${folder}`)).filter(file => file.endsWith('.js'));
