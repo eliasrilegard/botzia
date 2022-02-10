@@ -28,6 +28,7 @@
 		"curly": ["error", "multi-line"],
 		"dot-location": ["error", "property"],
 		"eqeqeq": ["error", "smart"],
+		"generator-star-spacing": ["error", "after"],
 		"indent": ["error", 2, { "SwitchCase" : 1 }],
 		"keyword-spacing": "error",
 		"max-nested-callbacks": ["error", { "max": 4 }],

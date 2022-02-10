@@ -58,7 +58,7 @@ class Bot extends Client {
   }
 
   // Generator method to recursively get all files within a directory
-  private async *getFiles(rootPath: string): AsyncGenerator<string> {
+  private async* getFiles(rootPath: string): AsyncGenerator<string> {
     const fileNames = await readdir(rootPath, { withFileTypes: true });
     for (const fileName of fileNames) {
       const path = resolve(rootPath, fileName.name);
