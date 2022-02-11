@@ -6,7 +6,7 @@ class Res extends Command {
     super('res', 'Calculate the number of upgrades required up max the resists of ult items.', '[res 1] [res 2] [res 3] [res 4]', { devOnly: true });
   }
 
-  public execute(message: Message, args: Array<string>): void {
+  public async execute(message: Message, args: Array<string>): Promise<void> {
     const resists = [...args].map(str => parseInt(str)).sort((a, b) => b - a);
     if (resists.length < 1 || resists.length > 4 || resists.some(res => Number.isNaN(res))) {
       const embed = new MessageEmbed()
