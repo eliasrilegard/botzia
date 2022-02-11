@@ -1,57 +1,94 @@
-import { Message } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import Bot from './bot';
+import PageHandler from './pageHandler';
 
-interface ClientOptions {
-  args?: boolean;
-  devOnly?: boolean;
+interface CommandOptions {
   aliases?: Array<string>;
-  permissions?: string;
-  guildOnly?: boolean;
+  args?: boolean;
+  belongsTo?: string;
+  category?: boolean;
   cooldown?: number;
+  devOnly?: boolean;
+  guildOnly?: boolean;
+  permissions?: string;
 }
 
-const defaultOptions: ClientOptions = {
-  args: true,
-  devOnly: false,
+const defaultOptions: CommandOptions = {
   aliases: new Array(),
-  permissions: '',
+  args: true,
+  belongsTo: undefined,
+  category: false,
+  cooldown: 3000,
+  devOnly: false,
   guildOnly: false,
-  cooldown: 3000
+  permissions: ''
 };
 
 class Command {
   public name: string;
   public description: string;
   public usage: string;
-  public args: boolean;
-  public devOnly: boolean;
+
   public aliases: Array<string>;
-  public permissions: string;
-  public guildOnly: boolean;
+  public args: boolean;
+  public belongsTo: string;
+  public category: boolean;
   public cooldown: number;
   public cooldowns: Map<string, number>;
+  public devOnly: boolean;
+  public guildOnly: boolean;
+  public permissions: string;
 
-  protected constructor(name: string, description: string, usage: string, customOptions?: ClientOptions) {
+  protected constructor(name: string, description: string, usage: string, customOptions?: CommandOptions) {
     const options = { ...defaultOptions, ...customOptions };
     this.name = name;
     this.description = description;
     this.usage = usage;
-    this.args = options.args;
-    this.devOnly = options.devOnly;
+
     this.aliases = options.aliases;
-    this.permissions = options.permissions;
-    this.guildOnly = options.guildOnly;
+    this.args = options.args;
+    this.belongsTo = options.belongsTo;
+    this.category = options.category;
     this.cooldown = options.cooldown;
     this.cooldowns = new Map();
+    this.devOnly = options.devOnly;
+    this.guildOnly = options.guildOnly;
+    this.permissions = options.permissions;
+  }
+
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+    if (!this.category) return; // This should never happen but I'm gonna check it anyways
+
+    const subCommand = args[0];
+    args = args.slice(1, args.length);
+
+    const command = client.categories.get(this.name).find(cmd => cmd.name === subCommand || cmd.aliases.includes(subCommand));
+
+    if (!command) {
+      const embed = new MessageEmbed()
+        .setColor('#cc0000')
+        .setTitle('Subcommand not found');
+      message.channel.send({ embeds: [embed] });
+      return;
+    }
+
+    if (!(await client.preRunCheck(message, args, command))) return;
+
+    try {
+      command.execute(message, args, client);
+    }
+    catch (error) {
+      console.log(`The following error was caused by ${message.author.tag}:`);
+      console.log(error);
+    }
   }
 
   public howTo(prefix: string, codeblock = false): string {
     return `${codeblock ? '\`' : ''}${prefix}${this.name} ${this.usage}${codeblock ? '\`' : ''}`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public execute(message: Message, args: Array<string>, client: Bot): void {
-    throw new Error('Method not implemented.');
+  protected sendMenu(message: Message, pages: Array<MessageEmbed>): PageHandler {
+    return new PageHandler(message, pages, undefined, true);
   }
 }
 
