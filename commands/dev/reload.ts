@@ -1,5 +1,4 @@
 import { Message, MessageEmbed } from 'discord.js';
-import { readdirSync } from 'fs';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -38,33 +37,42 @@ class Reload extends Command {
     // Get command name or alias
     const commandName = args[0].toLowerCase();
     const command = client.commands.get(commandName) ||
-      client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+      client.commands.find(cmd => cmd.aliases.includes(commandName));
 
-    if (!command) {
-      const embed = new MessageEmbed()
-        .setColor('#cc0000')
-        .setTitle('Comand not found')
-        .setDescription(`There is no command with name or alias \`${commandName}\`.`);
-      message.channel.send({ embeds: [embed] });
-      return;
+    if (!command) return this.notFound(message, commandName, false);
+
+    const files = new Array<string>();
+    for await (const file of client.getFiles(commandsDir)) files.push(file);
+
+    // This might need to be > 1 if we're allowing sub-subcommands
+    const isReloadingSubcommand = command.category && args.length === 2;
+
+    let subCommand: Command;
+    let pathToFile: string;
+    if (isReloadingSubcommand) {
+      // If we're reloading a subcommand we're gonna have to do everything pretty much once again
+      const subCommandName = args[1];
+      const subCommands = client.categories.get(command.name);
+      subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
+      if (!subCommand) return this.notFound(message, subCommandName, true);
+      pathToFile = files.filter(file => file.endsWith(`${command.name}/${subCommand.name}.js`))[0];
     }
-
-    const commandFolders = readdirSync(commandsDir);
-    const folderName = commandFolders.find(folder => readdirSync(`${commandsDir}/${folder}`).includes(`${command.name}.js`));
+    else pathToFile = files.filter(file => file.endsWith(`${command.name}.js`))[0];
 
     // Delete
-    delete require.cache[require.resolve(`${commandsDir}/${folderName}/${command.name}.js`)];
+    delete require.cache[require.resolve(pathToFile)];
 
-    // Re-require the file
+    // Re-import the file
     try {
-      const { default: newCommandClass } = await import(`${commandsDir}/${folderName}/${command.name}.js`);
+      const { default: newCommandClass } = await import(pathToFile);
       const newCommand: Command = new newCommandClass();
-      client.commands.set(newCommand.name, newCommand);
+      if (command.category) client.categories.get(command.name).set(newCommand.name, newCommand);
+      else client.commands.set(newCommand.name, newCommand);
 
       const embed = new MessageEmbed()
         .setColor('#00cc00')
         .setTitle('Command reloaded')
-        .setDescription(`Command \`${command.name}\` was reloaded.`);
+        .setDescription(`Command \`${isReloadingSubcommand ? subCommand.name : command.name}\` was reloaded.`);
       message.channel.send({ embeds: [embed] });
     }
     catch (error) {
@@ -72,10 +80,18 @@ class Reload extends Command {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('Error')
-        .setDescription(`Command \`${command.name}\` could not be reloaded.`)
+        .setDescription(`Command \`${isReloadingSubcommand ? subCommand.name : command.name}\` could not be reloaded.`)
         .addField('Error message:', `\`${error.message}\``);
       message.channel.send({ embeds: [embed] });
     }
+  }
+
+  private notFound(message: Message, name: string, isSubCommand: boolean): void {
+    const embed = new MessageEmbed()
+      .setColor('#cc0000')
+      .setTitle('Command not found')
+      .setDescription(`There is no ${isSubCommand ? 'sub' : ''}command with name or alias \`${name}\`.`);
+    message.channel.send({ embeds: [embed] });
   }
 }
 
