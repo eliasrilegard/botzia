@@ -10,6 +10,17 @@ interface IMonsterInfo {
   details: IMonsterDetails;
 }
 
+interface IHzv {
+  slash: string;
+  blunt: string;
+  shot: string;
+  fire: string;
+  water: string;
+  thunder: string;
+  ice: string;
+  dragon: string;
+}
+
 interface IMonsterDetails {
   aliases: Array<string>;
   title: string;
@@ -21,27 +32,20 @@ interface IMonsterDetails {
   locations: Array<{
     name: string;
     color: string;
+    icon?: string;
+    tempered?: boolean;
   }>;
   info: string;
-  hzv: {
-    slash: string;
-    blunt: string;
-    shot: string;
-    fire: string;
-    water: string;
-    thunder: string;
-    ice: string;
-    dragon: string;
-  };
+  hzv: IHzv;
+  hzv_hr?: IHzv;
   species: string;
   useful_info: string;
   resistances: Array<string>;
   weakness: Array<string>;
-  hzv_name: string;
   hzv_filepath: string;
-  icon_name: string;
+  hzv_filepath_hr?: string;
   icon_filepath: string;
-  threat_level: string;
+  threat_level?: string;
 }
 
 class Hzv extends Command {
@@ -56,6 +60,9 @@ class Hzv extends Command {
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     let input = args.join('').toLowerCase();
 
+    const isHR = input.startsWith('hr');
+    if (isHR) input = input.slice(2);
+
     if (this.monsters == null) {
       message.channel.send('data unavalible');
       return;
@@ -69,37 +76,47 @@ class Hzv extends Command {
     }
 
     if (this.monsters.has(input)) {
-      const [embed, imageStream] = await this.monsterEmbed(input);
+      const monster = this.monsters.get(input);
+      if (isHR && !('hzv_filepath_hr' in monster)) return this.notFound(message, client);
+
+      const [embed, imageStream] = await this.monsterEmbed(monster, isHR);
       message.channel.send({ embeds: [embed], files: [...imageStream] });
     }
-    else if (!this.monsters.has(input)) {
-      const msg = `That monster doesn't seem to exist! Check out \`${await client.prefix(message)}mhw list\` for the full list.`;
-      message.channel.send(msg);
-    }
+    else if (!this.monsters.has(input)) return this.notFound(message, client);
   }
 
-  private async monsterEmbed(name: string): Promise<[MessageEmbed, Array<string>]> {
-    const monster = this.monsters.get(name);
+  private async monsterEmbed(monster: IMonsterDetails, isHR: boolean): Promise<[MessageEmbed, Array<string>]> {
+    const hzvFilePath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
+    const hzv = isHR ? monster.hzv_hr : monster.hzv;
+
+    const hzvName = hzvFilePath.slice(hzvFilePath.lastIndexOf('/') + 1);
+    const iconName = monster.icon_filepath.slice(monster.icon_filepath.lastIndexOf('/') + 1);
 
     const title = `__**${monster.title}**__${monster.threat_level ? `  ${monster.threat_level}` : ''}`;
 
     const attachURL = (fileName: string) => `attachment://${fileName}`;
-
+    
     const embed = new MessageEmbed()
       .setColor('#8fde5d')
       .setTitle(title)
-      .setThumbnail(attachURL(monster.icon_name))
-      .setImage(attachURL(monster.hzv_name))
+      .setThumbnail(attachURL(iconName))
+      .setImage(attachURL(hzvName))
       .addField('Classification', monster.species)
       .addField('Characteristics', monster.description)
       .addField(
-        `Slash: **${monster.hzv.slash}** Blunt: **${monster.hzv.blunt}** Shot: **${monster.hzv.shot}**`,
-        `🔥 **${monster.hzv.fire}** 💧 **${monster.hzv.water}** ⚡ **${monster.hzv.thunder}** ❄ **${monster.hzv.ice}** 🐉 **${monster.hzv.dragon}**`
-      )
-      .setTimestamp()
-      .setFooter({ text: monster.title });
+        `Slash: **${hzv.slash}** Blunt: **${hzv.blunt}** Shot: **${hzv.shot}**`,
+        `🔥 **${hzv.fire}** 💧 **${hzv.water}** ⚡ **${hzv.thunder}** ❄ **${hzv.ice}** 🐉 **${hzv.dragon}**`
+      );
+    
+    return [embed, [monster.icon_filepath, hzvFilePath]];
+  }
 
-    return [embed, [monster.icon_filepath, monster.hzv_filepath]];
+  private async notFound(message: Message, client: Bot): Promise<void> {
+    const embed = new MessageEmbed()
+      .setColor('#cc0000')
+      .setTitle('Monster not found')
+      .setDescription(`That monster doesn't seem to exist!\nCheck out \`${await client.prefix(message)}mhw list\` for the full list.`);
+    message.channel.send({ embeds: [embed] });
   }
 }
 
