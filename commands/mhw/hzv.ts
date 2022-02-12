@@ -5,12 +5,12 @@ import Utils from '../../bot/utils';
 
 import * as monsterData from '../../database/monster_hunter/monster_data/mhw_monster_data.json';
 
-interface IMonsterInfo {
+interface MonsterInfo {
   name: string;
-  details: IMonsterDetails;
+  details: MonsterDetails;
 }
 
-interface IHzv {
+interface HzvSummary {
   slash: string;
   blunt: string;
   shot: string;
@@ -21,7 +21,7 @@ interface IHzv {
   dragon: string;
 }
 
-interface IMonsterDetails {
+interface MonsterDetails {
   aliases: Array<string>;
   title: string;
   url: string;
@@ -36,8 +36,8 @@ interface IMonsterDetails {
     tempered?: boolean;
   }>;
   info: string;
-  hzv: IHzv;
-  hzv_hr?: IHzv;
+  hzv: HzvSummary;
+  hzv_hr?: HzvSummary;
   species: string;
   useful_info: string;
   resistances: Array<string>;
@@ -49,12 +49,12 @@ interface IMonsterDetails {
 }
 
 class Hzv extends Command {
-  private monsters: Map<string, IMonsterDetails>;
+  private monsters: Map<string, MonsterDetails>;
 
   public constructor() {
     super('hzv', 'Gets the HZV of a specified monster [WIP]', '[monster name]', { belongsTo: 'mhw' });
     this.monsters = new Map();
-    for (const [, v] of Utils.getDataAsMap(monsterData) as Map<string, IMonsterInfo>) this.monsters.set(v.name, v.details);
+    for (const [, v] of Utils.getDataAsMap(monsterData) as Map<string, MonsterInfo>) this.monsters.set(v.name, v.details);
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
@@ -85,7 +85,7 @@ class Hzv extends Command {
     else if (!this.monsters.has(input)) return this.notFound(message, client);
   }
 
-  private async monsterEmbed(monster: IMonsterDetails, isHR: boolean): Promise<[MessageEmbed, Array<string>]> {
+  private async monsterEmbed(monster: MonsterDetails, isHR: boolean): Promise<[MessageEmbed, Array<string>]> {
     const hzvFilePath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
     const hzv = isHR ? monster.hzv_hr : monster.hzv;
 
