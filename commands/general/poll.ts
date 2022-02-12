@@ -1,6 +1,7 @@
 import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
+import Utils from '../../bot/utils';
 
 class Poll extends Command {
   public constructor() {
@@ -23,7 +24,7 @@ class Poll extends Command {
 
     const allEmotes = ['🍎', '🍓', '🍐', '🍒', '🍇', '🥕', '🍊', '🍉', '🍋', '🍌', '🥥', '🥑', '🥦', '🌶️', '🌽', '🥝', '🧄', '🍍', '🥬', '<:kekw:743962015411732510>'];
 
-    const emotes = this.shuffle(allEmotes).slice(0, pollOptions.length);
+    const emotes = (Utils.shuffle(allEmotes) as Array<string>).slice(0, pollOptions.length);
 
     let choicesString = '';
     pollOptions.forEach((option, index) => choicesString += `${emotes[index]} - ${option}\n`);
@@ -38,16 +39,6 @@ class Poll extends Command {
     
     const pollMessage = await message.channel.send({ embeds: [embed] });
     emotes.forEach(emote => pollMessage.react(emote));
-  }
-
-  private shuffle(array: Array<string>): Array<string> {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-    return array;
   }
 }
 

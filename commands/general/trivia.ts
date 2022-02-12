@@ -2,6 +2,7 @@ import { Message, MessageEmbed, MessageReaction, User } from 'discord.js';
 import fetch from 'node-fetch';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
+import Utils from '../../bot/utils';
 
 interface TriviaCategory {
   id: number;
@@ -70,15 +71,15 @@ class Trivia extends Command {
       return;
     }
 
-    const description = `${data.difficulty === 'easy' ? 'An' : 'A'} ${this.capitalize(data.difficulty)} one from the category ${data.category}.`;
+    const description = `${data.difficulty === 'easy' ? 'An' : 'A'} ${Utils.capitalize(data.difficulty)} one from the category ${data.category}.`;
     
     let allAnswers = new Array();
     allAnswers.push(data.correct_answer);
     data.incorrect_answers.forEach((entry: string) => allAnswers.push(entry));
-    allAnswers = allAnswers.length === 2 ? allAnswers.sort().reverse() : this.shuffle(allAnswers); // Sort if true/false, shuffle otherwise
+    allAnswers = allAnswers.length === 2 ? allAnswers.sort().reverse() : Utils.shuffle(allAnswers) as Array<string>; // Sort if true/false, shuffle otherwise
 
     const allEmotes = ['🍎', '🍓', '🍐', '🍒', '🍇', '🥕', '🍊', '🍉', '🍋', '🍌', '🥥', '🥑', '🥦', '🌶️', '🌽', '🥝', '🧄', '🍍', '🥬'];
-    const emotes = this.shuffle(allEmotes).slice(0, allAnswers.length);
+    const emotes = (Utils.shuffle(allEmotes) as Array<string>).slice(0, allAnswers.length);
 
     const correctEmote = emotes[allAnswers.indexOf(data.correct_answer)];
 
@@ -235,20 +236,6 @@ class Trivia extends Command {
     const response = await fetch('https://opentdb.com/api_category.php');
     const data: ResponseData = await response.json();
     return data.trivia_categories;
-  }
-
-  private shuffle(array: Array<string>): Array<string> {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-    return array;
-  }
-
-  private capitalize(str: string): string {
-    return typeof str === 'string' ? str.charAt(0).toUpperCase() + str.slice(1) : '';
   }
 
   private cleanup(str: string): string {  

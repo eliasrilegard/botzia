@@ -1,6 +1,7 @@
-import { GuildMember, Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
+import Utils from '../../bot/utils';
 
 class Ban extends Command {
   public constructor() {
@@ -39,14 +40,14 @@ class Ban extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (this.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
+    if (Utils.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
       embed
         .setTitle('Can\'t ban member')
         .setDescription('You can\'t ban someone equal to or above you');
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (this.permHierarchy(member, message.guild.members.resolve(client.user))) {
+    if (Utils.permHierarchy(member, message.guild.members.resolve(client.user))) {
       embed
         .setTitle('Can\'t ban member')
         .setDescription('Specified user is above my highest role.');
@@ -68,11 +69,6 @@ class Ban extends Command {
       .setTitle('Success')
       .setDescription(`Successfully banned <@${member.user.id}>${reason.length > 0 ? `for ${reason}` : ''}.`);
     message.channel.send({ embeds: [embed] });
-  }
-
-  private permHierarchy(memberHigh: GuildMember, memberLow: GuildMember): boolean {
-    // Returns true if memberHigh is higher or equal to memberLow in the role hierarchy
-    return memberLow.roles.highest.comparePositionTo(memberHigh.roles.highest) < 1;
   }
 }
 

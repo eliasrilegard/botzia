@@ -1,6 +1,7 @@
-import { GuildMember, Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
+import Utils from '../../bot/utils';
 
 class Timeout extends Command {
   public constructor() {
@@ -41,14 +42,14 @@ class Timeout extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (this.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
+    if (Utils.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
       embed
         .setTitle('Can\'t timeout member')
         .setDescription('You can\'t timeout someone equal to or above you');
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (this.permHierarchy(member, message.guild.members.resolve(client.user))) {
+    if (Utils.permHierarchy(member, message.guild.members.resolve(client.user))) {
       embed
         .setTitle('Can\'t timeout member')
         .setDescription('Specified user is above my highest role.');
@@ -119,10 +120,6 @@ class Timeout extends Command {
 
     if (reasonMessage.length) embed.addField('Reason', reasonMessage);
     message.channel.send({ embeds: [embed] });
-  }
-
-  private permHierarchy(memberHigh: GuildMember, memberLow: GuildMember): boolean {
-    return memberLow.roles.highest.comparePositionTo(memberHigh.roles.highest) < 1;
   }
 
   private helpMessage(prefix: string): MessageEmbed {
