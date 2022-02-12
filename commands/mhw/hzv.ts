@@ -1,60 +1,10 @@
 import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
-import Utils from '../../bot/utils';
-
-import * as monsterData from '../../database/monster_hunter/monster_data/mhw_monster_data.json';
-
-interface MonsterInfo {
-  name: string;
-  details: MonsterDetails;
-}
-
-interface HzvSummary {
-  slash: string;
-  blunt: string;
-  shot: string;
-  fire: string;
-  water: string;
-  thunder: string;
-  ice: string;
-  dragon: string;
-}
-
-interface MonsterDetails {
-  aliases: Array<string>;
-  title: string;
-  url: string;
-  description: string;
-  thumbnail: string;
-  elements: Array<string>;
-  ailments: Array<string>;
-  locations: Array<{
-    name: string;
-    color: string;
-    icon?: string;
-    tempered?: boolean;
-  }>;
-  info: string;
-  hzv: HzvSummary;
-  hzv_hr?: HzvSummary;
-  species: string;
-  useful_info: string;
-  resistances: Array<string>;
-  weakness: Array<string>;
-  hzv_filepath: string;
-  hzv_filepath_hr?: string;
-  icon_filepath: string;
-  threat_level?: string;
-}
 
 class Hzv extends Command {
-  private monsters: Map<string, MonsterDetails>;
-
   public constructor() {
     super('hzv', 'Gets the HZV of a specified monster [WIP]', '[monster name]', { belongsTo: 'mhw' });
-    this.monsters = new Map();
-    for (const [, v] of Utils.getDataAsMap(monsterData) as Map<string, MonsterInfo>) this.monsters.set(v.name, v.details);
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
@@ -63,29 +13,30 @@ class Hzv extends Command {
     const isHR = input.startsWith('hr');
     if (isHR) input = input.slice(2);
 
-    if (this.monsters == null) {
-      message.channel.send('data unavalible');
+    if (client.mhwMonsters == null) {
+      message.channel.send('data unavalible'); // TODO Make this prettier
       return;
     }
 
-    for (const [name, monster] of this.monsters.entries()) {
+    for (const [name, monster] of client.mhwMonsters.entries()) {
       if (monster.aliases && monster.aliases.includes(input) && input.length > 0) {
         input = name;
         break;
       }
     }
 
-    if (this.monsters.has(input)) {
-      const monster = this.monsters.get(input);
+    if (client.mhwMonsters.has(input)) {
+      const monster = client.mhwMonsters.get(input);
       if (isHR && !('hzv_filepath_hr' in monster)) return this.notFound(message, client);
 
-      const [embed, imageStream] = await this.monsterEmbed(monster, isHR);
+      const [embed, imageStream] = await this.monsterEmbed(client, input, isHR);
       message.channel.send({ embeds: [embed], files: [...imageStream] });
     }
-    else if (!this.monsters.has(input)) return this.notFound(message, client);
+    else if (!client.mhwMonsters.has(input)) return this.notFound(message, client);
   }
 
-  private async monsterEmbed(monster: MonsterDetails, isHR: boolean): Promise<[MessageEmbed, Array<string>]> {
+  private async monsterEmbed(client: Bot, name: string, isHR: boolean): Promise<[MessageEmbed, Array<string>]> {
+    const monster = client.mhwMonsters.get(name);
     const hzvFilePath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
     const hzv = isHR ? monster.hzv_hr : monster.hzv;
 

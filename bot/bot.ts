@@ -4,6 +4,52 @@ import { resolve } from 'path';
 import ApiClient from './api';
 import Command from './command';
 import ClientEvent from './event';
+import Utils from './utils';
+
+import * as monsterData from '../database/monster_hunter/monster_data/mhw_monster_data.json';
+
+interface HzvSummary {
+  slash: string;
+  blunt: string;
+  shot: string;
+  fire: string;
+  water: string;
+  thunder: string;
+  ice: string;
+  dragon: string;
+}
+
+interface MonsterDetails {
+  aliases: Array<string>;
+  title: string;
+  url: string;
+  description: string;
+  thumbnail: string;
+  elements: Array<string>;
+  ailments: Array<string>;
+  locations: Array<{
+    name: string;
+    color: string;
+    icon?: string;
+    tempered?: boolean;
+  }>;
+  info: string;
+  hzv: HzvSummary;
+  hzv_hr?: HzvSummary;
+  species: string;
+  useful_info: string;
+  resistances: Array<string>;
+  weakness: Array<string>;
+  hzv_filepath: string;
+  hzv_filepath_hr?: string;
+  icon_filepath: string;
+  threat_level?: string;
+}
+
+interface MonsterInfo {
+  name: string;
+  details: MonsterDetails;
+}
 
 interface ClientConfig {
   bot: {
@@ -24,6 +70,8 @@ class Bot extends Client {
   public tokens: Collection<string, string>;
   public apiClient: ApiClient;
 
+  public mhwMonsters: Map<string, MonsterDetails>;
+
   public constructor(dirname: string, config: ClientConfig) {
     super({
       intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INVITES', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS'],
@@ -37,6 +85,9 @@ class Bot extends Client {
     this.tokens = new Collection();
 
     this.apiClient = new ApiClient(this.root.slice(0, -5).concat('database'));
+
+    this.mhwMonsters = new Map();
+    for (const [, v] of Utils.getDataAsMap(monsterData) as Map<string, MonsterInfo>) this.mhwMonsters.set(v.name, v.details);
 
     this.loadEvents();
     this.loadCommands();
