@@ -7,9 +7,14 @@ class List extends Command {
     super('list', 'List all monsters in Monster Hunter World & Iceborne', '', { args: false, belongsTo: 'mhw' });
   }
 
-  public async execute(message: Message<boolean>, args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message<boolean>, _args: string[], client: Bot): Promise<void> {
     if (client.mhwMonsters == null) {
-      message.channel.send('data unavalible'); // TODO Make this prettier
+      const embed = new MessageEmbed()
+        .setColor('#cc0000')
+        .setTitle('Monster data unavalible')
+        .setDescription('Could not access monster data at this time.')
+        .setFooter({ text: `If this issue persists please contact ${client.config.users.chrono_tag}` });
+      message.channel.send({ embeds: [embed] });
       return;
     }
 
