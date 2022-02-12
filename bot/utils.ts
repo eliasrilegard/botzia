@@ -7,6 +7,10 @@ class Utils {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  public static getDataAsMap(data: unknown): Map<string, unknown> {
+    return new Map(Object.entries(data));
+  }
+
   public static permHierarchy(memberHigh: GuildMember, memberLow: GuildMember): boolean {
     // Returns true if memberHigh is higher or equal to memberLow in the role hierarchy
     return memberLow.roles.highest.comparePositionTo(memberHigh.roles.highest) < 1;
