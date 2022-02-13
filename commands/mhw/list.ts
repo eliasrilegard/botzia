@@ -20,27 +20,19 @@ class List extends Command {
 
     const monsterNames = [...client.mhwMonsters.values()].map(monster => monster.title).sort((a, b) => a.localeCompare(b));
     const monstersPerPage = 20;
-    const embeds = new Array<MessageEmbed>();
 
-    const makePage = (names: Array<string>) => {
-      if (!names.length) return;
-      const page = new MessageEmbed()
-        .setColor('#8fde5d')
-        .addField('Monsters list', names.join('\n'));
-
-      embeds.push(page);
-    };
-
-    let data = new Array<string>();
-    for (let i = 0; i < monsterNames.length; i++) {
-      if (i % monstersPerPage === 0) {
-        makePage(data);
-        data = new Array();
-      }
-      data.push(monsterNames[i]);
-    }
-
-    if (data.length) makePage(data);
+    const embeds = monsterNames
+      .reduce((result, name, index) => { // Split array into even chunks
+        const chunkIndex = Math.floor(index / monstersPerPage);
+        if (!result[chunkIndex]) result[chunkIndex] = new Array<string>();
+        result[chunkIndex].push(name);
+        return result;
+      }, new Array<Array<string>>())
+      .map((chunk: Array<string>) => { // Map each chunk to an embed message
+        return new MessageEmbed()
+          .setColor('#8fde5d')
+          .addField('Monsters list', chunk.join('\n'));
+      });
 
     this.sendMenu(message, embeds);
   }
