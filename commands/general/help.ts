@@ -15,11 +15,13 @@ class Help extends Command {
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const prefix = await client.prefix(message);
 
+    // No args - display interactive page to view all commands
     if (args.length === 0) {
       const categories = new Array<[Command, Collection<string, Command>]>();
       const categoryNames = [...client.categories.keys()];
       categoryNames.forEach(name => categories.push([client.commands.get(name), client.categories.get(name)]));
       
+      // Pages dedicated to individual categories
       const categoryEmbeds = categories.map(category => {
         const subCommands = [...category[1].entries()].map(commandEntry =>
           `**${prefix}${category[0].name} ${commandEntry[0]}** - ${commandEntry[1].description}`
@@ -33,6 +35,7 @@ class Help extends Command {
         return embed;
       });
       
+      // Build main page
       const categoriesOverview = categories.map(category => `**${prefix}${category[0].name}** - ${category[0].description}`).join('\n');
       const standaloneCommands = client.commands
         .filter(command => !command.category && !command.devOnly)
@@ -49,12 +52,13 @@ class Help extends Command {
       return;
     }
 
-    // Command has been specified
+    // Args present - command has been specified
     const commandName = args[0].toLowerCase();
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     
     if (!command) return this.notFound(message, commandName, false);
 
+    // We're looking for a subcommand if another command is specified after the first one
     const subCommandSpecified = command.category && args.length === 2;
     let subCommand: Command;
     if (subCommandSpecified) {
@@ -64,6 +68,7 @@ class Help extends Command {
       if (!subCommand) return this.notFound(message, subCommandName, true);
     }
 
+    // Build data
     const name = (subCommandSpecified ? subCommand : command).name;
     const aliases = (subCommandSpecified ? subCommand : command).aliases.join(', ');
     const commandUsage = (
