@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Collection, Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -15,9 +15,11 @@ class Reload extends Command {
       const embed = new MessageEmbed();
       const pathToFile = args[1];
       try {
-        const { default: commandClass } = await import(`${commandsDir}/${pathToFile}.js`);
-        const command: Command = new commandClass();
-        client.commands.set(command.name, command);
+        const { default: CommandClass } = await import(`${commandsDir}/${pathToFile}.js`);
+        const command: Command = new CommandClass();
+        if (command.category) client.categories.set(command.name, new Collection());
+        if (command.belongsTo) client.categories.get(command.belongsTo).set(command.name, command);
+        else client.commands.set(command.name, command);
         embed
           .setColor('#00cc00')
           .setTitle('Command added')
@@ -64,8 +66,8 @@ class Reload extends Command {
 
     // Re-import the file
     try {
-      const { default: newCommandClass } = await import(pathToFile);
-      const newCommand: Command = new newCommandClass();
+      const { default: CommandClass } = await import(pathToFile);
+      const newCommand: Command = new CommandClass();
       if (command.category) client.categories.get(command.name).set(newCommand.name, newCommand);
       else client.commands.set(newCommand.name, newCommand);
 

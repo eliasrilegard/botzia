@@ -95,8 +95,8 @@ class Bot extends Client {
 
   private async loadEvents(): Promise<void> {
     for await (const file of this.getFiles(this.root.concat('events'))) {
-      const { default: eventClass } = await import(file);
-      const event: ClientEvent = new eventClass();
+      const { default: EventClass } = await import(file);
+      const event: ClientEvent = new EventClass();
       if (event.once) this.once(event.name, (...args) => event.execute(this, ...args));
       else this.on(event.name, (...args) => event.execute(this, ...args));
     }
@@ -104,8 +104,8 @@ class Bot extends Client {
 
   private async loadCommands(): Promise<void> {
     for await (const file of this.getFiles(this.root.concat('commands'))) {
-      const { default: commandClass } = await import(file);
-      const command: Command = new commandClass();
+      const { default: CommandClass } = await import(file);
+      const command: Command = new CommandClass();
       if (command.category) this.categories.set(command.name, new Collection());
       if (command.belongsTo) this.categories.get(command.belongsTo).set(command.name, command);
       else this.commands.set(command.name, command);
