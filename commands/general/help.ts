@@ -7,7 +7,7 @@ class Help extends Command {
     super(
       'help',
       'List all commands or get info on a specific command',
-      ['(command)'],
+      ['(command) (subcommand)'],
       { args: false, aliases: ['commands'] }
     );
   }
@@ -53,28 +53,45 @@ class Help extends Command {
     const commandName = args[0].toLowerCase();
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     
-    const embed = new MessageEmbed();
+    if (!command) return this.notFound(message, commandName, false);
 
-    if (!command) {
-      embed
-        .setColor('#cc0000')
-        .setTitle('No such command')
-        .setDescription(`\`${commandName}\` is not a valid command.`);
-      message.channel.send({ embeds: [embed] });
-      return;
+    const subCommandSpecified = command.category && args.length === 2;
+    let subCommand: Command;
+    if (subCommandSpecified) {
+      const subCommandName = args[1].toLowerCase();
+      const subCommands = client.categories.get(command.name);
+      subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
+      if (!subCommand) return this.notFound(message, subCommandName, true);
     }
 
-    embed.setColor('#0066cc').setTitle(`Command: ${command.name}`);
+    const name = (subCommandSpecified ? subCommand : command).name;
+    const aliases = (subCommandSpecified ? subCommand : command).aliases.join(', ');
+    const commandUsage = (
+      subCommandSpecified ?
+        subCommand.usages.map(usage => `${prefix}${command.name} ${subCommand.name} ${usage}`) :
+        command.usages.map(usage => `${prefix}${command.name} ${usage}`)
+    ).join('\n').trim();
+    const description = (subCommandSpecified ? subCommand : command).description + '\n\u200b';
 
-    const commandUsage = command.usages.map(usage => `${prefix}${command.name} ${usage}`).join('\n').trim();
+    const embed = new MessageEmbed()
+      .setColor('#0066cc')
+      .setTitle(`Command: ${name}`);
 
-    if (command.aliases.length) embed.addField('Aliases', command.aliases.join(', '));
+    if (aliases.length) embed.addField('Aliases', aliases);
     embed.addFields([
       { name: 'Usage', value: commandUsage },
-      { name: 'Description', value: command.description + '\n\u200b' },
+      { name: 'Description', value: description },
       { name: 'Syntax', value: '[parameter] - Mandatory\n(parameter) - Optional' }
     ]);
 
+    message.channel.send({ embeds: [embed] });
+  }
+
+  private notFound(message: Message, name: string, isSubCommand: boolean): void {
+    const embed = new MessageEmbed()
+      .setColor('#cc0000')
+      .setTitle('Command not found')
+      .setDescription(`There is no ${isSubCommand ? 'sub' : ''}command with name or alias \`${name}\`.`);
     message.channel.send({ embeds: [embed] });
   }
 }
