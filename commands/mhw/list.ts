@@ -4,7 +4,12 @@ import Command from '../../bot/command';
 
 class List extends Command {
   public constructor() {
-    super('list', 'List all monsters in Monster Hunter World & Iceborne', '', { args: false, belongsTo: 'mhw' });
+    super(
+      'list',
+      'List all monsters in Monster Hunter World & Iceborne',
+      [],
+      { args: false, belongsTo: 'mhw' }
+    );
   }
 
   public async execute(message: Message<boolean>, _args: string[], client: Bot): Promise<void> {

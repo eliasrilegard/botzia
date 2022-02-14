@@ -5,7 +5,12 @@ import Utils from '../../bot/utils';
 
 class Timeout extends Command {
   public constructor() {
-    super('timeout', 'Give a user a timeout', '[user] [duration]; [optional reason] OR [user] [remove]', { permissions: 'MODERATE_MEMBERS' });
+    super(
+      'timeout',
+      'Give a user a timeout',
+      ['[@member] [duration]; (reason)', '[@member] remove'],
+      { permissions: 'MODERATE_MEMBERS' }
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {

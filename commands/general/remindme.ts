@@ -4,7 +4,11 @@ import Command from '../../bot/command';
 
 class Remindme extends Command {
   public constructor() {
-    super('remindme', 'Remind you of a message after a given time!', '[time until reminder]; [optional message]');
+    super(
+      'remindme',
+      'Remind you of a message after a given time!',
+      ['[time until reminder]', '[time until reminder]; (message)']
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {

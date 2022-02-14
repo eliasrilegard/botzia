@@ -5,7 +5,12 @@ import Utils from '../../bot/utils';
 
 class Kick extends Command {
   public constructor() {
-    super('kick', 'Kick a member', '[member] [optional reason]', { guildOnly: true, permissions: 'KICK_MEMBERS' });
+    super(
+      'kick',
+      'Kick a member',
+      ['[@member] (reason)'],
+      { guildOnly: true, permissions: 'KICK_MEMBERS' }
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {

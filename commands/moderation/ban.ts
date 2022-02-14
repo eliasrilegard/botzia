@@ -5,7 +5,12 @@ import Utils from '../../bot/utils';
 
 class Ban extends Command {
   public constructor() {
-    super('ban', 'Ban a member', '[member] [optional reason]', { guildOnly: true, permissions: 'BAN_MEMBERS' });
+    super(
+      'ban',
+      'Ban a member',
+      ['[@member] (reason)'],
+      { guildOnly: true, permissions: 'BAN_MEMBERS' }
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {

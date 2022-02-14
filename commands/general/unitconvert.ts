@@ -4,7 +4,12 @@ import Command from '../../bot/command';
 
 class UnitConvert extends Command {
   public constructor() {
-    super('unitconvert', 'Convert a measure from one unit to another!', '[value] [unit from] [unit to] OR --list', { aliases: ['convert'] });
+    super(
+      'unitconvert',
+      'Convert a measure from one unit to another!',
+      ['[value] [unit from] [unit to]', '--list'],
+      { aliases: ['convert'] }
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {    

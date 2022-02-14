@@ -4,7 +4,12 @@ import Command from '../../bot/command';
 
 class Prefix extends Command {
   public constructor() {
-    super('prefix', 'View the current prefix, or set a custom prefix for this server only', '[new prefix]', { args: false, aliases: ['setprefix'], guildOnly: true });
+    super(
+      'prefix',
+      'View the current prefix, or set a custom prefix for this server only',
+      ['[new prefix]'],
+      { args: false, aliases: ['setprefix'], guildOnly: true }
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {

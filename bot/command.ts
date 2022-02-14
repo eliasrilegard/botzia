@@ -27,7 +27,7 @@ const defaultOptions: CommandOptions = {
 class Command {
   public name: string;
   public description: string;
-  public usage: string;
+  public usages: Array<string>;
 
   public aliases: Array<string>;
   public args: boolean;
@@ -39,11 +39,11 @@ class Command {
   public guildOnly: boolean;
   public permissions: string;
 
-  protected constructor(name: string, description: string, usage: string, customOptions?: CommandOptions) {
+  protected constructor(name: string, description: string, usage: Array<string>, customOptions?: CommandOptions) {
     const options = { ...defaultOptions, ...customOptions };
     this.name = name;
     this.description = description;
-    this.usage = usage;
+    this.usages = usage;
 
     this.aliases = options.aliases;
     this.args = options.args;
@@ -84,7 +84,7 @@ class Command {
   }
 
   public howTo(prefix: string, codeblock = false): string {
-    return `${codeblock ? '\`' : ''}${prefix}${this.name} ${this.usage}${codeblock ? '\`' : ''}`;
+    return `${codeblock ? '\`' : ''}${prefix}${this.name} ${this.usages[0]}${codeblock ? '\`' : ''}`;
   }
 
   protected sendMenu(message: Message, pages: Array<MessageEmbed>): PageHandler {

@@ -4,7 +4,12 @@ import Command from '../../bot/command';
 
 class Hzv extends Command {
   public constructor() {
-    super('hzv', 'Gets the HZV of a specified monster', '[monster name]', { belongsTo: 'mhw' });
+    super(
+      'hzv',
+      'Gets the HZV of a specified monster',
+      ['[monster name]'],
+      { belongsTo: 'mhw' }
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {

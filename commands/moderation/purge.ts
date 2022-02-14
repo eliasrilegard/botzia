@@ -3,7 +3,12 @@ import Command from '../../bot/command';
 
 class Purge extends Command {
   public constructor() {
-    super('purge', 'Clears a specified number of messages.', '[# of messages to purge]', { permissions: 'MANAGE_MESSAGES', guildOnly: true });
+    super(
+      'purge',
+      'Clears a specified number of messages.',
+      ['[# of messages to remove - max 99]'],
+      { permissions: 'MANAGE_MESSAGES', guildOnly: true }
+    );
   }
 
   public async execute(message: Message, args: Array<string>): Promise<void> {
@@ -13,7 +18,7 @@ class Purge extends Command {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('Invalid argument')
-        .setDescription('Specify a number between 1 and 100.');
+        .setDescription('Specify a number between 1 and 99.');
       message.channel.send({ embeds: [embed] });
       return;
     }

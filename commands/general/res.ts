@@ -3,7 +3,12 @@ import Command from '../../bot/command';
 
 class Res extends Command {
   public constructor() {
-    super('res', 'Calculate the number of upgrades required up max the resists of ult items.', '[res 1] [res 2] [res 3] [res 4]', { devOnly: true });
+    super(
+      'res',
+      'Calculate the number of upgrades required up max the resists of ult items.',
+      ['[res 1] [res 2] [res 3] [res 4]'],
+      { devOnly: true }
+    );
   }
 
   public async execute(message: Message, args: Array<string>): Promise<void> {

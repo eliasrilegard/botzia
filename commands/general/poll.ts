@@ -5,7 +5,12 @@ import Utils from '../../bot/utils';
 
 class Poll extends Command {
   public constructor() {
-    super('poll', 'Make a poll about something!', '[Question]; [Option1]; [Option2] ...', { guildOnly: true });
+    super(
+      'poll',
+      'Make a poll about something!',
+      ['[Question]; [Option1]; [Option2] ...'],
+      { guildOnly: true }
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {

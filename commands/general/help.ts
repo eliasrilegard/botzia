@@ -7,7 +7,7 @@ class Help extends Command {
     super(
       'help',
       'List all commands or get info on a specific command',
-      '(command)',
+      ['(command)'],
       { args: false, aliases: ['commands'] }
     );
   }
@@ -66,13 +66,14 @@ class Help extends Command {
 
     embed.setColor('#0066cc').setTitle(`Command: ${command.name}`);
 
+    const commandUsage = command.usages.map(usage => `${prefix}${command.name} ${usage}`).join('\n').trim();
+
     if (command.aliases.length) embed.addField('Aliases', command.aliases.join(', '));
     embed.addFields([
-      { name: 'Usage', value: command.howTo(prefix) },
-      { name: 'Description', value: command.description },
-      { name: 'Syntax', value: '[parameter] - Mandatory parameter\n(parameter) - Optional paramater' }
+      { name: 'Usage', value: commandUsage },
+      { name: 'Description', value: command.description + '\n\u200b' },
+      { name: 'Syntax', value: '[parameter] - Mandatory\n(parameter) - Optional' }
     ]);
-
 
     message.channel.send({ embeds: [embed] });
   }

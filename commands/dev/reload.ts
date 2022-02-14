@@ -4,7 +4,12 @@ import Command from '../../bot/command';
 
 class Reload extends Command {
   public constructor() {
-    super('reload', 'Reloads a command!', '[command name] OR -b, --build [path to file]', { devOnly: true });
+    super(
+      'reload',
+      'Reloads a command!',
+      ['[command name]', '-b, --build [path/to/file]'],
+      { devOnly: true }
+    );
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {

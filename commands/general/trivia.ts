@@ -22,7 +22,12 @@ class Trivia extends Command {
   private triviaCategories: Array<TriviaCategory>;
 
   public constructor() {
-    super('trivia', 'Play a game of trivia!', '[category] OR --categories to list all', { args: false });
+    super(
+      'trivia',
+      'Play a game of trivia!',
+      ['(category)', '--categories'],
+      { args: false }
+    );
     this.getTriviaCategories().then(categories => this.triviaCategories = categories);
   }
   
