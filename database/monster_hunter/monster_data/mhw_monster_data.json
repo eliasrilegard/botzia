@@ -1755,7 +1755,8 @@
       "aliases": [
         "prath",
         "prathian",
-        "pink"
+        "pink",
+        "pinkrath"
       ],
       "title": "Pink Rathian",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Pink+Rathian",
@@ -4307,7 +4308,9 @@
   {
     "name": "ragingbrachydios",
     "details": {
-      "aliases": [],
+      "aliases": [
+        "ragingbrachy"
+      ],
       "title": "Raging Brachydios",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Raging+Brachydios",
       "description": "Raging Brachydios sports a green shell with yellow-orange slime mold on its forelimbs, head, back, and tail that turns red when it becomes enraged. It is noticeably larger than normal Brachydios and moves slower as a result.",
@@ -4431,7 +4434,9 @@
   {
     "name": "frostfangbarioth",
     "details": {
-      "aliases": [],
+      "aliases": [
+        "frostfang"
+      ],
       "title": "Frostfang Barioth",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Frostfang+Barioth",
       "description": "A Barioth variant capable of spewing a sub-zero breath attack that it uses to slow down prey. Be careful, as this attack can freeze you as well.",
