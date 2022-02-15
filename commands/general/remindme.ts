@@ -31,7 +31,7 @@ class Remindme extends Command {
     });
     
     const time = (timeData[0] * 24 * 60 + timeData[1] * 60 + timeData[2]) * 60000;
-    if (time < 0) { 
+    if (time <= 0) {
       message.channel.send({ embeds: [this.helpMessage(await client.prefix(message))] });
       return;
     }
@@ -61,7 +61,13 @@ class Remindme extends Command {
       .setTitle(`${reminderMessage ? 'Here\'s your reminder!' : 'Ding!'}`)
       .setDescription(`${reminderMessage ? reminderMessage : 'Here\'s your reminder!'}`);
     
-    setTimeout(() => message.reply({ embeds: [embed] }), time);
+    const pingList = new Array<string>();
+    if (message.mentions.members.size && reminderMessage) message.mentions.members.forEach(member => pingList.push(`${member}`));
+
+    const sendPingMessage = pingList.length ?
+      () => message.reply({ content: pingList.join(', '), embeds: [embed] }) :
+      () => message.reply({ embeds: [embed] });
+    setTimeout(sendPingMessage, time);
   }
 
   private helpMessage(prefix: string): MessageEmbed {
