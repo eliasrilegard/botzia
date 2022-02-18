@@ -13,7 +13,7 @@ class List extends Command {
   }
 
   public async execute(message: Message<boolean>, _args: string[], client: Bot): Promise<void> {
-    if (client.mhwMonsters == null) {
+    if (client.mhw.monsters == null) {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('Monster data unavalible')
@@ -23,7 +23,7 @@ class List extends Command {
       return;
     }
 
-    const monsterNames = [...client.mhwMonsters.values()].map(monster => monster.title).sort((a, b) => a.localeCompare(b));
+    const monsterNames = [...client.mhw.monsters.values()].map(monster => monster.title).sort((a, b) => a.localeCompare(b));
     const monstersPerPage = 20;
 
     const embeds = monsterNames
