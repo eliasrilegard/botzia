@@ -50,8 +50,10 @@ class Hzv extends Command {
     const hzvFilePath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
     const hzv = isHR ? monster.hzv_hr : monster.hzv;
 
-    const hzvName = hzvFilePath.slice(hzvFilePath.lastIndexOf('/') + 1);
-    const iconName = monster.icon_filepath.slice(monster.icon_filepath.lastIndexOf('/') + 1);
+    // Get file name by cutting off everything before and including the last '/'
+    // Clean up file name by removing characters that will mess with Discord's API
+    const hzvName = hzvFilePath.slice(hzvFilePath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '');
+    const iconName = monster.icon_filepath.slice(monster.icon_filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '');
 
     const title = `__**${monster.title}**__${monster.threat_level ? `  ${monster.threat_level}` : ''}`;
 
