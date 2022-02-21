@@ -2757,7 +2757,7 @@
       "aliases": [
         "bari"
       ],
-      "title": "Shrieking_Legiana_Icon",
+      "title": "Barioth",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Barioth",
       "description": "The snow white flying wyvern with huge tusks found in the frozen tundra. It uses its forelegs and tail to traverse ice with ease.",
       "thumbnail": "https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/gthumbnails/mhwi-barioth_icon.png",
@@ -2802,7 +2802,7 @@
         "Stun (⭐⭐)"
       ],
       "icon_filepath": "./database/monster_hunter/monster_data/img/mhw/large_monster/icons/Barioth_Icon.webp",
-      "hzv_filepath": "./database/monster_hunter/monster_data/img/mhw/large_monster/Shrieking_Legiana_Icon_HZV.png",
+      "hzv_filepath": "./database/monster_hunter/monster_data/img/mhw/large_monster/Barioth_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -4062,7 +4062,7 @@
     "name": "rajang",
     "details": {
       "aliases": [
-        "ape"
+        "monke"
       ],
       "title": "Rajang",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Rajang",
