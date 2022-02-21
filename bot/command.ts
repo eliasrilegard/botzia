@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from 'discord.js';
 import Bot from './bot';
-import PageHandler from './pageHandler';
+import PageHandler from './pagehandler';
 
 interface CommandOptions {
   aliases?: Array<string>;
