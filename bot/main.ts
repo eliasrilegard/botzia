@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 import Bot from './bot';
 import * as config from '../config.json';
 
