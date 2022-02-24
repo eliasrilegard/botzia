@@ -4,7 +4,8 @@
   "description": "A Discord bot created by Chronozia",
   "main": "dist/shard.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rebuild": "rm -rf dist && ./node_modules/typescript/bin/tsc"
   },
   "repository": {
     "type": "git",
@@ -19,13 +20,13 @@
   "dependencies": {
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
-    "nedb": "^1.8.0",
-    "typescript": "^4.5.5"
+    "nedb": "^1.8.0"
   },
   "devDependencies": {
     "@types/nedb": "^1.8.12",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
-    "eslint": "^8.8.0"
+    "eslint": "^8.8.0",
+    "typescript": "^4.5.5"
   }
 }
