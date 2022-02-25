@@ -12,7 +12,6 @@ class Restart extends Command {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async execute(message: Message, _args: Array<string>, client: Bot): Promise<void> {
     const embed = new MessageEmbed()
       .setColor('#0066cc')
