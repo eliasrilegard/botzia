@@ -12,7 +12,7 @@ class Utils {
     return memberLow.roles.highest.comparePositionTo(memberHigh.roles.highest) < 1;
   }
 
-  public static shuffle(array: Array<unknown>): Array<unknown> {
+  public static shuffle<T>(array: Array<T>): Array<T> {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
