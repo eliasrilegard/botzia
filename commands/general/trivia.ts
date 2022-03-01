@@ -19,6 +19,7 @@ interface TriviaQuestion {
 }
 
 class Trivia extends Command {
+  private readonly serverTokens: Map<string, string>;
   private triviaCategories: Array<TriviaCategory>;
 
   public constructor() {
@@ -28,18 +29,20 @@ class Trivia extends Command {
       ['(category)', '--categories'],
       { args: false }
     );
-    this.getTriviaCategories().then(categories => this.triviaCategories = categories);
+    this.serverTokens = new Map();
+    this.loadTriviaCategories();
   }
   
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args[0] === '--reset' && args.length === 1) {
-      const token = client.tokens.get('OTDB');
+      const token = this.serverTokens.get(message.guildId);
+      // const token = client.tokens.get('OTDB');
       if (token) {
-        try { return this.resetToken(message, client) }
+        try { return this.resetToken(message) }
         catch (error) { this.postErrorMessage(message, error.message) }
       }
       else {
-        try { return this.generateNewToken(message, client) }
+        try { return this.generateNewToken(message) }
         catch (error) { this.postErrorMessage(message, error.message) }
       }
     }
@@ -160,7 +163,7 @@ class Trivia extends Command {
   }
 
   private async getQuestion(message: Message, categoryId: number, client: Bot): Promise <TriviaQuestion> {
-    const token = client.tokens.get('OTDB');
+    const token = this.serverTokens.get(message.guildId);
     if (token) {
       let URL = 'https://opentdb.com/api.php?amount=1';
       if (categoryId !== -1) URL += `&category=${categoryId}`;
@@ -179,7 +182,7 @@ class Trivia extends Command {
             .setDescription('Requesting reset...');
           message.channel.send({ embeds: [embed] });
 
-          try { await this.resetToken(message, client) }
+          try { await this.resetToken(message) }
           catch (error) { throw error }
 
           try { return await this.getQuestion(message, categoryId, client) }
@@ -189,14 +192,14 @@ class Trivia extends Command {
       }
     }
 
-    try { await this.generateNewToken(message, client) }
+    try { await this.generateNewToken(message) }
     catch (error) { throw error }
 
     try { return await this.getQuestion(message, categoryId, client) }
     catch (error) { throw error }
   }
 
-  private async generateNewToken(message: Message, client: Bot): Promise<void> {
+  private async generateNewToken(message: Message): Promise<void> {
     const embed = new MessageEmbed()
       .setColor('#0066cc')
       .setTitle('No stored token found')
@@ -212,13 +215,13 @@ class Trivia extends Command {
         .setTitle('Token recieved');
       delete embed.description;
       message.channel.send({ embeds: [embed] });
-      client.tokens.set('OTDB', data.token);
+      this.serverTokens.set(message.guildId, data.token);
     }
     else throw new Error(`Could not generate new token.\nResponse code ${data.response_code}`);
   }
 
-  private async resetToken(message: Message, client: Bot): Promise<void> {
-    const token = client.tokens.get('OTDB');
+  private async resetToken(message: Message): Promise<void> {
+    const token = this.serverTokens.get(message.guildId);
     if (token) {
       const respose = await fetch(`https://opentdb.com/api_token.php?command=reset&token=${token}`);
       const data = await respose.json();
@@ -233,14 +236,13 @@ class Trivia extends Command {
     else throw new Error('No token found.');
   }
 
-  private async getTriviaCategories(): Promise<Array<TriviaCategory>> {
+  private async loadTriviaCategories(): Promise<void> {
     interface ResponseData {
       trivia_categories: Array<TriviaCategory>;
     }
-
     const response = await fetch('https://opentdb.com/api_category.php');
     const data: ResponseData = await response.json();
-    return data.trivia_categories;
+    this.triviaCategories = data.trivia_categories;
   }
 
   private cleanup(str: string): string {  

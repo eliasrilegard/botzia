@@ -22,7 +22,6 @@ class Bot extends Client {
   public readonly config: ClientConfig;
   public readonly categories: Collection<string, Collection<string, Command>>;
   public readonly commands: Collection<string, Command>;
-  public readonly tokens: Collection<string, string>;
 
   public readonly apiClient: ApiClient;
   public readonly mhw: MhwClient;
@@ -37,7 +36,6 @@ class Bot extends Client {
     this.config = config;
     this.categories = new Collection();
     this.commands = new Collection();
-    this.tokens = new Collection();
 
     this.apiClient = new ApiClient(this.root.slice(0, -5).concat('database'));
     this.mhw = new MhwClient();
