@@ -1,5 +1,3 @@
-import Utils from './utils';
-
 import * as monsterData from '../database/monster_hunter/monster_data/mhw_monster_data.json';
 
 interface HzvSummary {
@@ -40,17 +38,12 @@ interface MonsterDetails {
   threat_level?: string;
 }
 
-interface MonsterInfo {
-  name: string;
-  details: MonsterDetails;
-}
-
 class MhwClient {
   public monsters: Map<string, MonsterDetails>;
 
   public constructor() {
     this.monsters = new Map();
-    for (const [, v] of Utils.getDataAsMap(monsterData) as Map<string, MonsterInfo>) this.monsters.set(v.name, v.details);
+    for (const [, monster] of Object.entries(monsterData)) this.monsters.set(monster.name, monster.details);
   }
 }
 
