@@ -1,8 +1,8 @@
 import Bot from './bot';
 
 class ClientEvent {
-  public name: string;
-  public once: boolean;
+  public readonly name: string;
+  public readonly once: boolean;
 
   protected constructor(name: string, once: boolean) {
     this.name = name;

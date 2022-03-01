@@ -9,10 +9,10 @@ interface PageReactions {
 }
 
 class PageHandler {
-  private message: Message;
-  private pages: Array<MessageEmbed>;
-  private time: number;
-  private reactions: PageReactions;
+  private readonly message: Message;
+  private readonly pages: Array<MessageEmbed>;
+  private readonly time: number;
+  private readonly reactions: PageReactions;
   private pagerMessage: Message;
   private page: number;
 

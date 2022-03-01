@@ -7,7 +7,7 @@ interface Docs {
 }
 
 class ApiClient {
-  public serverPrefixes: Datastore;
+  public readonly serverPrefixes: Datastore;
 
   public constructor(dir: string) {
     this.serverPrefixes = new Datastore({ filename: `${dir}/discord/server_prefixes.db`, autoload: true });

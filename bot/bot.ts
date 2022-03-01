@@ -18,14 +18,14 @@ interface ClientConfig {
 }
 
 class Bot extends Client {
-  public root: string;
-  public config: ClientConfig;
-  public categories: Collection<string, Collection<string, Command>>;
-  public commands: Collection<string, Command>;
-  public tokens: Collection<string, string>;
-  
-  public apiClient: ApiClient;
-  public mhw: MhwClient;
+  public readonly root: string;
+  public readonly config: ClientConfig;
+  public readonly categories: Collection<string, Collection<string, Command>>;
+  public readonly commands: Collection<string, Command>;
+  public readonly tokens: Collection<string, string>;
+
+  public readonly apiClient: ApiClient;
+  public readonly mhw: MhwClient;
 
   public constructor(dirname: string, config: ClientConfig) {
     super({

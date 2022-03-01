@@ -39,7 +39,7 @@ interface MonsterDetails {
 }
 
 class MhwClient {
-  public monsters: Map<string, MonsterDetails>;
+  public readonly monsters: Map<string, MonsterDetails>;
 
   public constructor() {
     this.monsters = new Map();

@@ -25,19 +25,19 @@ const defaultOptions: CommandOptions = {
 };
 
 class Command {
-  public name: string;
-  public description: string;
-  public usages: Array<string>;
+  public readonly name: string;
+  public readonly description: string;
+  public readonly usages: Array<string>;
 
-  public aliases: Array<string>;
-  public args: boolean;
-  public belongsTo: string;
-  public category: boolean;
-  public cooldown: number;
-  public cooldowns: Map<string, number>;
-  public devOnly: boolean;
-  public guildOnly: boolean;
-  public permissions: string;
+  public readonly aliases: Array<string>;
+  public readonly args: boolean;
+  public readonly belongsTo: string;
+  public readonly category: boolean;
+  public readonly cooldown: number;
+  public readonly cooldowns: Map<string, number>;
+  public readonly devOnly: boolean;
+  public readonly guildOnly: boolean;
+  public readonly permissions: string;
 
   protected constructor(name: string, description: string, usage: Array<string>, customOptions?: CommandOptions) {
     const options = { ...defaultOptions, ...customOptions };
@@ -56,7 +56,7 @@ class Command {
     this.permissions = options.permissions;
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (!this.category) return; // This should never happen but I'm gonna check it anyways
 
     const subCommand = args[0];
@@ -83,7 +83,7 @@ class Command {
     }
   }
 
-  public howTo(prefix: string, codeblock = false): string {
+  howTo(prefix: string, codeblock = false): string {
     return `${codeblock ? '\`' : ''}${prefix}${this.name} ${this.usages[0]}${codeblock ? '\`' : ''}`;
   }
 
