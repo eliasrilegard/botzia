@@ -3,6 +3,15 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 class UnitConvert extends Command {
+  private readonly units: Map<string, {
+    name: string;
+    conversions: Array<{
+      unit: string;
+      name: string;
+      conversion: (x: number) => number;
+    }>;
+  }>;
+
   public constructor() {
     super(
       'unitconvert',
@@ -10,6 +19,64 @@ class UnitConvert extends Command {
       ['[value] [unit from] [unit to]', '--list'],
       { aliases: ['convert'] }
     );
+
+    this.units = new Map([
+      // Temperature
+      ['c', {
+        name: 'Celsius',
+        conversions: [
+          { unit: 'f', name: 'Fahrenheit', conversion: (t: number) => t * 9 / 5 + 32 },
+          { unit: 'k', name: 'Kelvin', conversion: t => t + 272.15 }
+        ]
+      }],
+      ['f', {
+        name: 'Fahrenheit',
+        conversions: [
+          { unit: 'c', name: 'Celsius', conversion: t => (t - 32) * 5 / 9 },
+          { unit: 'k', name: 'Kelvin', conversion: t => (t - 32) * 5 / 9 + 272.15 }
+        ]
+      }],
+      ['k', {
+        name: 'Kelvin',
+        conversions: [
+          { unit: 'c', name: 'Celsius', conversion: t => t - 272.15 },
+          { unit: 'f', name: 'Fahrenheit', conversion: t => (t - 272.15) * 9 / 5 + 32 }
+        ]
+      }],
+      // Length
+      ['m', {
+        name: 'Meters',
+        conversions: [
+          { unit: 'km', name: 'Kilometers', conversion: l => l * 0.001 },
+          { unit: 'ft', name: 'Feet', conversion: l => l / 0.3048 },
+          { unit: 'mi', name: 'Miles', conversion: l => l / 1609.344 }
+        ]
+      }],
+      ['km', {
+        name: 'Kilometers',
+        conversions: [
+          { unit: 'm', name: 'Meters', conversion: l => l * 1000 },
+          { unit: 'ft', name: 'Feet', conversion: l => l / 0.0003048 },
+          { unit: 'mi', name: 'Miles', conversion: l => l / 1.609344 }
+        ]
+      }],
+      ['ft', {
+        name: 'Feet',
+        conversions: [
+          { unit: 'm', name: 'Meters', conversion: l => l * 0.3048 },
+          { unit: 'km', name: 'Kilometers', conversion: l => l * 0.0003048 },
+          { unit: 'mi', name: 'Miles', conversion: l => l / 5280 }
+        ]
+      }],
+      ['mi', {
+        name: 'Miles',
+        conversions: [
+          { unit: 'm', name: 'Meters', conversion: l => l * 1609.344 },
+          { unit: 'km', name: 'Kilometers', conversion: l => l * 1.609344 },
+          { unit: 'ft', name: 'Feet', conversion: l => l * 5280 }
+        ]
+      }]
+    ]);
   }
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {    
@@ -18,7 +85,7 @@ class UnitConvert extends Command {
 
     if (args[0] === '--list') {
       const unitList = new Array();
-      units.forEach(unit => unitList.push(unit.name));
+      this.units.forEach(unit => unitList.push(unit.name));
       embed
         .setColor('#0066cc')
         .setTitle('Avalible units')
@@ -48,7 +115,7 @@ class UnitConvert extends Command {
 
     const unitBase = args[1];
     const unitGoal = args[2];
-    const baseObj = units.get(unitBase.toLowerCase());
+    const baseObj = this.units.get(unitBase.toLowerCase());
 
     if (!baseObj) {
       embed
@@ -81,63 +148,5 @@ class UnitConvert extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-const units = new Map([
-  // Temperature
-  ['c', {
-    name: 'Celsius',
-    conversions: [
-      { unit: 'f', name: 'Fahrenheit', conversion: (t: number) => t * 9 / 5 + 32 },
-      { unit: 'k', name: 'Kelvin', conversion: t => t + 272.15 }
-    ]
-  }],
-  ['f', {
-    name: 'Fahrenheit',
-    conversions: [
-      { unit: 'c', name: 'Celsius', conversion: t => (t - 32) * 5 / 9 },
-      { unit: 'k', name: 'Kelvin', conversion: t => (t - 32) * 5 / 9 + 272.15 }
-    ]
-  }],
-  ['k', {
-    name: 'Kelvin',
-    conversions: [
-      { unit: 'c', name: 'Celsius', conversion: t => t - 272.15 },
-      { unit: 'f', name: 'Fahrenheit', conversion: t => (t - 272.15) * 9 / 5 + 32 }
-    ]
-  }],
-  // Length
-  ['m', {
-    name: 'Meters',
-    conversions: [
-      { unit: 'km', name: 'Kilometers', conversion: l => l * 0.001 },
-      { unit: 'ft', name: 'Feet', conversion: l => l / 0.3048 },
-      { unit: 'mi', name: 'Miles', conversion: l => l / 1609.344 }
-    ]
-  }],
-  ['km', {
-    name: 'Kilometers',
-    conversions: [
-      { unit: 'm', name: 'Meters', conversion: l => l * 1000 },
-      { unit: 'ft', name: 'Feet', conversion: l => l / 0.0003048 },
-      { unit: 'mi', name: 'Miles', conversion: l => l / 1.609344 }
-    ]
-  }],
-  ['ft', {
-    name: 'Feet',
-    conversions: [
-      { unit: 'm', name: 'Meters', conversion: l => l * 0.3048 },
-      { unit: 'km', name: 'Kilometers', conversion: l => l * 0.0003048 },
-      { unit: 'mi', name: 'Miles', conversion: l => l / 5280 }
-    ]
-  }],
-  ['mi', {
-    name: 'Miles',
-    conversions: [
-      { unit: 'm', name: 'Meters', conversion: l => l * 1609.344 },
-      { unit: 'km', name: 'Kilometers', conversion: l => l * 1.609344 },
-      { unit: 'ft', name: 'Feet', conversion: l => l * 5280 }
-    ]
-  }]
-]);
 
 export default UnitConvert;
