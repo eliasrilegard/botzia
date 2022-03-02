@@ -1,6 +1,5 @@
 import { Message, MessageEmbed, MessageReaction, User } from 'discord.js';
 import fetch from 'node-fetch';
-import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
@@ -33,7 +32,7 @@ class Trivia extends Command {
     this.loadTriviaCategories();
   }
   
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>): Promise<void> {
     if (args[0] === '--reset' && args.length === 1) {
       const token = this.serverTokens.get(message.guildId);
       // const token = client.tokens.get('OTDB');
@@ -72,7 +71,7 @@ class Trivia extends Command {
     
     let data: TriviaQuestion;
     try {
-      data = await this.getQuestion(message, categoryId, client);
+      data = await this.getQuestion(message, categoryId);
     }
     catch (error) {
       this.postErrorMessage(message, error.message);
@@ -162,7 +161,7 @@ class Trivia extends Command {
     message.channel.send({ embeds: [embed] });
   }
 
-  private async getQuestion(message: Message, categoryId: number, client: Bot): Promise <TriviaQuestion> {
+  private async getQuestion(message: Message, categoryId: number): Promise <TriviaQuestion> {
     const token = this.serverTokens.get(message.guildId);
     if (token) {
       let URL = 'https://opentdb.com/api.php?amount=1';
@@ -176,16 +175,10 @@ class Trivia extends Command {
         case 1: throw new Error(`Could not get question.\nResponse code: ${data.response_code}`);
         case 2: throw new Error(`Invalid argument.\nCategory ID: \`${categoryId}\``);
         case 4: {
-          const embed = new MessageEmbed()
-            .setColor('#0066cc')
-            .setTitle('Empty token')
-            .setDescription('Requesting reset...');
-          message.channel.send({ embeds: [embed] });
-
           try { await this.resetToken(message) }
           catch (error) { throw error }
 
-          try { return await this.getQuestion(message, categoryId, client) }
+          try { return await this.getQuestion(message, categoryId) }
           catch (error) { throw error }
         }
         default: // Case 3
@@ -195,28 +188,15 @@ class Trivia extends Command {
     try { await this.generateNewToken(message) }
     catch (error) { throw error }
 
-    try { return await this.getQuestion(message, categoryId, client) }
+    try { return await this.getQuestion(message, categoryId) }
     catch (error) { throw error }
   }
 
   private async generateNewToken(message: Message): Promise<void> {
-    const embed = new MessageEmbed()
-      .setColor('#0066cc')
-      .setTitle('No stored token found')
-      .setDescription('Requesting new token...');
-    message.channel.send({ embeds: [embed] });
-    
     const response = await fetch('https://opentdb.com/api_token.php?command=request');
     const data = await response.json();
 
-    if (data.response_code === 0) {
-      embed
-        .setColor('#00cc00')
-        .setTitle('Token recieved');
-      delete embed.description;
-      message.channel.send({ embeds: [embed] });
-      this.serverTokens.set(message.guildId, data.token);
-    }
+    if (data.response_code === 0) this.serverTokens.set(message.guildId, data.token);
     else throw new Error(`Could not generate new token.\nResponse code ${data.response_code}`);
   }
 
