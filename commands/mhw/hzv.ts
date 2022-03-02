@@ -18,7 +18,7 @@ class Hzv extends Command {
     const isHR = input.startsWith('hr');
     if (isHR) input = input.slice(2);
 
-    if (client.mhw.monsters == null) {
+    if (client.mhwClient.monsters == null) {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('Monster data unavalible')
@@ -28,25 +28,25 @@ class Hzv extends Command {
       return;
     }
 
-    for (const [name, monster] of client.mhw.monsters.entries()) {
+    for (const [name, monster] of client.mhwClient.monsters.entries()) {
       if (monster.aliases && monster.aliases.includes(input) && input.length > 0) {
         input = name;
         break;
       }
     }
 
-    if (client.mhw.monsters.has(input)) {
-      const monster = client.mhw.monsters.get(input);
+    if (client.mhwClient.monsters.has(input)) {
+      const monster = client.mhwClient.monsters.get(input);
       if (isHR && !('hzv_filepath_hr' in monster)) return this.notFound(message, client);
 
       const [embed, imageStream] = await this.monsterEmbed(client, input, isHR);
       message.channel.send({ embeds: [embed], files: [...imageStream] });
     }
-    else if (!client.mhw.monsters.has(input)) return this.notFound(message, client);
+    else if (!client.mhwClient.monsters.has(input)) return this.notFound(message, client);
   }
 
   private async monsterEmbed(client: Bot, name: string, isHR: boolean): Promise<[MessageEmbed, Array<string>]> {
-    const monster = client.mhw.monsters.get(name);
+    const monster = client.mhwClient.monsters.get(name);
     const hzvFilePath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
     const hzv = isHR ? monster.hzv_hr : monster.hzv;
 

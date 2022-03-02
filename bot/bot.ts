@@ -24,7 +24,7 @@ class Bot extends Client {
   public readonly commands: Collection<string, Command>;
 
   public readonly apiClient: ApiClient;
-  public readonly mhw: MhwClient;
+  public readonly mhwClient: MhwClient;
 
   public constructor(dirname: string, config: ClientConfig) {
     super({
@@ -38,7 +38,7 @@ class Bot extends Client {
     this.commands = new Collection();
 
     this.apiClient = new ApiClient(this.root.slice(0, -5).concat('database'));
-    this.mhw = new MhwClient();
+    this.mhwClient = new MhwClient();
 
     this.loadEvents();
     this.loadCommands();
