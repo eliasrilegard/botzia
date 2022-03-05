@@ -56,7 +56,7 @@ class Command {
     this.permissions = options.permissions;
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (!this.category) return; // This should never happen but I'm gonna check it anyways
 
     const subCommand = args[0];
@@ -83,7 +83,7 @@ class Command {
     }
   }
 
-  howTo(prefix: string, codeblock = false): string {
+  public howTo(prefix: string, codeblock = false): string {
     return `${codeblock ? '\`' : ''}${prefix}${this.name} ${this.usages[0]}${codeblock ? '\`' : ''}`;
   }
 
