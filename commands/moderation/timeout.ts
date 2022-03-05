@@ -112,7 +112,7 @@ class Timeout extends Command {
     member.disableCommunicationUntil(Date.now() + time, reasonMessage);
 
     const UIWords = ['days', 'hours', 'minutes', 'seconds'];
-    const UIArray = new Array();
+    const UIArray: Array<string> = [];
     timeData.forEach((data, i) => {
       if (data) UIArray.push(`${data} ${data === 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
     });

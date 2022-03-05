@@ -14,7 +14,7 @@ interface CommandOptions {
 }
 
 const defaultOptions: CommandOptions = {
-  aliases: new Array(),
+  aliases: [],
   args: true,
   belongsTo: undefined,
   category: false,

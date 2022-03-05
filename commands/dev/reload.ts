@@ -48,7 +48,7 @@ class Reload extends Command {
 
     if (!command) return this.notFound(message, commandName, false);
 
-    const files = new Array<string>();
+    const files: Array<string> = [];
     for await (const file of client.getFiles(commandsDir)) files.push(file);
 
     // This might need to be > 1 if we're allowing sub-subcommands

@@ -17,7 +17,7 @@ class Help extends Command {
 
     // No args - display interactive page to view all commands
     if (args.length === 0) {
-      const categories = new Array<[Command, Collection<string, Command>]>();
+      const categories: Array<[Command, Collection<string, Command>]> = [];
       const categoryNames = [...client.categories.keys()];
       categoryNames.forEach(name => categories.push([client.commands.get(name), client.categories.get(name)]));
       

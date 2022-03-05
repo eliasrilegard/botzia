@@ -46,7 +46,7 @@ class Trivia extends Command {
       }
     }
     else if (args[0] === '--categories' && args.length === 1) {
-      const categories = new Array();
+      const categories: Array<string> = [];
       this.triviaCategories.forEach(category => categories.push(category.name));
       categories.sort();
       const embed = new MessageEmbed()
@@ -80,7 +80,7 @@ class Trivia extends Command {
 
     const description = `${data.difficulty === 'easy' ? 'An' : 'A'} ${Utils.capitalize(data.difficulty)} one from the category ${data.category}.`;
     
-    let allAnswers = new Array();
+    let allAnswers: Array<string> = [];
     allAnswers.push(data.correct_answer);
     data.incorrect_answers.forEach((entry: string) => allAnswers.push(entry));
     allAnswers = allAnswers.length === 2 ? allAnswers.sort().reverse() : Utils.shuffle(allAnswers) as Array<string>; // Sort if true/false, shuffle otherwise

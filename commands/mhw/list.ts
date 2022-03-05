@@ -12,7 +12,7 @@ class List extends Command {
     );
   }
 
-  public async execute(message: Message<boolean>, _args: string[], client: Bot): Promise<void> {
+  public async execute(message: Message<boolean>, _args: Array<string>, client: Bot): Promise<void> {
     if (client.mhwClient.monsters == null) {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
@@ -27,18 +27,18 @@ class List extends Command {
     const monstersPerPage = 20;
 
     const embeds = monsterNames
-      .reduce((result, name, index) => { // Split array into even chunks
+      .reduce((result: Array<Array<string>>, name, index) => { // Split monsterNames into chunks
         const chunkIndex = Math.floor(index / monstersPerPage);
-        if (!result[chunkIndex]) result[chunkIndex] = new Array<string>();
+        if (!result[chunkIndex]) result[chunkIndex] = [];
         result[chunkIndex].push(name);
         return result;
-      }, new Array<Array<string>>())
-      .map((chunk: Array<string>) => { // Map each chunk to an embed message
+      }, [])
+      .map(chunk => { // Map each chunk to an embed message
         return new MessageEmbed()
           .setColor('#8fde5d')
           .addField('Monsters list', chunk.join('\n'));
       });
-
+      
     this.sendMenu(message, embeds);
   }
 }

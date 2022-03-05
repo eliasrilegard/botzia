@@ -84,7 +84,7 @@ class UnitConvert extends Command {
     const embed = new MessageEmbed().setColor('#cc0000');
 
     if (args[0] === '--list') {
-      const unitList = new Array();
+      const unitList: Array<string> = [];
       this.units.forEach(unit => unitList.push(unit.name));
       embed
         .setColor('#0066cc')

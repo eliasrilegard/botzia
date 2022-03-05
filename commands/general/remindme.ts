@@ -41,7 +41,7 @@ class Remindme extends Command {
     }
     
     const UIWords = ['days', 'hours', 'minutes'];
-    const UIArray = new Array();
+    const UIArray: Array<string> = [];
     timeData.forEach((data, i) => {
       if (data) UIArray.push(`${data} ${data === 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
     });
@@ -61,7 +61,7 @@ class Remindme extends Command {
       .setTitle(`${reminderMessage ? 'Here\'s your reminder!' : 'Ding!'}`)
       .setDescription(`${reminderMessage ? reminderMessage : 'Here\'s your reminder!'}`);
     
-    const pingList = new Array<string>();
+    const pingList: Array<string> = [];
     if (message.mentions.members.size && reminderMessage) message.mentions.members.forEach(member => pingList.push(`${member}`));
 
     const sendPingMessage = pingList.length ?
