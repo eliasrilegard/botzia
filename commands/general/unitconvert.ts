@@ -25,7 +25,7 @@ class UnitConvert extends Command {
       ['c', {
         name: 'Celsius',
         conversions: [
-          { unit: 'f', name: 'Fahrenheit', conversion: (t: number) => t * 9 / 5 + 32 },
+          { unit: 'f', name: 'Fahrenheit', conversion: t => t * 9 / 5 + 32 },
           { unit: 'k', name: 'Kelvin', conversion: t => t + 272.15 }
         ]
       }],

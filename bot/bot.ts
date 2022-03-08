@@ -7,13 +7,12 @@ import ClientEvent from './event';
 import MhwClient from './mhw';
 
 interface ClientConfig {
-  bot: {
-    defaultPrefix: string;
-    invite: string;
-  };
-  users: {
-    chrono_id: string;
-    chrono_tag: string;
+  readonly bot: {
+    readonly defaultPrefix: string;
+    readonly invite: string;
+  }
+  readonly users: {
+    readonly [key: string]: string;
   }
 }
 
@@ -73,7 +72,7 @@ class Bot extends Client {
     }
   }
 
-  public async prefix(message = undefined): Promise<string> {
+  public async prefix(message?: Message): Promise<string> {
     const prefix = this.config.bot.defaultPrefix ? this.config.bot.defaultPrefix : '>';
     if (!message) return prefix;
     const customPrefix = await this.apiClient.getCustomPrefix(message.guildId);
@@ -106,7 +105,7 @@ class Bot extends Client {
     if (command.permissions) {
       const authorPerms = (message.channel as GuildChannel).permissionsFor(message.author);
       if ((!authorPerms || !authorPerms.has(command.permissions as PermissionResolvable)) &&
-        (!this.isDev(message.author.id))) {
+        !this.isDev(message.author.id)) {
         const embed = new MessageEmbed()
           .setColor('#cc0000')
           .setTitle('Insufficient permissions')

@@ -21,7 +21,7 @@ class ApiClient {
     return new Promise((resolve, reject) => {
       this.serverPrefixes.find({ id: serverId }, (err: Error, docs: Array<Docs>) => {
         if (err) reject(err.message); // Shouldn't ever happen
-        docs.length ? resolve(docs[0].prefix) : resolve(null);
+        docs.length > 0 ? resolve(docs[0].prefix) : resolve(null);
       });
     });
   }

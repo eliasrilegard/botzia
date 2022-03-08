@@ -52,11 +52,11 @@ class Reload extends Command {
     for await (const file of client.getFiles(commandsDir)) files.push(file);
 
     // This might need to be > 1 if we're allowing sub-subcommands
-    const isReloadingSubcommand = command.category && args.length === 2;
+    const isReloadingSubCommand = command.category && args.length === 2;
 
     let subCommand: Command;
     let pathToFile: string;
-    if (isReloadingSubcommand) {
+    if (isReloadingSubCommand) {
       // If we're reloading a subcommand we're gonna have to do everything pretty much once again
       const subCommandName = args[1];
       const subCommands = client.categories.get(command.name);
@@ -79,7 +79,7 @@ class Reload extends Command {
       const embed = new MessageEmbed()
         .setColor('#00cc00')
         .setTitle('Command reloaded')
-        .setDescription(`Command \`${isReloadingSubcommand ? subCommand.name : command.name}\` was reloaded.`);
+        .setDescription(`Command \`${isReloadingSubCommand ? subCommand.name : command.name}\` was reloaded.`);
       message.channel.send({ embeds: [embed] });
     }
     catch (error) {
@@ -87,7 +87,7 @@ class Reload extends Command {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('Error')
-        .setDescription(`Command \`${isReloadingSubcommand ? subCommand.name : command.name}\` could not be reloaded.`)
+        .setDescription(`Command \`${isReloadingSubCommand ? subCommand.name : command.name}\` could not be reloaded.`)
         .addField('Error message:', `\`${error.message}\``);
       message.channel.send({ embeds: [embed] });
     }

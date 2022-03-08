@@ -21,7 +21,7 @@ class PageHandler {
     pages: Array<MessageEmbed>,
     time = 120000,
     footerEnabled = false,
-    reactions = { first: '⏪', back: '◀️', next: '▶️', last: '⏩', stop: '⏹️' }
+    reactions: PageReactions = { first: '⏪', back: '◀️', next: '▶️', last: '⏩', stop: '⏹️' }
   ) {
     this.message = message;
     this.pages = pages;
@@ -29,7 +29,8 @@ class PageHandler {
     this.reactions = reactions;
     this.page = 1;
 
-    if (pages.length && footerEnabled) this.displayPageNumbers();
+    // Only add page numbers when it's enabled if there are multiple pages
+    if (footerEnabled && pages.length > 1) this.displayPageNumbers();
 
     let isPermissionsMissing = false;
     if (!(message.channel as GuildChannel).permissionsFor(message.member.guild.me).has(['MANAGE_MESSAGES', 'ADD_REACTIONS'])) {

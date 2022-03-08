@@ -64,7 +64,7 @@ class Remindme extends Command {
     const pingList: Array<string> = [];
     if (message.mentions.members.size && reminderMessage) message.mentions.members.forEach(member => pingList.push(`${member}`));
 
-    const sendPingMessage = pingList.length ?
+    const sendPingMessage = pingList.length > 0 ?
       () => message.reply({ content: pingList.join(', '), embeds: [embed] }) :
       () => message.reply({ embeds: [embed] });
     setTimeout(sendPingMessage, time);

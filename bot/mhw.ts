@@ -1,41 +1,41 @@
 import * as monsterData from '../database/monster_hunter/monster_data/mhw_monster_data.json';
 
 interface HzvSummary {
-  slash: string;
-  blunt: string;
-  shot: string;
-  fire: string;
-  water: string;
-  thunder: string;
-  ice: string;
-  dragon: string;
+  readonly slash: string;
+  readonly blunt: string;
+  readonly shot: string;
+  readonly fire: string;
+  readonly water: string;
+  readonly thunder: string;
+  readonly ice: string;
+  readonly dragon: string;
 }
 
 interface MonsterDetails {
-  aliases: Array<string>;
-  title: string;
-  url: string;
-  description: string;
-  thumbnail: string;
-  elements: Array<string>;
-  ailments: Array<string>;
-  locations: Array<{
-    name: string;
-    color: string;
-    icon?: string;
-    tempered?: boolean;
+  readonly aliases: Array<string>;
+  readonly title: string;
+  readonly url: string;
+  readonly description: string;
+  readonly thumbnail: string;
+  readonly elements: Array<string>;
+  readonly ailments: Array<string>;
+  readonly locations: Array<{
+    readonly name: string;
+    readonly color: string;
+    readonly icon?: string;
+    readonly tempered?: boolean;
   }>;
-  info: string;
-  hzv: HzvSummary;
-  hzv_hr?: HzvSummary;
-  species: string;
-  useful_info: string;
-  resistances: Array<string>;
-  weakness: Array<string>;
-  hzv_filepath: string;
-  hzv_filepath_hr?: string;
-  icon_filepath: string;
-  threat_level?: string;
+  readonly info: string;
+  readonly hzv: HzvSummary;
+  readonly hzv_hr?: HzvSummary;
+  readonly species: string;
+  readonly useful_info: string;
+  readonly resistances: Array<string>;
+  readonly weakness: Array<string>;
+  readonly hzv_filepath: string;
+  readonly hzv_filepath_hr?: string;
+  readonly icon_filepath: string;
+  readonly threat_level?: string;
 }
 
 class MhwClient {
