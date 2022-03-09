@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -45,15 +45,21 @@ class Hzv extends Command {
     else if (!client.mhwClient.monsters.has(input)) return this.notFound(message, client);
   }
 
-  private async monsterEmbed(client: Bot, name: string, isHR: boolean): Promise<[MessageEmbed, Array<string>]> {
+  private async monsterEmbed(client: Bot, name: string, isHR: boolean): Promise<[MessageEmbed, Array<MessageAttachment>]> {
     const monster = client.mhwClient.monsters.get(name);
-    const hzvFilePath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
+    const hzvFilepath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
     const hzv = isHR ? monster.hzv_hr : monster.hzv;
 
     // Get file name by cutting off everything before and including the last '/'
     // Clean up file name by removing characters that will mess with Discord's API
-    const hzvName = hzvFilePath.slice(hzvFilePath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '');
-    const iconName = monster.icon_filepath.slice(monster.icon_filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '');
+    const thumbnail = new MessageAttachment(
+      monster.icon_filepath,
+      monster.icon_filepath.slice(monster.icon_filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '')
+    );
+    const hzvImage = new MessageAttachment(
+      hzvFilepath,
+      hzvFilepath.slice(hzvFilepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '')
+    );
 
     const title = `__**${monster.title}**__${monster.threat_level ? `  ${monster.threat_level}` : ''}`;
 
@@ -62,8 +68,8 @@ class Hzv extends Command {
     const embed = new MessageEmbed()
       .setColor('#8fde5d')
       .setTitle(title)
-      .setThumbnail(attachURL(iconName))
-      .setImage(attachURL(hzvName))
+      .setThumbnail(attachURL(thumbnail.name))
+      .setImage(attachURL(hzvImage.name))
       .addField('Classification', monster.species)
       .addField('Characteristics', monster.description)
       .addField(
@@ -71,7 +77,7 @@ class Hzv extends Command {
         `🔥 **${hzv.fire}** 💧 **${hzv.water}** ⚡ **${hzv.thunder}** ❄ **${hzv.ice}** 🐉 **${hzv.dragon}**`
       );
     
-    return [embed, [monster.icon_filepath, hzvFilePath]];
+    return [embed, [thumbnail, hzvImage]];
   }
 
   private async notFound(message: Message, client: Bot): Promise<void> {
