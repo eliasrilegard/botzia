@@ -1,3 +1,4 @@
+import { getColorFromURL } from 'color-thief-node';
 import { Message, MessageEmbed } from 'discord.js';
 import Command from '../../bot/command';
 
@@ -24,11 +25,18 @@ class Avatar extends Command {
     }
 
     const avatarUrl = user.displayAvatarURL().slice(0, -4).concat('png?size=1024');
+    const dominantColor = await getColorFromURL(avatarUrl, 1);
 
     const embed = new MessageEmbed()
+      .setColor(dominantColor)
+      .setDescription(`Dominant color: #${this.hexify(dominantColor)}`)
       .setAuthor({ name: user.tag, iconURL: avatarUrl })
       .setImage(avatarUrl);
     message.channel.send({ embeds: [embed] });
+  }
+
+  private hexify(rgb: Array<number>): string {
+    return rgb.map(val => val.toString(16)).join('');
   }
 }
 
