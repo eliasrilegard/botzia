@@ -36,7 +36,7 @@ class Avatar extends Command {
   }
 
   private hexify(rgb: Array<number>): string {
-    return rgb.map(val => val.toString(16)).join('');
+    return rgb.reduce((result, val) => result + val.toString(16).padStart(2, '0'), '');
   }
 }
 
