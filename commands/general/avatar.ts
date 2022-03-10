@@ -24,14 +24,15 @@ class Avatar extends Command {
       return;
     }
 
-    const avatarUrl = user.displayAvatarURL().slice(0, -4).concat('png?size=1024');
-    const dominantColor = await getColorFromURL(avatarUrl, 1);
+    const avatarUrl = user.displayAvatarURL();
+    const requestUrl = avatarUrl.endsWith('.webp') ? avatarUrl.slice(0, -4).concat('png').concat('?size=1024') : avatarUrl;
+    const dominantColor = await getColorFromURL(requestUrl, 1);
 
     const embed = new MessageEmbed()
       .setColor(dominantColor)
       .setDescription(`Dominant color: #${this.hexify(dominantColor)}`)
       .setAuthor({ name: user.tag, iconURL: avatarUrl })
-      .setImage(avatarUrl);
+      .setImage(requestUrl);
     message.channel.send({ embeds: [embed] });
   }
 
