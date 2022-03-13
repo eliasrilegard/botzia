@@ -7,7 +7,10 @@ class Wordle extends Command {
     super(
       'wordle',
       'Wordle helper',
-      ['[placed letters] (unplaced letters) (wrong letters)']
+      [
+        '[placed letters] (unplaced letters) (wrong letters)',
+        '[placed letters] \`none\` (wrong letters)'
+      ]
     );
   }
 
