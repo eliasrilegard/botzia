@@ -39,26 +39,26 @@ class Wordle extends Command {
     const rePlaced = new RegExp(`${placed.replace(/-/g, '.')}`);
     words = words.filter(word => rePlaced.test(word));
 
-    const wordsPerPage = 20;
+    const wordsPerColumn = 20;
     const columnNumbers = 3;
 
     const embeds = words
-      .reduce((result: Array<Array<string>>, word, index) => { // Chunk all words into smaller arrays
-        const chunkIndex = Math.floor(index / wordsPerPage);
-        if (!result[chunkIndex]) result[chunkIndex] = [];
-        result[chunkIndex].push(word);
-        return result;
-      }, [])
-      .reduce((result: Array<Array<Array<string>>>, chunk, index) => { // Chunk those arrays into pairs
-        const chunkIndex = Math.floor(index / columnNumbers);
-        if (!result[chunkIndex]) result[chunkIndex] = [];
-        result[chunkIndex].push(chunk);
-        return result;
-      }, [])
-      .map(chunk => { // Map each pair of word arrays into an embed message with two columns
+      .reduce( // Chunk word list into triads of arrays, each inner array has 20 words
+        (result: Array<Array<Array<string>>>, word, index) => {
+          const embedIndex = Math.floor(index / (wordsPerColumn * columnNumbers));
+          const columnIndex = Math.floor(index / wordsPerColumn) % columnNumbers;
+          result[embedIndex][columnIndex].push(word);
+          return result;
+        },
+        Array.from( // [ [ [], [], [] ], [ [], [], [] ], ...]
+          { length: Math.ceil(words.length / (wordsPerColumn * columnNumbers)) },
+          () => Array.from({ length: 3 }, () => [])
+        )
+      )
+      .map((embedContent: Array<Array<string>>) => { // Map each chunk of word arrays into an embed message
         const embed = new MessageEmbed().setColor('#00cc00').setDescription('**Matching words**');
-        chunk.forEach(wordArr => {
-          embed.addField('\u200b', wordArr.join('\n'), true);
+        embedContent.forEach(wordArr => {
+          if (wordArr.length > 0) embed.addField('\u200b', wordArr.join('\n'), true);
         });
         return embed;
       });
