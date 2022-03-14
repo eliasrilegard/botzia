@@ -35,6 +35,15 @@ class Wordle extends Command {
     }
 
     if (args[2]) {
+      if (args[1].toLowerCase() !== 'none' && [...args[1]].some(c => args[2].includes(c))) {
+        const embed = new MessageEmbed()
+          .setColor('#cc0000')
+          .setTitle('Invalid arguments')
+          .setDescription('Argument 2 and 3 must not share any characters.');
+        message.channel.send({ embeds: [embed] });
+        return;
+      }
+
       const reIncorrect = new RegExp(`[${args[2].toLowerCase()}]`);
       words = words.filter(word => !reIncorrect.test(word));
     }
