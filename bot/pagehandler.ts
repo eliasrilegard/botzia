@@ -97,6 +97,10 @@ class PageHandler {
     this.page = pg;
     this.pagerMessage.edit({ embeds: [this.pages[pg - 1]] });
   }
+
+  public delete(): void {
+    this.pagerMessage.delete();
+  }
 }
 
 export default PageHandler;

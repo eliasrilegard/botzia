@@ -84,8 +84,15 @@ class Wordle extends Command {
         return embed;
       });
 
-    if (embeds.length === 1) message.channel.send({ embeds: [embeds[0]] });
-    else this.sendMenu(message, embeds);
+    if (embeds.length === 1) {
+      const wordMessage = await message.channel.send({ embeds: [embeds[0]] });
+      setTimeout(() => wordMessage.delete(), 120000);
+    }
+    else {
+      const pager = this.sendMenu(message, embeds);
+      setTimeout(() => pager.delete(), 120000);
+    }
+    setTimeout(() => message.delete(), 120000);
   }
 }
 
