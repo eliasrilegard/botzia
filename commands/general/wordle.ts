@@ -51,6 +51,15 @@ class Wordle extends Command {
     const rePlaced = new RegExp(`${placed.replace(/-/g, '.')}`);
     words = words.filter(word => rePlaced.test(word));
 
+    if (words.length === 0) {
+      const embed = new MessageEmbed()
+        .setColor('#cc6600')
+        .setTitle('No words found')
+        .setDescription('Did you enter all arguments correctly?');
+      message.channel.send({ embeds: [embed] });
+      return;
+    }
+
     const wordsPerColumn = 20;
     const columnNumbers = 3;
 
