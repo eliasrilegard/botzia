@@ -227,22 +227,22 @@ class Trivia extends Command {
 
   private cleanup(str: string): string {  
     // Keep on adding to this list as you find more errors
-    const allReplacements = [[/&#039;/g, '\''], [/&quot;/g, '\''], [/&micro;/g, 'µ'], [/&Agrave;/g, 'À'], [/&Aacute;/g, 'Á'],
-      [/&Acirc;/g, 'Â'], [/&Atilde;/g, 'Ã'], [/&Auml;/g, 'Ä'], [/&Aring;/g, 'Å'], [/&agrave;/g, 'à'], [/&aacute;/g, 'á'],
-      [/&acirc;/g, 'â'], [/&atilde;/g, 'ã'], [/&auml;/g, 'ä'], [/&aring;/g, 'å'], [/&AElig;/g, 'Æ'], [/&aelig;/g, 'æ'],
-      [/&szlig;/g, 'ß'], [/&Ccedil;/g, 'Ç'], [/&ccedil;/g, 'ç'], [/&Egrave;/g, 'È'], [/&Eacute;/g, 'É'], [/&Ecirc;/g, 'Ê'],
-      [/&Euml;/g, 'Ë'], [/&egrave;/g, 'è'], [/&eacute;/g, 'é'], [/&ecirc;/g, 'ê'], [/&euml;/g, 'ë'], [/&#131;/g, 'ƒ'],
-      [/&Igrave;/g, 'Ì'], [/&Iacute;/g, 'Í'], [/&Icirc;/g, 'Î'], [/&Iuml;/g, 'Ï'], [/&igrave;/g, 'ì'], [/&iacute;/g, 'í'],
-      [/&icirc;/g, 'î'], [/&iuml;/g, 'ï'], [/&Ntilde;/g, 'Ñ'], [/&ntilde;/g, 'ñ'], [/&Ograve;/g, 'Ò'], [/&Oacute;/g, 'Ó'],
-      [/&Ocirc;/g, 'Ô'], [/&Otilde;/g, 'Õ'], [/&Ouml;/g, 'Ö'], [/&ograve;/g, 'ò'], [/&oacute;/g, 'ó'], [/&ocirc;/g, 'ô'],
-      [/&otilde;/g, 'õ'], [/&ouml;/g, 'ö'], [/&Oslash;/g, 'Ø'], [/&oslash;/g, 'ø'], [/&#140;/g, 'Œ'], [/&#156;/g, 'œ'],
-      [/&#138;/g, 'Š'], [/&#154;/g, 'š'], [/&Ugrave;/g, 'Ù'], [/&Uacute;/g, 'Ú'], [/&Ucirc;/g, 'Û'], [/&Uuml;/g, 'Ü'],
-      [/&ugrave;/g, 'ù'], [/&uacute;/g, 'ú'], [/&ucirc;/g, 'û'], [/&uuml;/g, 'ü'], [/&#181;/g, 'µ'], [/&Yacute;/g, 'Ý'],
-      [/&#159;/g, 'Ÿ'], [/&yacute;/g, 'ý'], [/&yuml;/g, 'ÿ'], [/&deg;/g, '°'], [/&amp;/g, '&'], [/&ldquo;/g, '“'],
-      [/&rdquo;/g, '”'], [/&reg;/g, '®'], [/&trade;/g, '™'], [/&lt;/g, '<'], [/&gt;/g, '>'], [/&le;/g, '≤'],
-      [/&ge;/g, '≥']];
+    const allReplacements: Array<[RegExp, string]> = [[/&#039;/g, '\''], [/&quot;/g, '\''], [/&micro;/g, 'µ'],
+      [/&Agrave;/g, 'À'], [/&Aacute;/g, 'Á'], [/&Acirc;/g, 'Â'], [/&Atilde;/g, 'Ã'], [/&Auml;/g, 'Ä'], [/&Aring;/g, 'Å'],
+      [/&agrave;/g, 'à'], [/&aacute;/g, 'á'], [/&acirc;/g, 'â'], [/&atilde;/g, 'ã'], [/&auml;/g, 'ä'], [/&aring;/g, 'å'],
+      [/&AElig;/g, 'Æ'], [/&aelig;/g, 'æ'], [/&szlig;/g, 'ß'], [/&Ccedil;/g, 'Ç'], [/&ccedil;/g, 'ç'], [/&Egrave;/g, 'È'],
+      [/&Eacute;/g, 'É'], [/&Ecirc;/g, 'Ê'], [/&Euml;/g, 'Ë'], [/&egrave;/g, 'è'], [/&eacute;/g, 'é'], [/&ecirc;/g, 'ê'],
+      [/&euml;/g, 'ë'], [/&#131;/g, 'ƒ'], [/&Igrave;/g, 'Ì'], [/&Iacute;/g, 'Í'], [/&Icirc;/g, 'Î'], [/&Iuml;/g, 'Ï'],
+      [/&igrave;/g, 'ì'], [/&iacute;/g, 'í'], [/&icirc;/g, 'î'], [/&iuml;/g, 'ï'], [/&Ntilde;/g, 'Ñ'], [/&ntilde;/g, 'ñ'],
+      [/&Ograve;/g, 'Ò'], [/&Oacute;/g, 'Ó'], [/&Ocirc;/g, 'Ô'], [/&Otilde;/g, 'Õ'], [/&Ouml;/g, 'Ö'], [/&ograve;/g, 'ò'],
+      [/&oacute;/g, 'ó'], [/&ocirc;/g, 'ô'], [/&otilde;/g, 'õ'], [/&ouml;/g, 'ö'], [/&Oslash;/g, 'Ø'], [/&oslash;/g, 'ø'],
+      [/&#140;/g, 'Œ'], [/&#156;/g, 'œ'], [/&#138;/g, 'Š'], [/&#154;/g, 'š'], [/&Ugrave;/g, 'Ù'], [/&Uacute;/g, 'Ú'],
+      [/&Ucirc;/g, 'Û'], [/&Uuml;/g, 'Ü'], [/&ugrave;/g, 'ù'], [/&uacute;/g, 'ú'], [/&ucirc;/g, 'û'], [/&uuml;/g, 'ü'],
+      [/&#181;/g, 'µ'], [/&Yacute;/g, 'Ý'], [/&#159;/g, 'Ÿ'], [/&yacute;/g, 'ý'], [/&yuml;/g, 'ÿ'], [/&deg;/g, '°'],
+      [/&amp;/g, '&'], [/&ldquo;/g, '“'], [/&rdquo;/g, '”'], [/&reg;/g, '®'], [/&trade;/g, '™'], [/&lt;/g, '<'],
+      [/&gt;/g, '>'], [/&le;/g, '≤'], [/&ge;/g, '≥']];
   
-    allReplacements.forEach(pair => str = str.replace(pair[0], pair[1] as string));
+    allReplacements.forEach(pair => str = str.replace(pair[0], pair[1]));
     return str;
   }
 }
