@@ -2,9 +2,9 @@ import { Message, MessageEmbed } from 'discord.js';
 import Command from '../../bot/command';
 
 class DynamicTime extends Command {
-  timezones: Map<string, number>;
+  private timezones: Map<string, number>;
 
-  constructor() {
+  public constructor() {
     super(
       'dynamictime',
       'Convert a timestamp (UTC) to dynamic date-time display',
