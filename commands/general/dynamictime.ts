@@ -8,7 +8,7 @@ class DynamicTime extends Command {
     super(
       'dynamictime',
       'Convert a timestamp (UTC) to dynamic date-time display',
-      ['[YYYY-MM-DD] [HH:MM] (Timezone or UTC±Offset)', '-list'],
+      ['[YYYY-MM-DD] [HH:MM] (Timezone or UTC±Offset)', '--list'],
       { aliases: ['dtime'] }
     );
 
@@ -20,6 +20,20 @@ class DynamicTime extends Command {
   }
 
   public async execute(message: Message, args: Array<string>): Promise<void> {
+    // If timezone list requested
+    if (args.length === 1 && args[0] === '--list') {  
+      const offsets = [...this.timezones.values()].map(offset => `${offset > 0 ? '+' : ''}${offset}`);
+      const embed = new MessageEmbed()
+        .setColor('#0066cc')
+        .setTitle('Supported timezones')
+        .addFields([
+          { name: 'Name', value: [...this.timezones.keys()].join('\n'), inline: true },
+          { name: 'UTC Offset', value: offsets.join('\n'), inline: true }
+        ]);
+      message.channel.send({ embeds: [embed] });
+      return;
+    }
+
     // Validate arguments
     if (![2, 3].includes(args.length)) return;
     if (!/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(args.slice(0, 2).join(' '))) {
@@ -33,6 +47,7 @@ class DynamicTime extends Command {
 
     let dateString = args.slice(0, 2).join(' ');
 
+    // If timezone specified, else default to UTC
     if (args[2]) {
       if (this.timezones.has(args[2])) {
         const offset = this.timezones.get(args[2]);
