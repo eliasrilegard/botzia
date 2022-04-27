@@ -8,7 +8,7 @@ class DynamicTime extends Command {
     super(
       'dynamictime',
       'Convert a timestamp (UTC) to dynamic date-time display',
-      ['[YYYY-MM-DD] [HH:MM] (Timezone or UTC±Offset)', '--list'],
+      ['[YYYY-MM-DD] [HH:MM] (timezone or UTC±offset)', '--list'],
       { aliases: ['dtime'] }
     );
 

@@ -9,7 +9,7 @@ class Quote extends Command {
     super(
       'quote',
       'Posts a quote',
-      ['[Quote]'],
+      ['[quote]'],
       { belongsTo: 'dd' }
     );
     this.quoteMap = new Map();

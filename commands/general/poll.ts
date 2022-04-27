@@ -8,7 +8,7 @@ class Poll extends Command {
     super(
       'poll',
       'Make a poll about something!',
-      ['[Question]; [Option1]; [Option2] ...'],
+      ['[question]; [option 1]; [option 2] ...'],
       { guildOnly: true }
     );
   }

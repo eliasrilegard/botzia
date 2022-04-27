@@ -6,7 +6,7 @@ class Res extends Command {
     super(
       'res',
       'Calulates the number of upgrades required to max the resists of ult armor.',
-      ['[Res 1] (Res 2) (Res 3) (Res 4) (Upgrades) (Primary stat)'],
+      ['[res 1] (res 2) (res 3) (res 4) (upgrades) (primary stat)'],
       { belongsTo: 'dd' }
     );
   }
