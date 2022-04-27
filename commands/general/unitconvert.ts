@@ -75,6 +75,28 @@ class UnitConvert extends Command {
           { unit: 'km', name: 'Kilometers', conversion: l => l * 1.609344 },
           { unit: 'ft', name: 'Feet', conversion: l => l * 5280 }
         ]
+      }],
+      // Mass
+      ['kg', {
+        name: 'Kilograms',
+        conversions: [
+          { unit: 'lb', name: 'Pounds', conversion: m => m * 2.20462262 },
+          { unit: 'oz', name: 'Ounces', conversion: m => m * 35.2739619 }
+        ]
+      }],
+      ['lb', {
+        name: 'Pounds',
+        conversions: [
+          { unit: 'kg', name: 'Kilograms', conversion: m => m * 0.45359237 },
+          { unit: 'oz', name: 'Ounces', conversion: m => m * 16 }
+        ]
+      }],
+      ['oz', {
+        name: 'Ounces',
+        conversions: [
+          { unit: 'kg', name: 'Kilograms', conversion: m => m * 0.02834952 },
+          { unit: 'lb', name: 'Pounds', conversion: m => m * 0.0625 }
+        ]
       }]
     ]);
   }
