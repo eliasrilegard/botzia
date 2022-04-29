@@ -9,7 +9,7 @@ class Quote extends Command {
     super(
       'quote',
       'Posts a quote',
-      ['[quote]'],
+      ['[quote]', '--list'],
       { belongsTo: 'dd' }
     );
     this.quoteMap = new Map();
@@ -17,6 +17,14 @@ class Quote extends Command {
   }
 
   public async execute(message: Message, args: Array<string>): Promise<void> {
+    if (args[0] === '--list' && args.length === 1) {
+      const embed = new MessageEmbed()
+        .setColor('#0066cc')
+        .setTitle('Quote list')
+        .addField('Here\'s a list of all avalible quotes', [...this.quoteMap.keys()].sort((a, b) => a.localeCompare(b)).join('\n'));
+      message.channel.send({ embeds: [embed] });
+      return;
+    }
     const key = args.join('').toLowerCase();
     if (!this.quoteMap.has(key)) {
       const embed = new MessageEmbed()
