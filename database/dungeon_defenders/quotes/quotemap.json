@@ -6,5 +6,9 @@
   {
     "name": "cheating",
     "filepath": "./database/dungeon_defenders/quotes/img/plane_cheating.png"
+  },
+  {
+    "name": "post",
+    "filepath": "./database/dungeon_defenders/quotes/img/nyman_post.png"
   }
 ]
