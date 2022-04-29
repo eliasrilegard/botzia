@@ -1,6 +1,5 @@
 import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
 import Command from '../../bot/command';
-import * as quoteData from '../../database/dungeon_defenders/quotes/quoteMap.json';
 
 class Quote extends Command {
   private readonly quoteMap: Map<string, string>;
@@ -13,7 +12,7 @@ class Quote extends Command {
       { belongsTo: 'dd' }
     );
     this.quoteMap = new Map();
-    for (const [, v] of Object.entries(quoteData)) this.quoteMap.set(v.name, v.filepath);
+    this.loadQuotes();
   }
 
   public async execute(message: Message, args: Array<string>): Promise<void> {
@@ -39,6 +38,11 @@ class Quote extends Command {
       filepath.slice(filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '') // See mhw/hzv
     );
     message.channel.send({ files: [quoteImage] });
+  }
+
+  private async loadQuotes(): Promise<void> {
+    const quoteData = await import('../../database/dungeon_defenders/quotes/quotemap.json');
+    for (const [, v] of Object.entries(quoteData)) this.quoteMap.set(v.name, v.filepath);
   }
 }
 
