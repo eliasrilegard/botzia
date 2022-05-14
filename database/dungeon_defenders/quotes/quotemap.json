@@ -10,5 +10,9 @@
   {
     "name": "post",
     "filepath": "./database/dungeon_defenders/quotes/img/nyman_post.png"
+  },
+  {
+    "name": "ups",
+    "filepath": "./database/dungeon_defenders/quotes/img/moose_ups.png"
   }
 ]
