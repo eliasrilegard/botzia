@@ -41,6 +41,7 @@ class Quote extends Command {
   }
 
   private async loadQuotes(): Promise<void> {
+    delete require.cache[require.resolve('../../database/dungeon_defenders/quotes/quotemap.json')];
     const quoteData = await import('../../database/dungeon_defenders/quotes/quotemap.json');
     for (const [, v] of Object.entries(quoteData)) this.quoteMap.set(v.name, v.filepath);
   }
