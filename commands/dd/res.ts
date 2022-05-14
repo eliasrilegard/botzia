@@ -50,8 +50,10 @@ class Res extends Command {
       .setTitle(`It takes ${levelsSpent} levels to max the resistances`)
       .setDescription(`The final upgrade will be on level ${armorLevel}.`);
     if (avalibleUpgrades) {
-      if (primaryStat) embed.addField('Additional info', `The piece will end up with ${primaryStat + intoPrimaryStat} in the primary stat and ${avalibleUpgrades - armorLevel - 1} upgrades remaining.`);
-      else embed.addField('Additional info', `The piece will end up with ${avalibleUpgrades - armorLevel - 1} upgrades remaining.`); // -1 might need to be -2
+      const upgradesRemaining = avalibleUpgrades - armorLevel - 1,
+        potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
+      if (primaryStat) embed.addField('Additional info', `The piece will end up with ${primaryStat + intoPrimaryStat} in the primary stat and ${upgradesRemaining} upgrades remaining.\n This gives a potential stat total of ${potentialTotal}, or ${Math.ceil(1.4 * potentialTotal)} with boost.`);
+      else embed.addField('Additional info', `The piece will end up with ${upgradesRemaining} upgrades remaining.`);
       embed.setFooter({ text: 'Final (forging) upgrade not included in upgrades remaining.' });
     }
     message.channel.send({ embeds: [embed] });
