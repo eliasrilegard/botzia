@@ -14,5 +14,9 @@
   {
     "name": "ups",
     "filepath": "./database/dungeon_defenders/quotes/img/moose_ups.png"
+  },
+  {
+    "name": "verylucky",
+    "filepath": "./database/dungeon_defenders/quotes/img/washboard_tol.png"
   }
 ]
