@@ -1,4 +1,5 @@
 import { Message, MessageEmbed } from 'discord.js';
+import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 class DynamicTime extends Command {
@@ -8,7 +9,7 @@ class DynamicTime extends Command {
     super(
       'dynamictime',
       'Convert a timestamp (UTC) to dynamic date-time display',
-      ['[YYYY-MM-DD] [HH:MM] (timezone or UTC±offset)', '--list'],
+      ['[YYYY-MM-DD] [HH:MM] (timezone or UTC±offset)', '--list', '--timezone [set or reset]'],
       { aliases: ['dtime'] }
     );
 
@@ -19,9 +20,9 @@ class DynamicTime extends Command {
     ]);
   }
 
-  public async execute(message: Message, args: Array<string>): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     // If timezone list requested
-    if (args.length === 1 && args[0] === '--list') {  
+    if (args.length === 1 && args[0] === '--list') {
       const offsets = [...this.timezones.values()].map(offset => `${offset > 0 ? '+' : ''}${offset}`);
       const embed = new MessageEmbed()
         .setColor('#0066cc')
@@ -32,6 +33,9 @@ class DynamicTime extends Command {
         ]);
       message.channel.send({ embeds: [embed] });
       return;
+    }
+    else if (args[0] === '--timezone') {
+      return this.handleTimezone(message, args, client);
     }
 
     // Validate arguments
@@ -60,10 +64,14 @@ class DynamicTime extends Command {
         const embed = new MessageEmbed()
           .setColor('#cc0000')
           .setTitle('Invalid timezone')
-          .setDescription('Do \'UTC±Offset\'');
+          .setDescription('Do `UTC±Offset`');
         message.channel.send({ embeds: [embed] });
         return;
       }
+    }
+    else { // Check if user has a stored timezone, though only if it was omitted in original message
+      const savedOffset = await client.apiClient.getUserTimezone(message.author.id);
+      dateString += savedOffset ? ` ${savedOffset}` : ' UTC';
     }
 
     const unixTime = Math.floor(Date.parse(dateString) / 1000);
@@ -83,6 +91,67 @@ class DynamicTime extends Command {
         { name: 'Raw', value: `\`<t:${unixTime}:f>\`` }
       ]);
     message.channel.send({ embeds: [embed] });
+  }
+
+  private handleTimezone(message: Message, args: Array<string>, client: Bot): void {
+    const action = args[1].toLowerCase();
+    switch (action) {
+      case 'set': {
+        if (args.length !== 3) {
+          const embed = new MessageEmbed()
+            .setColor('#cc0000')
+            .setTitle('Invalid format')
+            .setDescription('Do `--timezone set [UTC±x or named timezone]`');
+          message.channel.send({ embeds: [embed] });
+          return;
+        }
+
+        // Find offset specified by checking if it's a key in this.timezones or if matches UTC±x
+        const timezone = args[2].toUpperCase();
+        let utcOffset: string;
+        if (this.timezones.has(timezone)) {
+          const offset = this.timezones.get(timezone);
+          utcOffset = `UTC${offset < 0 ? '' : '+'}${offset}`;
+        }
+        else if (/UTC[+-]\d{1,2}/.test(timezone)) utcOffset = timezone;
+        else {
+          const embed = new MessageEmbed()
+            .setColor('#cc0000')
+            .setTitle('Invalid timezone')
+            .setDescription('Do `UTC±Offset` or a named timezone.\nSee `--list` for a list of supported timezones.');
+          message.channel.send({ embeds: [embed] });
+          return;
+        }
+
+        // Bind timezone to user id
+        client.apiClient.setUserTimezone(message.author.id, utcOffset);
+        const embed = new MessageEmbed()
+          .setColor('#00cc00')
+          .setTitle('Timezone set')
+          .setDescription(`Your offset is now ${utcOffset}`);
+        message.channel.send({ embeds: [embed] });
+        return;
+      }
+
+      case 'reset': {
+        client.apiClient.removeUserTimezone(message.author.id);
+        const embed = new MessageEmbed()
+          .setColor('#00cc00')
+          .setTitle('Timezone reset')
+          .setDescription('Your timezone has been reset');
+        message.channel.send({ embeds: [embed] });
+        return;
+      }
+    
+      default: {
+        const embed = new MessageEmbed()
+          .setColor('#cc0000')
+          .setTitle('Invalid action')
+          .setDescription('Accepted arguments are `set` and `reset`.');
+        message.channel.send({ embeds: [embed] });
+        return;
+      }
+    }
   }
 }
 
