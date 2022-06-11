@@ -9,7 +9,7 @@ class DynamicTime extends Command {
     super(
       'dynamictime',
       'Convert a timestamp (UTC) to dynamic date-time display',
-      ['[YYYY-MM-DD] [HH:MM] (timezone or UTC±offset)', '--list', '--timezone [set or reset]'],
+      ['(YYYY-MM-DD) [HH:MM] (timezone or UTC±offset)', '--list', '--timezone [set or reset]'],
       { aliases: ['dtime'] }
     );
 
@@ -39,26 +39,29 @@ class DynamicTime extends Command {
     }
 
     // Validate arguments
-    if (![2, 3].includes(args.length)) return;
-    if (!/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(args.slice(0, 2).join(' '))) {
+    if (args.length < 1 || args.length > 3) return;
+    if (!/^(\d{4}-\d{2}-\d{2}\s)?\d{2}:\d{2}/.test(args.join(' '))) {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('Invalid format')
-        .setDescription('Make sure the date format is YYYY-MM-DD HH:MM');
+        .setDescription('Make sure the date format is YYYY-MM-DD HH:MM or just HH:MM');
       message.channel.send({ embeds: [embed] });
       return;
     }
 
-    let dateString = args.slice(0, 2).join(' ');
+    // Build 'YYYY-MM-DD HH:MM' string
+    const isDaySpecified = args.findIndex(arg => arg.match(/\d{2}:\d{2}/)) === 1; // Is time the second argument?
+    let dateString = isDaySpecified ? args.slice(0, 2).join(' ') : `${new Date().toISOString().slice(0, 10)} ${args.slice(0, 1)}`;
 
     // If timezone specified, else default to UTC
-    if (args[2]) {
-      if (this.timezones.has(args[2])) {
-        const offset = this.timezones.get(args[2]);
+    if (args[args.length - 1].match(/^\w{3,4}/)) { // If last specified argument starts with 3 or 4 letters
+      const timezone = args[args.length - 1];
+      if (this.timezones.has(timezone)) {
+        const offset = this.timezones.get(timezone);
         dateString += ` UTC${offset < 0 ? '' : '+'}${offset}`;
       }
-      else if (/UTC[+-]\d{1,2}/.test(args[2])) {
-        dateString += ` ${args[2]}`;
+      else if (/UTC[+-]\d{1,2}/.test(timezone)) {
+        dateString += ` ${timezone}`;
       }
       else { // Nothing matched
         const embed = new MessageEmbed()
@@ -84,11 +87,12 @@ class DynamicTime extends Command {
       return;
     }
 
+    const formatted = `<t:${unixTime}:${isDaySpecified ? 'f' : 't'}>`;
     const embed = new MessageEmbed()
       .setColor('#0066cc')
       .addFields([
-        { name: 'Display', value: `<t:${unixTime}:f>` },
-        { name: 'Raw', value: `\`<t:${unixTime}:f>\`` }
+        { name: 'Display', value: formatted },
+        { name: 'Raw', value: `\`${formatted}\`` }
       ]);
     message.channel.send({ embeds: [embed] });
   }
