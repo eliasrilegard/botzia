@@ -84,7 +84,7 @@ class Command {
   }
 
   public howTo(prefix: string, codeblock = false): string {
-    return `${codeblock ? '\`' : ''}${prefix}${this.name} ${this.usages[0]}${codeblock ? '\`' : ''}`;
+    return `${codeblock ? '\`' : ''}${prefix}${this.belongsTo ? this.belongsTo + ' ' : ''}${this.name} ${this.usages[0]}${codeblock ? '\`' : ''}`;
   }
 
   protected sendMenu(message: Message, pages: Array<MessageEmbed>): PageHandler {
