@@ -32,23 +32,23 @@ class LTRange extends Command {
     }
 
     const currentRange = parseInt(args[0]);
-    if (isNaN(currentRange)) {
+    if (isNaN(currentRange) || currentRange < 0 || currentRange > 9999) {
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('Check arguments')
-        .setDescription('This command takes a number as its argument.')
+        .setDescription('This command takes a number between 0 and 9999 as its argument.')
         .addField('Usage', this.howTo(await client.prefix(message), true));
       message.channel.send({ embeds: [embed] });
       return;
     }
 
-    // Find closest 3 breakpoints in normal and upped
-    const indexNormal = this.normal.findIndex(x => x >= currentRange);
-    const indexUpped = this.upped.findIndex(x => x >= currentRange);
+    // Find the 3 closest breakpoints to the current range
+    const [indexNormal, ...closestNormal] = this.closestBreakpoint(currentRange, this.normal);
+    const [indexUpped, ...closestUpped] = this.closestBreakpoint(currentRange, this.upped);
 
     // Construct the embed content by showing the 3 closest breakpoints and their values
-    const valueNormal = `\`\`\`${this.normal[indexNormal - 1]} - ${indexNormal + 5}\n${this.normal[indexNormal]} - ${indexNormal + 6}\n${this.normal[indexNormal + 1]} - ${indexNormal + 7}\`\`\``;
-    const valueUpped = `\`\`\`${this.upped[indexUpped - 1]} - ${indexUpped + 16}\n${this.upped[indexUpped]} - ${indexUpped + 17}\n${this.upped[indexUpped + 1]} - ${indexUpped + 18}\`\`\``;
+    const valueNormal = `\`\`\`${closestNormal[0]} - ${indexNormal + 5}\n${closestNormal[1]} - ${indexNormal + 6}\n${closestNormal[2]} - ${indexNormal + 7}\`\`\``;
+    const valueUpped = `\`\`\`${closestUpped[0]} - ${indexUpped + 16}\n${closestUpped[1]} - ${indexUpped + 17}\n${closestUpped[2]} - ${indexUpped + 18}\`\`\``;
 
     const embed = new MessageEmbed()
       .setColor('#0066cc')
@@ -59,6 +59,13 @@ class LTRange extends Command {
         { name: 'Upgraded', value: valueUpped, inline: true }
       );
     message.channel.send({ embeds: [embed] });
+  }
+
+  private closestBreakpoint(range: number, breakpoints: Array<number>): Array<number> {
+    // Constrain index to 1 and length - 2. Should range not be found, findIndex will return -1
+    const foundIndex = breakpoints.findIndex(bp => bp >= range);
+    const index = Math.max(1, foundIndex !== -1 ? foundIndex : breakpoints.length - 2);
+    return [index, breakpoints[index - 1] ?? 0, breakpoints[index] ?? 9999, breakpoints[index + 1] ?? 9999];
   }
 }
 
