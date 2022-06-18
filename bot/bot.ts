@@ -118,7 +118,7 @@ class Bot extends Client {
     // Check if arguments are provided if required
     if (command.args && args.length === 0) {
       const prefix = await this.prefix(message);
-      const commandUsage = command.usages.map(usage => `${prefix}${command.name} ${usage}`).join('\n').trim();
+      const commandUsage = command.usages.map(usage => `${prefix}${command.belongsTo ? command.belongsTo + ' ' : ''}${command.name} ${usage}`).join('\n').trim();
       const embed = new MessageEmbed()
         .setColor('#cc0000')
         .setTitle('No arguments given')
