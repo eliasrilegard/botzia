@@ -130,7 +130,7 @@ class Bot extends Client {
 
     // Manage cooldown for user on command
     const expirationTime = command.cooldowns.get(message.author.id);
-    if (expirationTime && !command.category) {
+    if (expirationTime && !command.category && !this.isDev(message.author.id)) {
       const timeLeft = (expirationTime - Date.now()) / 1000;
       const embed = new MessageEmbed()
         .setColor('#cc6600')
