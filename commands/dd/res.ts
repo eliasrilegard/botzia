@@ -47,14 +47,11 @@ class Res extends Command {
 
     const embed = new MessageEmbed()
       .setColor('#0066cc')
-      .setTitle(`It takes ${levelsSpent} levels to max the resistances`)
-      .setDescription(`The final upgrade will be on level ${armorLevel}.`);
+      .setTitle(`It takes ${levelsSpent} levels to max the resistances`);
     if (avalibleUpgrades) {
-      const upgradesRemaining = avalibleUpgrades - armorLevel - 1,
-        potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
-      if (primaryStat) embed.addField('Additional info', `The piece will end up with ${primaryStat + intoPrimaryStat} in the primary stat and ${upgradesRemaining} upgrades remaining.\n This gives a potential stat total of ${potentialTotal}, or ${Math.ceil(1.4 * potentialTotal)} with boost.`);
-      else embed.addField('Additional info', `The piece will end up with ${upgradesRemaining} upgrades remaining.`);
-      embed.setFooter({ text: 'Final (forging) upgrade not included in upgrades remaining.' });
+      const upgradesRemaining = avalibleUpgrades - armorLevel - 1, potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
+      if (primaryStat) embed.setDescription(`The piece will end up with ${potentialTotal} in the stat, or ${Math.ceil(1.4 * potentialTotal)} with boost.`);
+      else embed.setDescription(`This leaves you with to invest a total of ${intoPrimaryStat + upgradesRemaining} points into a stat.`);
     }
     message.channel.send({ embeds: [embed] });
   }
