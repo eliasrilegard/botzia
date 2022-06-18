@@ -65,7 +65,7 @@ class LTRange extends Command {
     // Constrain index to 1 and length - 2. Should range not be found, findIndex will return -1
     const foundIndex = breakpoints.findIndex(bp => bp >= range);
     const index = Math.max(1, foundIndex !== -1 ? foundIndex : breakpoints.length - 2);
-    return [index, breakpoints[index - 1] ?? 0, breakpoints[index] ?? 9999, breakpoints[index + 1] ?? 9999];
+    return [index, breakpoints[index - 1], breakpoints[index], breakpoints[index + 1]];
   }
 }
 
