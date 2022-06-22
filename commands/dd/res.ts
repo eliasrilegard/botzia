@@ -1,4 +1,5 @@
 import { Message, MessageEmbed } from 'discord.js';
+import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 class Res extends Command {
@@ -11,12 +12,12 @@ class Res extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const resists = args.slice(0, 4).map(res => parseInt(res)).sort((a, b) => b - a) // Sort resists in descending order
       .concat(args.slice(4).map(stat => parseInt(stat))); // Add upgrades and primary stat to the end
     if (resists.length < 1 || resists.length > 6 || resists.some(res => isNaN(res))) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Bad argument(s)')
         .setDescription('This command takes 1-6 numbers.');
       message.channel.send({ embeds: [embed] });
@@ -46,7 +47,7 @@ class Res extends Command {
     }
 
     const embed = new MessageEmbed()
-      .setColor('#0066cc')
+      .setColor(client.config.colors.BLUE)
       .setTitle(`It takes ${levelsSpent} levels to max the resistances`);
     if (avalibleUpgrades) {
       const upgradesRemaining = avalibleUpgrades - armorLevel - 1, potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;

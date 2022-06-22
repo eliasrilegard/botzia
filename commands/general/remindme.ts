@@ -32,11 +32,11 @@ class Remindme extends Command {
     
     const time = (timeData[0] * 24 * 60 + timeData[1] * 60 + timeData[2]) * 60000;
     if (time <= 0) {
-      message.channel.send({ embeds: [this.helpMessage(await client.prefix(message))] });
+      message.channel.send({ embeds: [this.helpMessage(client, await client.prefix(message))] });
       return;
     }
     if (time > 2073600000) { // Limit of setTimeout
-      message.channel.send({ embeds: [this.tooLong()] });
+      message.channel.send({ embeds: [this.tooLong(client)] });
       return;
     }
     
@@ -48,7 +48,7 @@ class Remindme extends Command {
     const UIString = UIArray.join(', ').replace(/,(?=[^,]*$)/, ' and'); // Replace last ', ' with ' and '
     
     const embed = new MessageEmbed()
-      .setColor('#00cc00')
+      .setColor(client.config.colors.GREEN)
       .setTitle('Reminder created')
       .setDescription(`Okay! I will remind you in ${UIString}.`)
       .setTimestamp();
@@ -57,7 +57,7 @@ class Remindme extends Command {
     delete embed.fields;
 
     embed
-      .setColor('#0066cc')
+      .setColor(client.config.colors.BLUE)
       .setTitle(`${reminderMessage ? 'Here\'s your reminder!' : 'Ding!'}`)
       .setDescription(`${reminderMessage ? reminderMessage : 'Here\'s your reminder!'}`);
     
@@ -70,9 +70,9 @@ class Remindme extends Command {
     setTimeout(sendPingMessage, time);
   }
 
-  private helpMessage(prefix: string): MessageEmbed {
+  private helpMessage(client: Bot, prefix: string): MessageEmbed {
     return new MessageEmbed()
-      .setColor('#cc0000')
+      .setColor(client.config.colors.RED)
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
       .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
@@ -80,9 +80,9 @@ class Remindme extends Command {
       .addField('Command usage', this.howTo(prefix, true));
   }
 
-  private tooLong(): MessageEmbed {
+  private tooLong(client: Bot): MessageEmbed {
     return new MessageEmbed()
-      .setColor('#cc0000')
+      .setColor(client.config.colors.RED)
       .setTitle('Invalid time')
       .setDescription('Reminders have an upper time limit of 24 days.');
   }

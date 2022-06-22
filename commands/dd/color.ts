@@ -17,7 +17,7 @@ export default class Color extends Command {
     const colorString = args.join('');
     if (!/^,*-?\d{1,3}(,*-?\d{1,3}){0,2},*$/.test(colorString)) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000') // TODO: Specify colors in config.json and import them on startup
+        .setColor(client.config.colors.RED)
         .setTitle('Invalid format')
         .setDescription('Take your character name, remove `<color:` and `>` so you\'re only entering the numbers and commas.');
       message.channel.send({ embeds: [embed] });

@@ -19,7 +19,7 @@ class Db extends Command {
         client.apiClient.userTimezones.loadDatabase();
 
         const embed = new MessageEmbed()
-          .setColor('#00cc00')
+          .setColor(client.config.colors.GREEN)
           .setTitle('Database reloaded')
           .setDescription('Successfully reloaded all databases.');
         message.channel.send({ embeds: [embed] });
@@ -28,7 +28,7 @@ class Db extends Command {
 
       default: {
         const embed = new MessageEmbed()
-          .setColor('#cc0000')
+          .setColor(client.config.colors.RED)
           .setTitle('No such command')
           .setDescription(`The command \`${args[0]}\` couldn't be found.`);
         message.channel.send({ embeds: [embed] });

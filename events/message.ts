@@ -15,7 +15,7 @@ class MessageCreate extends ClientEvent {
 
     if (message.content.startsWith(`<@!${client.user.id}>`)) {
       const embed = new MessageEmbed()
-        .setColor('#00cc00')
+        .setColor(client.config.colors.GREEN)
         .setTitle('Getting started')
         .setDescription(`Use \`${prefix}help\` to get started!`);
       message.reply({ embeds: [embed] });

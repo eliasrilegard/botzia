@@ -17,7 +17,7 @@ class Ban extends Command {
     const member = message.mentions.members.first();
     const reason = args.slice(1).join(' ');
 
-    const embed = new MessageEmbed().setColor('#cc0000');
+    const embed = new MessageEmbed().setColor(client.config.colors.RED);
 
     if (!member) {
       embed
@@ -70,7 +70,7 @@ class Ban extends Command {
     member.ban({ reason: reason });
 
     embed
-      .setColor('#00cc00')
+      .setColor(client.config.colors.GREEN)
       .setTitle('Success')
       .setDescription(`Successfully banned <@${member.user.id}>${reason.length > 0 ? `for ${reason}` : ''}.`);
     message.channel.send({ embeds: [embed] });

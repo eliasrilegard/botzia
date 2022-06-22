@@ -23,7 +23,7 @@ class LTRange extends Command {
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args.length > 1) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('This command takes 1 argument.')
         .addField('Usage', this.howTo(await client.prefix(message), true));
@@ -34,7 +34,7 @@ class LTRange extends Command {
     const currentRange = parseInt(args[0]);
     if (isNaN(currentRange) || currentRange < 0 || currentRange > 9999) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('This command takes a number between 0 and 9999 as its argument.')
         .addField('Usage', this.howTo(await client.prefix(message), true));
@@ -51,7 +51,7 @@ class LTRange extends Command {
     const valueUpped = `\`\`\`${closestUpped[0]} - ${indexUpped + 16}\n${closestUpped[1]} - ${indexUpped + 17}\n${closestUpped[2]} - ${indexUpped + 18}\`\`\``;
 
     const embed = new MessageEmbed()
-      .setColor('#0066cc')
+      .setColor(client.config.colors.BLUE)
       .setTitle('Closest breakpoints')
       .setDescription('Here are the closest breakpoints to your current range.\n\`Range - Targets\`')
       .addFields(

@@ -3,6 +3,12 @@
     "defaultPrefix": ">",
     "invite": "https://discord.com/api/oauth2/authorize?client_id=780420556637339648&permissions=8&scope=bot"
   },
+  "colors": {
+    "RED": "#cc0000",
+    "GREEN": "#00cc00",
+    "BLUE": "#0066cc",
+    "ORANGE": "#cc6600"
+  },
   "users": {
     "chrono_id": "169889611911266304",
     "chrono_tag": "Chronozia#1815"

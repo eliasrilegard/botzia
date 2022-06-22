@@ -1,4 +1,5 @@
 import { BaseGuildTextChannel, Message, MessageEmbed } from 'discord.js';
+import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 class Purge extends Command {
@@ -11,12 +12,12 @@ class Purge extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const count = parseInt(args[0]) + 1;
 
     if (count < 2 || count > 100 || isNaN(count)) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Invalid argument')
         .setDescription('Specify a number between 1 and 99.');
       message.channel.send({ embeds: [embed] });
@@ -27,7 +28,7 @@ class Purge extends Command {
     catch (error) {
       console.log(error); // TODO Replace with logger
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Error')
         .setDescription('An error was encountered while trying to delete messages.')
         .addField('Error message', error);
@@ -35,7 +36,7 @@ class Purge extends Command {
       return;
     }
     const successEmbed = new MessageEmbed()
-      .setColor('#00cc00')
+      .setColor(client.config.colors.GREEN)
       .setTitle('Success')
       .setDescription(`Successfully deleted ${count} messages.`);
     const successMsg = await message.channel.send({ embeds: [successEmbed] });

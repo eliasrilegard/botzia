@@ -26,13 +26,13 @@ class Reload extends Command {
         if (command.belongsTo) client.categories.get(command.belongsTo).set(command.name, command);
         else client.commands.set(command.name, command);
         embed
-          .setColor('#00cc00')
+          .setColor(client.config.colors.GREEN)
           .setTitle('Command added')
           .setDescription(`Successfully built the command \`commands/${pathToFile}.js\`.`);
       }
       catch (error) {
         embed
-          .setColor('#cc0000')
+          .setColor(client.config.colors.RED)
           .setTitle('No such file')
           .setDescription(`The file \`commands/${pathToFile}.js\` couldn't be located.`)
           .addField('Error message', error.message);
@@ -46,7 +46,7 @@ class Reload extends Command {
     const command = client.commands.get(commandName) ||
       client.commands.find(cmd => cmd.aliases.includes(commandName));
 
-    if (!command) return this.notFound(message, commandName, false);
+    if (!command) return this.notFound(message, client, commandName, false);
 
     const files: Array<string> = [];
     for await (const file of client.getFiles(commandsDir)) files.push(file);
@@ -61,7 +61,7 @@ class Reload extends Command {
       const subCommandName = args[1];
       const subCommands = client.categories.get(command.name);
       subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
-      if (!subCommand) return this.notFound(message, subCommandName, true);
+      if (!subCommand) return this.notFound(message, client, subCommandName, true);
       pathToFile = files.filter(file => file.endsWith(`${command.name}/${subCommand.name}.js`))[0];
     }
     else pathToFile = files.filter(file => file.endsWith(`${command.name}.js`))[0];
@@ -77,7 +77,7 @@ class Reload extends Command {
       else client.commands.set(newCommand.name, newCommand);
 
       const embed = new MessageEmbed()
-        .setColor('#00cc00')
+        .setColor(client.config.colors.GREEN)
         .setTitle('Command reloaded')
         .setDescription(`Command \`${isReloadingSubCommand ? subCommand.name : command.name}\` was reloaded.`);
       message.channel.send({ embeds: [embed] });
@@ -85,7 +85,7 @@ class Reload extends Command {
     catch (error) {
       console.log(error);
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Error')
         .setDescription(`Command \`${isReloadingSubCommand ? subCommand.name : command.name}\` could not be reloaded.`)
         .addField('Error message:', `\`${error.message}\``);
@@ -93,9 +93,9 @@ class Reload extends Command {
     }
   }
 
-  private notFound(message: Message, name: string, isSubCommand: boolean): void {
+  private notFound(message: Message, client: Bot, name: string, isSubCommand: boolean): void {
     const embed = new MessageEmbed()
-      .setColor('#cc0000')
+      .setColor(client.config.colors.RED)
       .setTitle('Command not found')
       .setDescription(`There is no ${isSubCommand ? 'sub' : ''}command with name or alias \`${name}\`.`);
     message.channel.send({ embeds: [embed] });

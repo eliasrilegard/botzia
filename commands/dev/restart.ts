@@ -14,7 +14,7 @@ class Restart extends Command {
 
   public async execute(message: Message, _args: Array<string>, client: Bot): Promise<void> {
     const embed = new MessageEmbed()
-      .setColor('#0066cc')
+      .setColor(client.config.colors.BLUE)
       .setTitle('Restarting')
       .setDescription('Sent request to respawn all shards.')
       .setTimestamp();

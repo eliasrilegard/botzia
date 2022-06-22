@@ -103,13 +103,13 @@ class UnitConvert extends Command {
 
   public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {    
     const prefix = await client.prefix(message);
-    const embed = new MessageEmbed().setColor('#cc0000');
+    const embed = new MessageEmbed().setColor(client.config.colors.RED);
 
     if (args[0] === '--list') {
       const unitList: Array<string> = [];
       this.units.forEach(unit => unitList.push(unit.name));
       embed
-        .setColor('#0066cc')
+        .setColor(client.config.colors.BLUE)
         .setTitle('Avalible units')
         .addField('Here\'s a list of all supported units.', `\`${unitList.join('\`, \`')}\``);
       message.channel.send({ embeds: [embed] });
@@ -165,7 +165,7 @@ class UnitConvert extends Command {
     const valueConverted = Math.round((conversion(Number(valueBase)) + Number.EPSILON) * 100) / 100;
 
     embed
-      .setColor('#0066cc')
+      .setColor(client.config.colors.BLUE)
       .setTitle(`${valueBase} ${baseName} is ${valueConverted} ${goalName}`);
     message.channel.send({ embeds: [embed] });
   }

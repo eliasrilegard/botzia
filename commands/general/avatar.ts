@@ -1,5 +1,6 @@
 import { getColorFromURL } from 'color-thief-node';
 import { Message, MessageEmbed } from 'discord.js';
+import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 class Avatar extends Command {
@@ -12,11 +13,11 @@ class Avatar extends Command {
     );
   }
 
-  public async execute(message: Message): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const user = message.mentions.users.first();
     if (!user) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('User not found')
         .setDescription('Could not fetch information for the specified user.')
         .addField('Tip', 'Make sure the user is tagged and is a member of this server.');

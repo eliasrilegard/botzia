@@ -15,7 +15,7 @@ class List extends Command {
   public async execute(message: Message<boolean>, _args: Array<string>, client: Bot): Promise<void> {
     if (client.mhwClient.monsters == null) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Monster data unavalible')
         .setDescription('Could not access monster data at this time.')
         .setFooter({ text: `If this issue persists please contact ${client.config.users.chrono_tag}` });

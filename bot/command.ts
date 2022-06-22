@@ -66,7 +66,7 @@ class Command {
 
     if (!command) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Subcommand not found');
       message.channel.send({ embeds: [embed] });
       return;

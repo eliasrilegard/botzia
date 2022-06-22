@@ -17,7 +17,7 @@ class Timeout extends Command {
     const member = message.mentions.members.first();
 
     const prefix = await client.prefix(message);
-    const embed = new MessageEmbed().setColor('#cc0000');
+    const embed = new MessageEmbed().setColor(client.config.colors.RED);
 
     if (!member) {
       embed
@@ -72,7 +72,7 @@ class Timeout extends Command {
     if (member.communicationDisabledUntilTimestamp > Date.now()) { // Workaround for isCommunicationDisabled()
       if (args[1] === 'remove') {
         embed
-          .setColor('#00cc00')
+          .setColor(client.config.colors.GREEN)
           .setTitle('Timeout removal successful')
           .setDescription(`Successfully removed timeout for <@${member.user.id}>.`);
         member.disableCommunicationUntil(null);
@@ -105,7 +105,7 @@ class Timeout extends Command {
     const time = (timeData[0] * 24 * 60 * 60 + timeData[1] * 60 * 60 + timeData[2] * 60 + timeData[3]) * 1000;
     
     if (time < 0) {
-      message.channel.send({ embeds: [this.helpMessage(prefix)] });
+      message.channel.send({ embeds: [this.helpMessage(client, prefix)] });
       return;
     }
 
@@ -119,7 +119,7 @@ class Timeout extends Command {
     const UIString = UIArray.join(', ').replace(/,([^,]*)$/, ' and$1');
 
     embed
-      .setColor('#00cc00')
+      .setColor(client.config.colors.GREEN)
       .setTitle('Timeout successful')
       .setDescription(`Successfully timed out <@${member.user.id}> for ${UIString}.`);
 
@@ -127,9 +127,9 @@ class Timeout extends Command {
     message.channel.send({ embeds: [embed] });
   }
 
-  private helpMessage(prefix: string): MessageEmbed {
+  private helpMessage(client: Bot, prefix: string): MessageEmbed {
     return new MessageEmbed()
-      .setColor('#cc0000')
+      .setColor(client.config.colors.RED)
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
       .addField('Arguments', '**Days:\nHours:\nMinutes:\nSeconds:**', true)

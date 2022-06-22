@@ -1,4 +1,5 @@
 import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
+import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 class Quote extends Command {
@@ -15,10 +16,10 @@ class Quote extends Command {
     this.loadQuotes();
   }
 
-  public async execute(message: Message, args: Array<string>): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args[0] === '--list' && args.length === 1) {
       const embed = new MessageEmbed()
-        .setColor('#0066cc')
+        .setColor(client.config.colors.BLUE)
         .setTitle('Quote list')
         .addField('Here\'s a list of all avalible quotes', [...this.quoteMap.keys()].sort((a, b) => a.localeCompare(b)).join('\n'));
       message.channel.send({ embeds: [embed] });
@@ -27,7 +28,7 @@ class Quote extends Command {
     const key = args.join('').toLowerCase();
     if (!this.quoteMap.has(key)) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Quote not found');
       message.channel.send({ embeds: [embed] });
       return;

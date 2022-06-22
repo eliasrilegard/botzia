@@ -20,7 +20,7 @@ class Hzv extends Command {
 
     if (client.mhwClient.monsters == null) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Monster data unavalible')
         .setDescription('Could not access monster data at this time.')
         .setFooter({ text: `If this issue persists please contact ${client.config.users.chrono_tag}` });
@@ -82,7 +82,7 @@ class Hzv extends Command {
 
   private async notFound(message: Message, client: Bot): Promise<void> {
     const embed = new MessageEmbed()
-      .setColor('#cc0000')
+      .setColor(client.config.colors.RED)
       .setTitle('Monster not found')
       .setDescription(`That monster doesn't seem to exist!\nCheck out \`${await client.prefix(message)}mhw list\` for the full list.`);
     message.channel.send({ embeds: [embed] });

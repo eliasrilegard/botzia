@@ -19,7 +19,7 @@ class Poll extends Command {
 
     if (pollOptions.length > 20 || pollOptions.length < 2) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('A poll needs at least 2 and a most 20 options.')
         .addField('Command usage:', this.howTo(await client.prefix(message), true));

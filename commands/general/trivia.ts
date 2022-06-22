@@ -1,5 +1,6 @@
 import { Message, MessageEmbed, MessageReaction, User } from 'discord.js';
 import fetch from 'node-fetch';
+import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
@@ -32,17 +33,17 @@ class Trivia extends Command {
     this.loadTriviaCategories();
   }
   
-  public async execute(message: Message, args: Array<string>): Promise<void> {
+  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args[0] === '--reset' && args.length === 1) {
       const token = this.serverTokens.get(message.guildId);
       // const token = client.tokens.get('OTDB');
       if (token) {
-        try { return this.resetToken(message) }
-        catch (error) { this.postErrorMessage(message, error.message) }
+        try { return this.resetToken(message, client) }
+        catch (error) { this.postErrorMessage(message, client, error.message) }
       }
       else {
         try { return this.generateNewToken(message) }
-        catch (error) { this.postErrorMessage(message, error.message) }
+        catch (error) { this.postErrorMessage(message, client, error.message) }
       }
     }
     else if (args[0] === '--categories' && args.length === 1) {
@@ -50,7 +51,7 @@ class Trivia extends Command {
       this.triviaCategories.forEach(category => categories.push(category.name));
       categories.sort();
       const embed = new MessageEmbed()
-        .setColor('#0066cc')
+        .setColor(client.config.colors.BLUE)
         .setTitle('All categories')
         .addField('Here\'s a list of all categories:', categories.slice(0, Math.ceil(categories.length / 2)).join('\n'), true)
         .addField('\u200b', categories.slice(Math.ceil(categories.length / 2), categories.length).join('\n'), true);
@@ -71,10 +72,10 @@ class Trivia extends Command {
     
     let data: TriviaQuestion;
     try {
-      data = await this.getQuestion(message, categoryId);
+      data = await this.getQuestion(message, client, categoryId);
     }
     catch (error) {
-      this.postErrorMessage(message, error.message);
+      this.postErrorMessage(message, client, error.message);
       return;
     }
 
@@ -104,13 +105,13 @@ class Trivia extends Command {
     // Set embed color depending on difficulty
     switch (data.difficulty) {
       case 'easy':
-        embed.setColor('#00cc00');
+        embed.setColor(client.config.colors.GREEN);
         break;
       case 'medium':
-        embed.setColor('#cc6600');
+        embed.setColor(client.config.colors.ORANGE);
         break;
       case 'hard':
-        embed.setColor('#cc0000');
+        embed.setColor(client.config.colors.RED);
         break; 
     }
 
@@ -128,13 +129,13 @@ class Trivia extends Command {
       reacted = true;
       if (reaction.emoji.name === correctEmote) {
         embedAns
-          .setColor('#00cc00')
+          .setColor(client.config.colors.GREEN)
           .setTitle('Correct answer!')
           .setDescription(`<@${message.author.id}>, you were correct! Congratulations!`);
       }
       else {
         embedAns
-          .setColor('#cc0000')
+          .setColor(client.config.colors.RED)
           .setTitle('Incorrect')
           .setDescription(`Sorry, but that's incorrect. The right answer was ${this.cleanup(data.correct_answer)}.`)
           .setFooter({ text: 'Better luck next time!' });
@@ -145,23 +146,23 @@ class Trivia extends Command {
     collector.on('end', () => {
       if (reacted) return;
       embedAns
-        .setColor('#cc6600')
+        .setColor(client.config.colors.ORANGE)
         .setTitle('Time\'s up!')
         .setDescription(`You ran out of time! The correct answer was ${data.correct_answer}.`);
       return message.channel.send({ embeds: [embedAns] });
     });
   }
 
-  private postErrorMessage(message: Message, errorMessage: string): void {
+  private postErrorMessage(message: Message, client: Bot, errorMessage: string): void {
     const embed = new MessageEmbed()
-      .setColor('#cc0000')
+      .setColor(client.config.colors.RED)
       .setTitle('Error')
       .setDescription('An error was encountered')
       .addField('Error message:', `\`${errorMessage}\``);
     message.channel.send({ embeds: [embed] });
   }
 
-  private async getQuestion(message: Message, categoryId: number): Promise <TriviaQuestion> {
+  private async getQuestion(message: Message, client: Bot, categoryId: number): Promise <TriviaQuestion> {
     const token = this.serverTokens.get(message.guildId);
     if (token) {
       let URL = 'https://opentdb.com/api.php?amount=1';
@@ -175,10 +176,10 @@ class Trivia extends Command {
         case 1: throw new Error(`Could not get question.\nResponse code: ${data.response_code}`);
         case 2: throw new Error(`Invalid argument.\nCategory ID: \`${categoryId}\``);
         case 4: {
-          try { await this.resetToken(message) }
+          try { await this.resetToken(message, client) }
           catch (error) { throw error }
 
-          try { return await this.getQuestion(message, categoryId) }
+          try { return await this.getQuestion(message, client, categoryId) }
           catch (error) { throw error }
         }
         default: // Case 3
@@ -188,7 +189,7 @@ class Trivia extends Command {
     try { await this.generateNewToken(message) }
     catch (error) { throw error }
 
-    try { return await this.getQuestion(message, categoryId) }
+    try { return await this.getQuestion(message, client, categoryId) }
     catch (error) { throw error }
   }
 
@@ -200,14 +201,14 @@ class Trivia extends Command {
     else throw new Error(`Could not generate new token.\nResponse code ${data.response_code}`);
   }
 
-  private async resetToken(message: Message): Promise<void> {
+  private async resetToken(message: Message, client: Bot): Promise<void> {
     const token = this.serverTokens.get(message.guildId);
     if (token) {
       const respose = await fetch(`https://opentdb.com/api_token.php?command=reset&token=${token}`);
       const data = await respose.json();
       if (data.response_code === 0) {
         const embed = new MessageEmbed()
-          .setColor('#00cc00')
+          .setColor(client.config.colors.GREEN)
           .setTitle('Token reset');
         message.channel.send({ embeds: [embed] });
       }

@@ -1,4 +1,4 @@
-import { Client, Collection, DMChannel, GuildChannel, Message, MessageEmbed, PermissionResolvable } from 'discord.js';
+import { Client, Collection, ColorResolvable, DMChannel, GuildChannel, Message, MessageEmbed, PermissionResolvable } from 'discord.js';
 import { readdir } from 'fs/promises';
 import { resolve } from 'path';
 import ApiClient from './api';
@@ -10,6 +10,9 @@ interface ClientConfig {
   readonly bot: {
     readonly defaultPrefix: string;
     readonly invite: string;
+  }
+  readonly colors: {
+    readonly [key: string]: ColorResolvable;
   }
   readonly users: {
     readonly [key: string]: string;
@@ -94,7 +97,7 @@ class Bot extends Client {
     // Check if a server-only command being triggered in a DM
     if (command.guildOnly && message.channel instanceof DMChannel) {
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(this.config.colors.RED)
         .setTitle('Server-only command')
         .setDescription('This command cannot be executed inside of DMs.');
       message.channel.send({ embeds: [embed] });
@@ -107,7 +110,7 @@ class Bot extends Client {
       if ((!authorPerms || !authorPerms.has(command.permissions as PermissionResolvable)) &&
         !this.isDev(message.author.id)) {
         const embed = new MessageEmbed()
-          .setColor('#cc0000')
+          .setColor(this.config.colors.RED)
           .setTitle('Insufficient permissions')
           .setDescription('You do not have permission to issue this command.');
         message.channel.send({ embeds: [embed] });
@@ -120,7 +123,7 @@ class Bot extends Client {
       const prefix = await this.prefix(message);
       const commandUsage = command.usages.map(usage => `${prefix}${command.belongsTo ? command.belongsTo + ' ' : ''}${command.name} ${usage}`).join('\n').trim();
       const embed = new MessageEmbed()
-        .setColor('#cc0000')
+        .setColor(this.config.colors.RED)
         .setTitle('No arguments given')
         .addField('Usage: ', commandUsage)
         .addField('Description: ', command.description);
@@ -133,7 +136,7 @@ class Bot extends Client {
     if (expirationTime && !command.category && !this.isDev(message.author.id)) {
       const timeLeft = (expirationTime - Date.now()) / 1000;
       const embed = new MessageEmbed()
-        .setColor('#cc6600')
+        .setColor(this.config.colors.ORANGE)
         .setTitle('Too hasty')
         .setDescription(`Please wait ${timeLeft.toFixed(1)} more second(s) before using \`${command.name}\` again`);
       const embedMessage = await message.channel.send({ embeds: [embed] });

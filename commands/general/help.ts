@@ -28,7 +28,7 @@ class Help extends Command {
         );
         const categoryCommand = category[0];
         const embed = new MessageEmbed()
-          .setColor('#0066cc')
+          .setColor(client.config.colors.BLUE)
           .setTitle(categoryCommand.description)
           .setDescription(categoryCommand.howTo(prefix))
           .addField('Avalible subcommands', subCommands.join('\n\n'));
@@ -43,7 +43,7 @@ class Help extends Command {
         .sort((a, b) => a.localeCompare(b))
         .join('\n');
       
-      const mainPage = new MessageEmbed().setColor('#0066cc').setTitle('Avalible commands');
+      const mainPage = new MessageEmbed().setColor(client.config.colors.BLUE).setTitle('Avalible commands');
       if (categoriesOverview.length) mainPage.addField('Category commands', categoriesOverview);
       if (standaloneCommands.length) mainPage.addField('General commands', standaloneCommands);
       mainPage.addField('Additional help', `You can send ${this.howTo(prefix, true)} to get additional info on a specific command.`);
@@ -56,7 +56,7 @@ class Help extends Command {
     const commandName = args[0].toLowerCase();
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     
-    if (!command) return this.notFound(message, commandName, false);
+    if (!command) return this.notFound(message, client, commandName, false);
 
     // We're looking for a subcommand if another command is specified after the first one
     const subCommandSpecified = command.category && args.length === 2;
@@ -65,7 +65,7 @@ class Help extends Command {
       const subCommandName = args[1].toLowerCase();
       const subCommands = client.categories.get(command.name);
       subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
-      if (!subCommand) return this.notFound(message, subCommandName, true);
+      if (!subCommand) return this.notFound(message, client, subCommandName, true);
     }
 
     // Build data
@@ -79,7 +79,7 @@ class Help extends Command {
     const description = (subCommandSpecified ? subCommand : command).description + '\n\u200b';
 
     const embed = new MessageEmbed()
-      .setColor('#0066cc')
+      .setColor(client.config.colors.BLUE)
       .setTitle(`Command: ${name}`);
 
     if (aliases.length) embed.addField('Aliases', aliases);
@@ -92,9 +92,9 @@ class Help extends Command {
     message.channel.send({ embeds: [embed] });
   }
 
-  private notFound(message: Message, name: string, isSubCommand: boolean): void {
+  private notFound(message: Message, client: Bot, name: string, isSubCommand: boolean): void {
     const embed = new MessageEmbed()
-      .setColor('#cc0000')
+      .setColor(client.config.colors.RED)
       .setTitle('Command not found')
       .setDescription(`There is no ${isSubCommand ? 'sub' : ''}command with name or alias \`${name}\`.`);
     message.channel.send({ embeds: [embed] });
