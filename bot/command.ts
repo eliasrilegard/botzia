@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { DMChannel, GuildChannel, Message, MessageEmbed, PermissionResolvable } from 'discord.js';
 import Bot from './bot';
 import PageHandler from './pagehandler';
 
@@ -72,7 +72,7 @@ class Command {
       return;
     }
 
-    if (!(await client.preRunCheck(message, args, command))) return;
+    if (!(await this.preRunCheck(message, args, client, command))) return;
 
     try {
       command.execute(message, args, client);
@@ -81,6 +81,68 @@ class Command {
       console.log(`The following error was caused by ${message.author.tag}:`);
       console.log(error);
     }
+  }
+
+  // Return true if all checks passed
+  private async preRunCheck(message: Message, args: Array<string>, client: Bot, command: Command): Promise<boolean> {
+    // Ignore non-dev attemps at launching dev commands
+    if (command.devOnly && !client.isDev(message.author.id)) return false;
+
+    // Check if a server-only command being triggered in a DM
+    if (command.guildOnly && message.channel instanceof DMChannel) {
+      const embed = new MessageEmbed()
+        .setColor(client.config.colors.RED)
+        .setTitle('Server-only command')
+        .setDescription('This command cannot be executed inside of DMs.');
+      message.channel.send({ embeds: [embed] });
+      return false;
+    }
+
+    // Verify user has sufficient permissions
+    if (command.permissions) {
+      const authorPerms = (message.channel as GuildChannel).permissionsFor(message.author);
+      if ((!authorPerms || !authorPerms.has(command.permissions as PermissionResolvable)) &&
+        !client.isDev(message.author.id)) {
+        const embed = new MessageEmbed()
+          .setColor(client.config.colors.RED)
+          .setTitle('Insufficient permissions')
+          .setDescription('You do not have permission to issue this command.');
+        message.channel.send({ embeds: [embed] });
+        return false;
+      }
+    }
+
+    // Check if arguments are provided if required
+    if (command.args && args.length === 0) {
+      const prefix = await client.prefix(message);
+      const commandUsage = command.usages.map(usage => `${prefix}${command.belongsTo ? command.belongsTo + ' ' : ''}${command.name} ${usage}`).join('\n').trim();
+      const embed = new MessageEmbed()
+        .setColor(client.config.colors.RED)
+        .setTitle('No arguments given')
+        .addField('Usage: ', commandUsage)
+        .addField('Description: ', command.description);
+      message.channel.send({ embeds: [embed] });
+      return false;
+    }
+
+    // Manage cooldown for user on command
+    const expirationTime = command.cooldowns.get(message.author.id);
+    if (expirationTime && !command.category) {
+      const timeLeft = (expirationTime - Date.now()) / 1000;
+      const embed = new MessageEmbed()
+        .setColor(client.config.colors.ORANGE)
+        .setTitle('Too hasty')
+        .setDescription(`Please wait ${timeLeft.toFixed(1)} more second(s) before using \`${command.name}\` again`);
+      const embedMessage = await message.channel.send({ embeds: [embed] });
+      setTimeout(() => embedMessage.delete(), 7000);
+      return false;
+    }
+    if (!command.category && !client.isDev(message.author.id)) { // Avoid cooldown for category commands and devs
+      command.cooldowns.set(message.author.id, Date.now() + command.cooldown);
+      setTimeout(() => command.cooldowns.delete(message.author.id), command.cooldown);
+    }
+
+    return true; // All checks passed
   }
 
   public howTo(prefix: string, codeblock = false): string {
