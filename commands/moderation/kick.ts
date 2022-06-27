@@ -40,8 +40,8 @@ export default class Kick extends Command {
     }
     if (client.isDev(member.id)) {
       embed
-        .setTitle('You may not kick my dev')
-        .setFooter({ text: 'Don\'t even think about it >:c' });
+        .setTitle('Using my own weapons against me...')
+        .setFooter({ text: 'No, I don\'t think that\'ll work' });
       message.channel.send({ embeds: [embed] });
       return;
     }
