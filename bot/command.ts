@@ -72,7 +72,7 @@ export default class Command {
       return;
     }
 
-    if (!(await this.preRunCheck(message, args, client, command))) return;
+    if (!(await this.preRunCheck(message, args, client))) return;
 
     try {
       command.execute(message, args, client);
@@ -84,12 +84,12 @@ export default class Command {
   }
 
   // Return true if all checks passed
-  private async preRunCheck(message: Message, args: Array<string>, client: Bot, command: Command): Promise<boolean> {
+  public async preRunCheck(message: Message, args: Array<string>, client: Bot): Promise<boolean> {
     // Ignore non-dev attemps at launching dev commands
-    if (command.devOnly && !client.isDev(message.author.id)) return false;
+    if (this.devOnly && !client.isDev(message.author.id)) return false;
 
     // Check if a server-only command being triggered in a DM
-    if (command.guildOnly && message.channel instanceof DMChannel) {
+    if (this.guildOnly && message.channel instanceof DMChannel) {
       const embed = new MessageEmbed()
         .setColor(client.config.colors.RED)
         .setTitle('Server-only command')
@@ -99,9 +99,9 @@ export default class Command {
     }
 
     // Verify user has sufficient permissions
-    if (command.permissions) {
+    if (this.permissions) {
       const authorPerms = (message.channel as GuildChannel).permissionsFor(message.author);
-      if ((!authorPerms || !authorPerms.has(command.permissions as PermissionResolvable)) &&
+      if ((!authorPerms || !authorPerms.has(this.permissions as PermissionResolvable)) &&
         !client.isDev(message.author.id)) {
         const embed = new MessageEmbed()
           .setColor(client.config.colors.RED)
@@ -113,33 +113,33 @@ export default class Command {
     }
 
     // Check if arguments are provided if required
-    if (command.args && args.length === 0) {
+    if (this.args && args.length === 0) {
       const prefix = await client.prefix(message);
-      const commandUsage = command.usages.map(usage => `${prefix}${command.belongsTo ? command.belongsTo + ' ' : ''}${command.name} ${usage}`).join('\n').trim();
+      const commandUsage = this.usages.map(usage => `${prefix}${this.belongsTo ? this.belongsTo + ' ' : ''}${this.name} ${usage}`).join('\n').trim();
       const embed = new MessageEmbed()
         .setColor(client.config.colors.RED)
         .setTitle('No arguments given')
         .addField('Usage: ', commandUsage)
-        .addField('Description: ', command.description);
+        .addField('Description: ', this.description);
       message.channel.send({ embeds: [embed] });
       return false;
     }
 
     // Manage cooldown for user on command
-    const expirationTime = command.cooldowns.get(message.author.id);
-    if (expirationTime && !command.category) {
+    const expirationTime = this.cooldowns.get(message.author.id);
+    if (expirationTime && !this.category) {
       const timeLeft = (expirationTime - Date.now()) / 1000;
       const embed = new MessageEmbed()
         .setColor(client.config.colors.ORANGE)
         .setTitle('Too hasty')
-        .setDescription(`Please wait ${timeLeft.toFixed(1)} more second(s) before using \`${command.name}\` again`);
+        .setDescription(`Please wait ${timeLeft.toFixed(1)} more second(s) before using \`${this.name}\` again`);
       const embedMessage = await message.channel.send({ embeds: [embed] });
       setTimeout(() => embedMessage.delete(), 7000);
       return false;
     }
-    if (!command.category && !client.isDev(message.author.id)) { // Avoid cooldown for category commands and devs
-      command.cooldowns.set(message.author.id, Date.now() + command.cooldown);
-      setTimeout(() => command.cooldowns.delete(message.author.id), command.cooldown);
+    if (!this.category && !client.isDev(message.author.id)) { // Avoid cooldown for category commands and devs
+      this.cooldowns.set(message.author.id, Date.now() + this.cooldown);
+      setTimeout(() => this.cooldowns.delete(message.author.id), this.cooldown);
     }
 
     return true; // All checks passed

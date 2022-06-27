@@ -31,7 +31,7 @@ export default class MessageCreate extends ClientEvent {
       client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); // Or look for potential aliases
     if (!command) return;
 
-    if (!(await client.preRunCheck(message, args, command))) return;
+    if (!(await command.preRunCheck(message, args, client))) return;
 
     try {
       command.execute(message, args, client);
