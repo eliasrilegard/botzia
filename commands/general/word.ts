@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 class Word extends Command {
-  constructor() {
+  public constructor() {
     super(
       'word',
       'Fetches the word count of a word by users.',

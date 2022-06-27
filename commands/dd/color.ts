@@ -4,7 +4,7 @@ import Command from '../../bot/command';
 import fetch from 'node-fetch';
 
 export default class Color extends Command {
-  constructor() {
+  public constructor() {
     super(
       'color',
       'Emulates the forge color mechanic',

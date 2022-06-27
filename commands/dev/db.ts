@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 class Db extends Command {
-  constructor() {
+  public constructor() {
     super(
       'db',
       'Database management commands',
