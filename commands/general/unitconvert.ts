@@ -2,15 +2,19 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
+interface BaseUnit {
+  readonly name: string;
+  readonly conversions: Array<GoalUnit>;
+}
+
+interface GoalUnit {
+  readonly unit: string;
+  readonly name: string;
+  readonly conversion: (x: number) => number;
+}
+
 export default class UnitConvert extends Command {
-  private readonly units: Map<string, {
-    name: string;
-    conversions: Array<{
-      unit: string;
-      name: string;
-      conversion: (x: number) => number;
-    }>;
-  }>;
+  private readonly units: Map<string, BaseUnit>;
 
   constructor() {
     super(

@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class DynamicTime extends Command {
-  private timezones: Map<string, number>;
+  private readonly timezones: Map<string, number>;
 
   constructor() {
     super(

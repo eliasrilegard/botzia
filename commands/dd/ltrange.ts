@@ -5,8 +5,8 @@ import Command from '../../bot/command';
 export default class LTRange extends Command {
   // These offsets are taken from https://quarplet.com/chaintargets_breakpoints.txt
   // Since we're storing the breakpoints in an array, we need to offset the index by some value
-  private normal: Array<number>; // +6
-  private upped: Array<number>; // +17
+  private readonly normal: Array<number>; // +6
+  private readonly upped: Array<number>; // +17
 
   constructor() {
     super(
