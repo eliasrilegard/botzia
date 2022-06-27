@@ -25,19 +25,19 @@ const defaultOptions: CommandOptions = {
 };
 
 export default class Command {
-  public readonly name: string;
-  public readonly description: string;
-  public readonly usages: Array<string>;
+  readonly name: string;
+  readonly description: string;
+  readonly usages: Array<string>;
 
-  public readonly aliases: Array<string>;
-  public readonly args: boolean;
-  public readonly belongsTo: string;
-  public readonly category: boolean;
-  public readonly cooldown: number;
-  public readonly cooldowns: Map<string, number>;
-  public readonly devOnly: boolean;
-  public readonly guildOnly: boolean;
-  public readonly permissions: string;
+  readonly aliases: Array<string>;
+  readonly args: boolean;
+  readonly belongsTo: string;
+  readonly category: boolean;
+  readonly cooldown: number;
+  readonly cooldowns: Map<string, number>;
+  readonly devOnly: boolean;
+  readonly guildOnly: boolean;
+  readonly permissions: string;
 
   protected constructor(name: string, description: string, usage: Array<string>, customOptions?: CommandOptions) {
     const options = { ...defaultOptions, ...customOptions };
@@ -56,7 +56,7 @@ export default class Command {
     this.permissions = options.permissions;
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (!this.category) return; // This should never happen but I'm gonna check it anyways
 
     const subCommand = args[0];
@@ -84,7 +84,7 @@ export default class Command {
   }
 
   // Return true if all checks passed
-  public async preRunCheck(message: Message, args: Array<string>, client: Bot): Promise<boolean> {
+  async preRunCheck(message: Message, args: Array<string>, client: Bot): Promise<boolean> {
     // Ignore non-dev attemps at launching dev commands
     if (this.devOnly && !client.isDev(message.author.id)) return false;
 
@@ -145,7 +145,7 @@ export default class Command {
     return true; // All checks passed
   }
 
-  public howTo(prefix: string, codeblock = false): string {
+  howTo(prefix: string, codeblock = false): string {
     return `${codeblock ? '\`' : ''}${prefix}${this.belongsTo ? this.belongsTo + ' ' : ''}${this.name} ${this.usages[0]}${codeblock ? '\`' : ''}`;
   }
 

@@ -4,7 +4,7 @@ import Command from '../../bot/command';
 import fetch from 'node-fetch';
 
 export default class Color extends Command {
-  public constructor() {
+  constructor() {
     super(
       'color',
       'Emulates the forge color mechanic',
@@ -13,7 +13,7 @@ export default class Color extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const colorString = args.join('');
     if (!/^,*-?\d{1,3}(,*-?\d{1,3}){0,2},*$/.test(colorString)) {
       const embed = new MessageEmbed()

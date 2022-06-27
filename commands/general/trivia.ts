@@ -22,7 +22,7 @@ export default class Trivia extends Command {
   private readonly serverTokens: Map<string, string>;
   private triviaCategories: Array<TriviaCategory>;
 
-  public constructor() {
+  constructor() {
     super(
       'trivia',
       'Play a game of trivia!',
@@ -33,7 +33,7 @@ export default class Trivia extends Command {
     this.loadTriviaCategories();
   }
   
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args[0] === '--reset' && args.length === 1) {
       const token = this.serverTokens.get(message.guildId);
       // const token = client.tokens.get('OTDB');

@@ -8,10 +8,10 @@ interface Docs {
 }
 
 export default class ApiClient {
-  public readonly serverPrefixes: Datastore;
-  public readonly userTimezones: Datastore;
+  readonly serverPrefixes: Datastore;
+  readonly userTimezones: Datastore;
 
-  public constructor(dir: string) {
+  constructor(dir: string) {
     this.serverPrefixes = new Datastore({ filename: `${dir}/discord/server_prefixes.db`, autoload: true });
     this.userTimezones = new Datastore({ filename: `${dir}/discord/user_timezones.db`, autoload: true });
 
@@ -25,7 +25,7 @@ export default class ApiClient {
   // TODO: Refactor to avoid duplicate code
 
   // Server prefixes
-  public async getCustomPrefix(serverId: string): Promise<string> {
+  async getCustomPrefix(serverId: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this.serverPrefixes.find({ id: serverId }, (err: Error, docs: Array<Docs>) => {
         if (err) reject(err.message); // Shouldn't ever happen
@@ -34,7 +34,7 @@ export default class ApiClient {
     });
   }
 
-  public async setCustomPrefix(serverId: string, newPrefix: string): Promise<void> {
+  async setCustomPrefix(serverId: string, newPrefix: string): Promise<void> {
     this.serverPrefixes.insert({ id: serverId, prefix: newPrefix }, err => {
       if (err && err['errorType'] === 'uniqueViolated') {
         this.serverPrefixes.update({ id: serverId }, { $set: { prefix: newPrefix } });
@@ -42,12 +42,12 @@ export default class ApiClient {
     });
   }
 
-  public async removeCustomPrefix(serverId: string): Promise<void> {
+  async removeCustomPrefix(serverId: string): Promise<void> {
     this.serverPrefixes.remove({ id: serverId }, {});
   }
 
   // User timezones
-  public async getUserTimezone(userId: string): Promise<string> {
+  async getUserTimezone(userId: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this.userTimezones.find({ id: userId }, (err: Error, docs: Array<Docs>) => {
         if (err) reject(err.message);
@@ -56,7 +56,7 @@ export default class ApiClient {
     });
   }
 
-  public async setUserTimezone(userId: string, offset: string): Promise<void> {
+  async setUserTimezone(userId: string, offset: string): Promise<void> {
     this.userTimezones.insert({ id: userId, offset }, err => {
       if (err && err['errorType'] === 'uniqueViolated') {
         this.userTimezones.update({ id: userId }, { $set: { offset } });
@@ -64,7 +64,7 @@ export default class ApiClient {
     });
   }
 
-  public async removeUserTimezone(userId: string): Promise<void> {
+  async removeUserTimezone(userId: string): Promise<void> {
     this.userTimezones.remove({ id: userId }, {});
   }
 }

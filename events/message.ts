@@ -3,11 +3,11 @@ import Bot from '../bot/bot';
 import ClientEvent from '../bot/event';
 
 export default class MessageCreate extends ClientEvent {
-  public constructor() {
+  constructor() {
     super('messageCreate', false);
   }
 
-  public async execute(client: Bot, message: Message): Promise<void> {
+  async execute(client: Bot, message: Message): Promise<void> {
     // Ignore bots
     if (message.author.bot) return;
 

@@ -1,7 +1,7 @@
 import Command from '../../bot/command';
 
 export default class Mhw extends Command {
-  public constructor() {
+  constructor() {
     super(
       'mhw',
       'Monster Hunter World: Iceborne',

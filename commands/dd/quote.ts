@@ -5,7 +5,7 @@ import Command from '../../bot/command';
 export default class Quote extends Command {
   private readonly quoteMap: Map<string, string>;
 
-  public constructor() {
+  constructor() {
     super(
       'quote',
       'Posts a quote',
@@ -16,7 +16,7 @@ export default class Quote extends Command {
     this.loadQuotes();
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args[0] === '--list' && args.length === 1) {
       const embed = new MessageEmbed()
         .setColor(client.config.colors.BLUE)

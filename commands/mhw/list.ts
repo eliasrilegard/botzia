@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class List extends Command {
-  public constructor() {
+  constructor() {
     super(
       'list',
       'List all monsters in Monster Hunter World & Iceborne',
@@ -12,7 +12,7 @@ export default class List extends Command {
     );
   }
 
-  public async execute(message: Message<boolean>, _args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message<boolean>, _args: Array<string>, client: Bot): Promise<void> {
     if (client.mhwClient.monsters == null) {
       const embed = new MessageEmbed()
         .setColor(client.config.colors.RED)

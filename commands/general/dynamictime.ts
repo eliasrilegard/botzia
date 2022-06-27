@@ -5,7 +5,7 @@ import Command from '../../bot/command';
 export default class DynamicTime extends Command {
   private timezones: Map<string, number>;
 
-  public constructor() {
+  constructor() {
     super(
       'dynamictime',
       'Convert a timestamp (UTC) to dynamic date-time display',
@@ -20,7 +20,7 @@ export default class DynamicTime extends Command {
     ]);
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     // If timezone list requested
     if (args.length === 1 && args[0] === '--list') {
       const offsets = [...this.timezones.values()].map(offset => `${offset > 0 ? '+' : ''}${offset}`);

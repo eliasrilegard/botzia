@@ -4,7 +4,7 @@ import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
 export default class Kick extends Command {
-  public constructor() {
+  constructor() {
     super(
       'kick',
       'Kick a member',
@@ -13,7 +13,7 @@ export default class Kick extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const member = message.mentions.members.first();
     const reason = args.slice(1).join(' ');
 

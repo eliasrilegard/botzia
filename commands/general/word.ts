@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Word extends Command {
-  public constructor() {
+  constructor() {
     super(
       'word',
       'Fetches the word count of a word by users.',
@@ -12,7 +12,7 @@ export default class Word extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args.length === 0 || args.length > 1) {
       const embed = new MessageEmbed()
         .setColor(client.config.colors.RED)

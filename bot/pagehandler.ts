@@ -16,7 +16,7 @@ export default class PageHandler {
   private pagerMessage: Message;
   private page: number;
 
-  public constructor(
+  constructor(
     message: Message,
     pages: Array<MessageEmbed>,
     time = 120000,
@@ -39,7 +39,7 @@ export default class PageHandler {
       this.pages[0].setDescription(checkPermissions);
     }
 
-    this.init(isPermissionsMissing); // Make this method public and remove this line?
+    this.init(isPermissionsMissing); // Make this method and remove this line?
   }
 
   private displayPageNumbers(): void {
@@ -98,7 +98,7 @@ export default class PageHandler {
     this.pagerMessage.edit({ embeds: [this.pages[pg - 1]] });
   }
 
-  public delete(): void {
+  delete(): void {
     this.pagerMessage.delete();
   }
 }

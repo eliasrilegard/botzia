@@ -4,7 +4,7 @@ import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
 export default class Timeout extends Command {
-  public constructor() {
+  constructor() {
     super(
       'timeout',
       'Give a user a timeout',
@@ -13,7 +13,7 @@ export default class Timeout extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const member = message.mentions.members.first();
 
     const prefix = await client.prefix(message);

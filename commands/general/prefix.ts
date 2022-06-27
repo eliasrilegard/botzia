@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Prefix extends Command {
-  public constructor() {
+  constructor() {
     super(
       'prefix',
       'View the current prefix, or set a custom prefix for this server only',
@@ -12,7 +12,7 @@ export default class Prefix extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const defaultPrefix = client.config.bot.defaultPrefix;
 
     const serverPrefix = await client.apiClient.getCustomPrefix(message.guild.id);

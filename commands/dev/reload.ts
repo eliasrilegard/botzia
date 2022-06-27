@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Reload extends Command {
-  public constructor() {
+  constructor() {
     super(
       'reload',
       'Reloads a command!',
@@ -12,7 +12,7 @@ export default class Reload extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const commandsDir = client.root.concat('commands');
 
     if (['-b', '--build'].includes(args[0])) {

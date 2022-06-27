@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Restart extends Command {
-  public constructor() {
+  constructor() {
     super(
       'restart',
       'Restarts the bot',
@@ -12,7 +12,7 @@ export default class Restart extends Command {
     );
   }
 
-  public async execute(message: Message, _args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, _args: Array<string>, client: Bot): Promise<void> {
     const embed = new MessageEmbed()
       .setColor(client.config.colors.BLUE)
       .setTitle('Restarting')

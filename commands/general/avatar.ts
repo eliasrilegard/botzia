@@ -4,7 +4,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Avatar extends Command {
-  public constructor() {
+  constructor() {
     super(
       'avatar',
       'Gets the tagged user\'s avatar',
@@ -13,7 +13,7 @@ export default class Avatar extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const user = message.mentions.users.first();
     if (!user) {
       const embed = new MessageEmbed()

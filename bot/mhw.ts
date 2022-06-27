@@ -39,9 +39,9 @@ interface MonsterDetails {
 }
 
 export default class MhwClient {
-  public readonly monsters: Map<string, MonsterDetails>;
+  readonly monsters: Map<string, MonsterDetails>;
 
-  public constructor() {
+  constructor() {
     this.monsters = new Map();
     for (const [, monster] of Object.entries(monsterData)) this.monsters.set(monster.name, monster.details);
   }

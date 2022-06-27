@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Purge extends Command {
-  public constructor() {
+  constructor() {
     super(
       'purge',
       'Clears a specified number of messages.',
@@ -12,7 +12,7 @@ export default class Purge extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const count = parseInt(args[0]) + 1;
 
     if (count < 2 || count > 100 || isNaN(count)) {

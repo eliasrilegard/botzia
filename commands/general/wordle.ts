@@ -4,7 +4,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Wordle extends Command {
-  public constructor() {
+  constructor() {
     super(
       'wordle',
       'Wordle helper',
@@ -15,7 +15,7 @@ export default class Wordle extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     let words = readFileSync(__dirname.slice(0, -21).concat('database/wordle/allowed_real.txt')).toString().split('\n');
 
     const placed = args[0].toLowerCase(); // Use - to denote empty

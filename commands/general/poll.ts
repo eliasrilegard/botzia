@@ -4,7 +4,7 @@ import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
 export default class Poll extends Command {
-  public constructor() {
+  constructor() {
     super(
       'poll',
       'Make a poll about something!',
@@ -13,7 +13,7 @@ export default class Poll extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const pollOptions = args.join(' ').split(';').map(str => str.trim());
     const question = pollOptions.shift();
 

@@ -8,7 +8,7 @@ export default class LTRange extends Command {
   private normal: Array<number>; // +6
   private upped: Array<number>; // +17
 
-  public constructor() {
+  constructor() {
     super(
       'ltrange',
       'Finds the closest LT breakpoints to your current range',
@@ -20,7 +20,7 @@ export default class LTRange extends Command {
     this.upped = [0, 7, 15, 24, 34, 45, 57, 70, 84, 100, 117, 135, 154, 175, 197, 221, 246, 273, 301, 331, 363, 396, 432, 468, 507, 548, 590, 635, 681, 730, 780, 833, 888, 945, 1004, 1065, 1129, 1195, 1264, 1334, 1408, 1483, 1562, 1643, 1726, 1812, 1901, 1992, 2086, 2183, 2283, 2385, 2490, 2599, 2710, 2824, 2941, 3062, 3185, 3311, 3441, 3574, 3710, 3849, 3991, 4137, 4286, 4439, 4595, 4754, 4917, 5083, 5253, 5427, 5604, 5784, 5969, 6157, 6349, 6545, 6744, 6947, 7154, 7366, 7581, 7799, 8022, 8249, 8480, 8716, 8955, 9198, 9446, 9698, 9954];
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (args.length > 1) {
       const embed = new MessageEmbed()
         .setColor(client.config.colors.RED)

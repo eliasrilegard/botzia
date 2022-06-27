@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Res extends Command {
-  public constructor() {
+  constructor() {
     super(
       'res',
       'Calulates the number of upgrades required to max the resists of ult armor.',
@@ -12,7 +12,7 @@ export default class Res extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const resists = args.slice(0, 4).map(res => parseInt(res)).sort((a, b) => b - a) // Sort resists in descending order
       .concat(args.slice(4).map(stat => parseInt(stat))); // Add upgrades and primary stat to the end
     if (resists.length < 1 || resists.length > 6 || resists.some(res => isNaN(res))) {

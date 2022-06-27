@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Help extends Command {
-  public constructor() {
+  constructor() {
     super(
       'help',
       'List all commands or get info on a specific command',
@@ -12,7 +12,7 @@ export default class Help extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const prefix = await client.prefix(message);
 
     // No args - display interactive page to view all commands

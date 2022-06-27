@@ -12,7 +12,7 @@ export default class UnitConvert extends Command {
     }>;
   }>;
 
-  public constructor() {
+  constructor() {
     super(
       'unitconvert',
       'Convert a measure from one unit to another!',
@@ -101,7 +101,7 @@ export default class UnitConvert extends Command {
     ]);
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {    
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {    
     const prefix = await client.prefix(message);
     const embed = new MessageEmbed().setColor(client.config.colors.RED);
 

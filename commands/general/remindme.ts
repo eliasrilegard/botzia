@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Remindme extends Command {
-  public constructor() {
+  constructor() {
     super(
       'remindme',
       'Remind you of a message after a given time!',
@@ -11,7 +11,7 @@ export default class Remindme extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     const indexMessageStart = args.indexOf(args.filter(arg => arg.includes(';'))[0]) + 1; // -1 + 1 if no match
     const reminderMessage = indexMessageStart ? args.slice(indexMessageStart, args.length).join(' ') : '';
     const timeArgs = indexMessageStart ? [...args.slice(0, indexMessageStart - 1), args[indexMessageStart - 1].slice(0, -1)] : args;

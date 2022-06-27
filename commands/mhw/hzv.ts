@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Hzv extends Command {
-  public constructor() {
+  constructor() {
     super(
       'hzv',
       'Gets the HZV of a specified monster',
@@ -12,7 +12,7 @@ export default class Hzv extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     let input = args.join('').toLowerCase();
 
     const isHR = input.startsWith('hr');

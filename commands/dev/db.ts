@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Database extends Command {
-  public constructor() {
+  constructor() {
     super(
       'db',
       'Database management commands',
@@ -12,7 +12,7 @@ export default class Database extends Command {
     );
   }
 
-  public async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     switch (args[0]) {
       case 'reload': {
         client.apiClient.serverPrefixes.loadDatabase();

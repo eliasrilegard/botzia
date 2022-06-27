@@ -20,15 +20,15 @@ export interface ClientConfig {
 }
 
 export default class Bot extends Client {
-  public readonly root: string;
-  public readonly config: ClientConfig;
-  public readonly categories: Collection<string, Collection<string, Command>>;
-  public readonly commands: Collection<string, Command>;
+  readonly root: string;
+  readonly config: ClientConfig;
+  readonly categories: Collection<string, Collection<string, Command>>;
+  readonly commands: Collection<string, Command>;
 
-  public readonly apiClient: ApiClient;
-  public readonly mhwClient: MhwClient;
+  readonly apiClient: ApiClient;
+  readonly mhwClient: MhwClient;
 
-  public constructor(dirname: string, config: ClientConfig) {
+  constructor(dirname: string, config: ClientConfig) {
     super({
       intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INVITES', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS'],
       partials: ['CHANNEL']
@@ -66,7 +66,7 @@ export default class Bot extends Client {
   }
 
   // Generator method to recursively get all files within a directory
-  public async* getFiles(rootPath: string): AsyncGenerator<string> {
+  async* getFiles(rootPath: string): AsyncGenerator<string> {
     const fileNames = await readdir(rootPath, { withFileTypes: true });
     for (const fileName of fileNames) {
       const path = resolve(rootPath, fileName.name);
@@ -75,14 +75,14 @@ export default class Bot extends Client {
     }
   }
 
-  public async prefix(message?: Message): Promise<string> {
+  async prefix(message?: Message): Promise<string> {
     const prefix = this.config.bot.defaultPrefix ? this.config.bot.defaultPrefix : '>';
     if (!message) return prefix;
     const customPrefix = await this.apiClient.getCustomPrefix(message.guildId);
     return customPrefix ? customPrefix : prefix;
   }
 
-  public isDev(id: string): boolean {
+  isDev(id: string): boolean {
     const devs = [
       this.config.users.chrono_id
     ];
