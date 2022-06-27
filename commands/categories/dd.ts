@@ -1,6 +1,6 @@
 import Command from '../../bot/command';
 
-class Dd extends Command {
+export default class DD extends Command {
   public constructor() {
     super(
       'dd',
@@ -10,5 +10,3 @@ class Dd extends Command {
     );
   }
 }
-
-export default Dd;

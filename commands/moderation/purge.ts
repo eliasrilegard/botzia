@@ -2,7 +2,7 @@ import { BaseGuildTextChannel, Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Purge extends Command {
+export default class Purge extends Command {
   public constructor() {
     super(
       'purge',
@@ -43,5 +43,3 @@ class Purge extends Command {
     setTimeout(() => successMsg.delete(), 7000);
   }
 }
-
-export default Purge;

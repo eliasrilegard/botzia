@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class List extends Command {
+export default class List extends Command {
   public constructor() {
     super(
       'list',
@@ -42,5 +42,3 @@ class List extends Command {
     this.sendMenu(message, embeds);
   }
 }
-
-export default List;

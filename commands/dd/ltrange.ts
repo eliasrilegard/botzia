@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class LTRange extends Command {
+export default class LTRange extends Command {
   // These offsets are taken from https://quarplet.com/chaintargets_breakpoints.txt
   // Since we're storing the breakpoints in an array, we need to offset the index by some value
   private normal: Array<number>; // +6
@@ -68,5 +68,3 @@ class LTRange extends Command {
     return [index, breakpoints[index - 1], breakpoints[index], breakpoints[index + 1]];
   }
 }
-
-export default LTRange;

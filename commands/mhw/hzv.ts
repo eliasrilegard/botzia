@@ -2,7 +2,7 @@ import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Hzv extends Command {
+export default class Hzv extends Command {
   public constructor() {
     super(
       'hzv',
@@ -88,5 +88,3 @@ class Hzv extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-export default Hzv;

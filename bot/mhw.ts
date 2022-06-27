@@ -38,7 +38,7 @@ interface MonsterDetails {
   readonly threat_level?: string;
 }
 
-class MhwClient {
+export default class MhwClient {
   public readonly monsters: Map<string, MonsterDetails>;
 
   public constructor() {
@@ -46,5 +46,3 @@ class MhwClient {
     for (const [, monster] of Object.entries(monsterData)) this.monsters.set(monster.name, monster.details);
   }
 }
-
-export default MhwClient;

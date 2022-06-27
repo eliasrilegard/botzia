@@ -24,7 +24,7 @@ const defaultOptions: CommandOptions = {
   permissions: ''
 };
 
-class Command {
+export default class Command {
   public readonly name: string;
   public readonly description: string;
   public readonly usages: Array<string>;
@@ -153,5 +153,3 @@ class Command {
     return new PageHandler(message, pages, undefined, true);
   }
 }
-
-export default Command;

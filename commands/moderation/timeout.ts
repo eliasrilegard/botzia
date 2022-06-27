@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
-class Timeout extends Command {
+export default class Timeout extends Command {
   public constructor() {
     super(
       'timeout',
@@ -137,5 +137,3 @@ class Timeout extends Command {
       .addField('Command usage', this.howTo(prefix, true));
   }
 }
-
-export default Timeout;

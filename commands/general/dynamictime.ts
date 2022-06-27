@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class DynamicTime extends Command {
+export default class DynamicTime extends Command {
   private timezones: Map<string, number>;
 
   public constructor() {
@@ -158,5 +158,3 @@ class DynamicTime extends Command {
     }
   }
 }
-
-export default DynamicTime;

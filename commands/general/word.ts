@@ -2,7 +2,7 @@ import { ChannelLogsQueryOptions, Message, MessageEmbed, TextChannel } from 'dis
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Word extends Command {
+export default class Word extends Command {
   public constructor() {
     super(
       'word',
@@ -74,5 +74,3 @@ class Word extends Command {
     return result;
   }
 }
-
-export default Word;

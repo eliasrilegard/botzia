@@ -7,7 +7,7 @@ interface Docs {
   offset?: string;
 }
 
-class ApiClient {
+export default class ApiClient {
   public readonly serverPrefixes: Datastore;
   public readonly userTimezones: Datastore;
 
@@ -68,5 +68,3 @@ class ApiClient {
     this.userTimezones.remove({ id: userId }, {});
   }
 }
-
-export default ApiClient;

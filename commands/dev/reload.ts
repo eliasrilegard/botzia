@@ -2,7 +2,7 @@ import { Collection, Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Reload extends Command {
+export default class Reload extends Command {
   public constructor() {
     super(
       'reload',
@@ -101,5 +101,3 @@ class Reload extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-export default Reload;

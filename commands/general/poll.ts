@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
-class Poll extends Command {
+export default class Poll extends Command {
   public constructor() {
     super(
       'poll',
@@ -46,5 +46,3 @@ class Poll extends Command {
     emotes.forEach(emote => pollMessage.react(emote));
   }
 }
-
-export default Poll;

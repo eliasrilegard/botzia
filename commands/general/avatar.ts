@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Avatar extends Command {
+export default class Avatar extends Command {
   public constructor() {
     super(
       'avatar',
@@ -41,5 +41,3 @@ class Avatar extends Command {
     return rgb.reduce((result, val) => result + val.toString(16).padStart(2, '0'), '');
   }
 }
-
-export default Avatar;

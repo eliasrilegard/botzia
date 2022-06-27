@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Db extends Command {
+export default class Database extends Command {
   public constructor() {
     super(
       'db',
@@ -37,5 +37,3 @@ class Db extends Command {
     }
   }
 }
-
-export default Db;

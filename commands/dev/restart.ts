@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Restart extends Command {
+export default class Restart extends Command {
   public constructor() {
     super(
       'restart',
@@ -22,5 +22,3 @@ class Restart extends Command {
     client.shard.respawnAll();
   }
 }
-
-export default Restart;

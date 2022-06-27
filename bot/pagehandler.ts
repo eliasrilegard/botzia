@@ -8,7 +8,7 @@ interface PageReactions {
   stop: string;
 }
 
-class PageHandler {
+export default class PageHandler {
   private readonly message: Message;
   private readonly pages: Array<MessageEmbed>;
   private readonly time: number;
@@ -102,5 +102,3 @@ class PageHandler {
     this.pagerMessage.delete();
   }
 }
-
-export default PageHandler;

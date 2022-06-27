@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Res extends Command {
+export default class Res extends Command {
   public constructor() {
     super(
       'res',
@@ -57,5 +57,3 @@ class Res extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-export default Res;

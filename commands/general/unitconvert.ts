@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class UnitConvert extends Command {
+export default class UnitConvert extends Command {
   private readonly units: Map<string, {
     name: string;
     conversions: Array<{
@@ -170,5 +170,3 @@ class UnitConvert extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-export default UnitConvert;

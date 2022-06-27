@@ -18,7 +18,7 @@ interface TriviaQuestion {
   incorrect_answers: Array<string>;
 }
 
-class Trivia extends Command {
+export default class Trivia extends Command {
   private readonly serverTokens: Map<string, string>;
   private triviaCategories: Array<TriviaCategory>;
 
@@ -247,5 +247,3 @@ class Trivia extends Command {
     return str;
   }
 }
-
-export default Trivia;

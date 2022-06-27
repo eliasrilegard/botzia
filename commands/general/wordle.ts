@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Wordle extends Command {
+export default class Wordle extends Command {
   public constructor() {
     super(
       'wordle',
@@ -96,5 +96,3 @@ class Wordle extends Command {
     setTimeout(() => message.delete(), 120000);
   }
 }
-
-export default Wordle;

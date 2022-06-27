@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Prefix extends Command {
+export default class Prefix extends Command {
   public constructor() {
     super(
       'prefix',
@@ -69,5 +69,3 @@ class Prefix extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-export default Prefix;

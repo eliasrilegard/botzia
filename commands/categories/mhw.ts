@@ -1,6 +1,6 @@
 import Command from '../../bot/command';
 
-class Mhw extends Command {
+export default class Mhw extends Command {
   public constructor() {
     super(
       'mhw',
@@ -10,5 +10,3 @@ class Mhw extends Command {
     );
   }
 }
-
-export default Mhw;

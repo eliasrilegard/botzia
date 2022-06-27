@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
-class Kick extends Command {
+export default class Kick extends Command {
   public constructor() {
     super(
       'kick',
@@ -76,5 +76,3 @@ class Kick extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-export default Kick;

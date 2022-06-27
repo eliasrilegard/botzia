@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import Utils from '../../bot/utils';
 
-class Ban extends Command {
+export default class Ban extends Command {
   public constructor() {
     super(
       'ban',
@@ -62,7 +62,7 @@ class Ban extends Command {
     if (!member.bannable) { // Failsafe
       embed
         .setTitle('Can\'t ban member')
-        .setDescription(`<@${member.user.id}> cannot be kicked.`);
+        .setDescription(`<@${member.user.id}> cannot be banned.`);
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -76,5 +76,3 @@ class Ban extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-export default Ban;

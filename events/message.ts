@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../bot/bot';
 import ClientEvent from '../bot/event';
 
-class MessageCreate extends ClientEvent {
+export default class MessageCreate extends ClientEvent {
   public constructor() {
     super('messageCreate', false);
   }
@@ -42,5 +42,3 @@ class MessageCreate extends ClientEvent {
     }
   }
 }
-
-export default MessageCreate;

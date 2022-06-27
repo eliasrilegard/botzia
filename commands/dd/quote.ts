@@ -2,7 +2,7 @@ import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Quote extends Command {
+export default class Quote extends Command {
   private readonly quoteMap: Map<string, string>;
 
   public constructor() {
@@ -47,5 +47,3 @@ class Quote extends Command {
     for (const [, v] of Object.entries(quoteData)) this.quoteMap.set(v.name, v.filepath);
   }
 }
-
-export default Quote;

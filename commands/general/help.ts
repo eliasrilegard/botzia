@@ -2,7 +2,7 @@ import { Collection, Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Help extends Command {
+export default class Help extends Command {
   public constructor() {
     super(
       'help',
@@ -100,5 +100,3 @@ class Help extends Command {
     message.channel.send({ embeds: [embed] });
   }
 }
-
-export default Help;

@@ -2,7 +2,7 @@ import { GuildMember } from 'discord.js';
 
 // A utility class with common functions required by some modules to run.
 
-class Utils {
+export default class Utils {
   /**
    * Capitalizes the first letter of a given string.
    */
@@ -29,5 +29,3 @@ class Utils {
     return array;
   }
 }
-
-export default Utils;

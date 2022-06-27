@@ -2,7 +2,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
-class Remindme extends Command {
+export default class Remindme extends Command {
   public constructor() {
     super(
       'remindme',
@@ -87,5 +87,3 @@ class Remindme extends Command {
       .setDescription('Reminders have an upper time limit of 24 days.');
   }
 }
-
-export default Remindme;

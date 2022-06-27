@@ -1,6 +1,6 @@
 import Bot from './bot';
 
-class ClientEvent {
+export default class ClientEvent {
   public readonly name: string;
   public readonly once: boolean;
 
@@ -14,5 +14,3 @@ class ClientEvent {
     throw new Error('Method not implemented.');
   }
 }
-
-export default ClientEvent;
