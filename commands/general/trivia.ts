@@ -241,7 +241,7 @@ export default class Trivia extends Command {
       [/&Ucirc;/g, 'Û'], [/&Uuml;/g, 'Ü'], [/&ugrave;/g, 'ù'], [/&uacute;/g, 'ú'], [/&ucirc;/g, 'û'], [/&uuml;/g, 'ü'],
       [/&#181;/g, 'µ'], [/&Yacute;/g, 'Ý'], [/&#159;/g, 'Ÿ'], [/&yacute;/g, 'ý'], [/&yuml;/g, 'ÿ'], [/&deg;/g, '°'],
       [/&amp;/g, '&'], [/&ldquo;/g, '“'], [/&rdquo;/g, '”'], [/&reg;/g, '®'], [/&trade;/g, '™'], [/&lt;/g, '<'],
-      [/&gt;/g, '>'], [/&le;/g, '≤'], [/&ge;/g, '≥']];
+      [/&gt;/g, '>'], [/&le;/g, '≤'], [/&ge;/g, '≥'], [/&pi;/g, 'π']];
   
     allReplacements.forEach(pair => str = str.replace(pair[0], pair[1]));
     return str;
