@@ -9,7 +9,7 @@ export default class Color extends Command {
       'color',
       'Emulates the forge color mechanic',
       ['[color string]'],
-      { belongsTo: 'dd' }
+      { belongsTo: 'dd', aliases: ['colour'] }
     );
   }
 
