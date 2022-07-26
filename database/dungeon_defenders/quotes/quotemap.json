@@ -18,5 +18,13 @@
   {
     "name": "verylucky",
     "filepath": "./database/dungeon_defenders/quotes/img/washboard_tol.png"
+  },
+  {
+    "name": "trash",
+    "filepath": "./database/dungeon_defenders/quotes/img/jeol_trash.png"
+  },
+  {
+    "name": "faking",
+    "filepath": "./database/dungeon_defenders/quotes/img/thales_faking_traces.png"
   }
 ]
