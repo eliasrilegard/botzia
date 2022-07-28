@@ -59,12 +59,11 @@ export default class Command {
   async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (!this.category) return; // This should never happen but I'm gonna check it anyways
 
-    const subCommand = args[0];
-    args = args.slice(1, args.length);
+    const subCommandName = args.shift();
 
-    const command = client.categories.get(this.name).find(cmd => cmd.name === subCommand || cmd.aliases.includes(subCommand));
+    const subCommand = client.categories.get(this.name).find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
 
-    if (!command) {
+    if (!subCommand) {
       const embed = new MessageEmbed()
         .setColor(client.config.colors.RED)
         .setTitle('Subcommand not found');
@@ -72,10 +71,10 @@ export default class Command {
       return;
     }
 
-    if (!(await this.preRunCheck(message, args, client))) return;
+    if (!(await subCommand.preRunCheck(message, args, client))) return;
 
     try {
-      command.execute(message, args, client);
+      subCommand.execute(message, args, client);
     }
     catch (error) {
       console.log(`The following error was caused by ${message.author.tag}:`);
