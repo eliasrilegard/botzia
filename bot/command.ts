@@ -25,10 +25,6 @@ const defaultOptions: CommandOptions = {
 };
 
 export default class Command {
-  readonly name: string;
-  readonly description: string;
-  readonly usages: Array<string>;
-
   readonly aliases: Array<string>;
   readonly args: boolean;
   readonly belongsTo: string;
@@ -39,11 +35,22 @@ export default class Command {
   readonly guildOnly: boolean;
   readonly permissions: string;
 
-  protected constructor(name: string, description: string, usage: Array<string>, customOptions?: CommandOptions) {
+  /**
+   * @param name The command name
+   * @param description A short description of the command
+   * @param usages One or several usage examples (generalized)
+   * @param customOptions Any optional settings. Avalible tags:
+   * - aliases
+   * - args
+   * - belongsTo
+   * - category
+   * - cooldown (ms)
+   * - devOnly
+   * - guildOnly
+   * - permissions
+   */
+  protected constructor(readonly name: string, readonly description: string, readonly usages: Array<string>, customOptions?: CommandOptions) {
     const options = { ...defaultOptions, ...customOptions };
-    this.name = name;
-    this.description = description;
-    this.usages = usage;
 
     this.aliases = options.aliases;
     this.args = options.args;

@@ -50,7 +50,7 @@ export default class Bot extends Client {
     for await (const file of this.getFiles(this.root.concat('events'))) {
       const { default: EventClass } = await import(file);
       const event: ClientEvent = new EventClass();
-      if (event.once) this.once(event.name, (...args) => event.execute(this, ...args));
+      if (event.isOnce) this.once(event.name, (...args) => event.execute(this, ...args));
       else this.on(event.name, (...args) => event.execute(this, ...args));
     }
   }
