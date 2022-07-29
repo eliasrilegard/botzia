@@ -8,7 +8,7 @@ export default class Prefix extends Command {
       'prefix',
       'View the current prefix, or set a custom prefix for this server only',
       ['[new prefix]'],
-      { args: false, aliases: ['setprefix'], guildOnly: true }
+      { args: false, aliases: ['setprefix'], guildOnly: true, permissions: 'MANAGE_MESSAGES' }
     );
   }
 
