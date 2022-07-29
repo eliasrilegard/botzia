@@ -1,20 +1,56 @@
 import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
+import DWG from '../../utils/dwg';
 
-interface BaseUnit {
+interface Unit {
   readonly name: string;
-  readonly conversions: Array<GoalUnit>;
+  readonly aliases?: Array<string>;
 }
 
-interface GoalUnit {
-  readonly unit: string;
-  readonly name: string;
-  readonly conversion: (x: number) => number;
+type convertFn = (x: number) => number;
+
+// A wrapper class for the DWG class, adapted for use with Units
+class UnitStore {
+  private readonly graph: DWG<Unit, convertFn>;
+
+  constructor(input?: Array<[Unit, Array<[string, convertFn]>]>) {
+    this.graph = new DWG();
+    
+    if (!input) return;
+    
+    // Add all units to the graph first
+    for (const entry of input) this.graph.addVertex(entry[0]); // entry[0] has the base unit
+
+    // Go through every connection and add as necessary
+    for (const [baseUnit, destUnits] of input) {
+      for (const [goalName, conversion] of destUnits) {
+        const goalUnits = this.graph.find(v => [v.name, ...v.aliases].includes(goalName));
+        for (const goalUnit of goalUnits) this.graph.addEdge(baseUnit, goalUnit, conversion);
+      }
+    }
+  }
+
+  getUnits(name: string): Array<Unit> {
+    return this.graph.find(unit => {
+      const searchList = [unit.name, ...unit.aliases].map(str => str.toLowerCase());
+      return searchList.includes(name.toLowerCase());
+    });
+  }
+
+  getConversion(unit1: Unit, unit2: Unit): convertFn {
+    if (!this.graph.has(unit1) || !this.graph.has(unit2)) return;
+    return this.graph.getWeight(unit1, unit2);
+  }
+
+  getNameList(): Array<string> {
+    const allUnits = this.graph.getAllVertices();
+    return allUnits.map(unit => unit.name);
+  }
 }
 
 export default class UnitConvert extends Command {
-  private readonly units: Map<string, BaseUnit>;
+  private readonly unitStore: UnitStore;
 
   constructor() {
     super(
@@ -24,84 +60,84 @@ export default class UnitConvert extends Command {
       { aliases: ['convert'] }
     );
 
-    this.units = new Map([
+    this.unitStore = new UnitStore([
       // Temperature
-      ['c', {
+      [{
         name: 'Celsius',
-        conversions: [
-          { unit: 'f', name: 'Fahrenheit', conversion: t => t * 9 / 5 + 32 },
-          { unit: 'k', name: 'Kelvin', conversion: t => t + 272.15 }
-        ]
-      }],
-      ['f', {
+        aliases: ['C']
+      }, [
+        ['F', t => t * 9 / 5 + 32],
+        ['K', t => t + 272.15]
+      ]],
+      [{
         name: 'Fahrenheit',
-        conversions: [
-          { unit: 'c', name: 'Celsius', conversion: t => (t - 32) * 5 / 9 },
-          { unit: 'k', name: 'Kelvin', conversion: t => (t - 32) * 5 / 9 + 272.15 }
-        ]
-      }],
-      ['k', {
+        aliases: ['F']
+      }, [
+        ['C', t => (t - 32) * 5 / 9],
+        ['K', t => (t - 32) * 5 / 9 + 273.15]
+      ]],
+      [{
         name: 'Kelvin',
-        conversions: [
-          { unit: 'c', name: 'Celsius', conversion: t => t - 272.15 },
-          { unit: 'f', name: 'Fahrenheit', conversion: t => (t - 272.15) * 9 / 5 + 32 }
-        ]
-      }],
+        aliases: ['K']
+      }, [
+        ['C', t => t - 273.15],
+        ['F', t => (t - 273.15) * 9 / 5 + 32]
+      ]],
       // Length
-      ['m', {
-        name: 'Meters',
-        conversions: [
-          { unit: 'km', name: 'Kilometers', conversion: l => l * 0.001 },
-          { unit: 'ft', name: 'Feet', conversion: l => l / 0.3048 },
-          { unit: 'mi', name: 'Miles', conversion: l => l / 1609.344 }
-        ]
-      }],
-      ['km', {
-        name: 'Kilometers',
-        conversions: [
-          { unit: 'm', name: 'Meters', conversion: l => l * 1000 },
-          { unit: 'ft', name: 'Feet', conversion: l => l / 0.0003048 },
-          { unit: 'mi', name: 'Miles', conversion: l => l / 1.609344 }
-        ]
-      }],
-      ['ft', {
-        name: 'Feet',
-        conversions: [
-          { unit: 'm', name: 'Meters', conversion: l => l * 0.3048 },
-          { unit: 'km', name: 'Kilometers', conversion: l => l * 0.0003048 },
-          { unit: 'mi', name: 'Miles', conversion: l => l / 5280 }
-        ]
-      }],
-      ['mi', {
-        name: 'Miles',
-        conversions: [
-          { unit: 'm', name: 'Meters', conversion: l => l * 1609.344 },
-          { unit: 'km', name: 'Kilometers', conversion: l => l * 1.609344 },
-          { unit: 'ft', name: 'Feet', conversion: l => l * 5280 }
-        ]
-      }],
+      [{
+        name: 'Meter',
+        aliases: ['Meters', 'Metre', 'Metres', 'm']
+      }, [
+        ['km', l => l / 1000],
+        ['ft', l => l / 0.3048],
+        ['mi', l => l / 1609.344]
+      ]],
+      [{
+        name: 'Kilometer',
+        aliases: ['Kilometers', 'Kilometre', 'Kilometres', 'km']
+      }, [
+        ['m', l => l * 1000],
+        ['ft', l => l / 0.0003048],
+        ['mi', l => l / 1.609344]
+      ]],
+      [{
+        name: 'Foot',
+        aliases: ['Feet', 'ft']
+      }, [
+        ['m', l => l * 0.3048],
+        ['km', l => l * 0.0003048],
+        ['mi', l => l / 5280]
+      ]],
+      [{
+        name: 'Mile',
+        aliases: ['Miles', 'mi']
+      }, [
+        ['m', l => l * 1609.344],
+        ['km', l => l * 1.609344],
+        ['ft', l => l * 5280]
+      ]],
       // Mass
-      ['kg', {
-        name: 'Kilograms',
-        conversions: [
-          { unit: 'lb', name: 'Pounds', conversion: m => m * 2.20462262 },
-          { unit: 'oz', name: 'Ounces', conversion: m => m * 35.2739619 }
-        ]
-      }],
-      ['lb', {
-        name: 'Pounds',
-        conversions: [
-          { unit: 'kg', name: 'Kilograms', conversion: m => m * 0.45359237 },
-          { unit: 'oz', name: 'Ounces', conversion: m => m * 16 }
-        ]
-      }],
-      ['oz', {
-        name: 'Ounces',
-        conversions: [
-          { unit: 'kg', name: 'Kilograms', conversion: m => m * 0.02834952 },
-          { unit: 'lb', name: 'Pounds', conversion: m => m * 0.0625 }
-        ]
-      }]
+      [{
+        name: 'Kilogram',
+        aliases: ['Kilograms', 'kg', 'kgs']
+      }, [
+        ['lb', m => m * 2.20462262],
+        ['oz', m => m * 35.2739619]
+      ]],
+      [{
+        name: 'Pound',
+        aliases: ['Pounds', 'lb', 'lbs']
+      }, [
+        ['kg', m => m * 0.45359237],
+        ['oz', m => m * 16]
+      ]],
+      [{
+        name: 'Ounce',
+        aliases: ['Ounces', 'oz']
+      }, [
+        ['kg', m => m * 0.02834952],
+        ['lb', m => m * 0.0625]
+      ]]
     ]);
   }
 
@@ -110,8 +146,7 @@ export default class UnitConvert extends Command {
     const embed = new MessageEmbed().setColor(client.config.colors.RED);
 
     if (args[0] === '--list') {
-      const unitList: Array<string> = [];
-      this.units.forEach(unit => unitList.push(unit.name));
+      const unitList = this.unitStore.getNameList();
       embed
         .setColor(client.config.colors.BLUE)
         .setTitle('Avalible units')
@@ -139,11 +174,10 @@ export default class UnitConvert extends Command {
       return;
     }
 
-    const unitBase = args[1];
-    const unitGoal = args[2];
-    const baseObj = this.units.get(unitBase.toLowerCase());
-
-    if (!baseObj) {
+    const baseUnit = this.unitStore.getUnits(args[1])[0];
+    const goalUnit = this.unitStore.getUnits(args[2])[0];
+    
+    if (!baseUnit) {
       embed
         .setTitle('Invalid base unit')
         .setDescription('Unable to identify base unit.')
@@ -151,11 +185,8 @@ export default class UnitConvert extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-      
-    const baseName = baseObj.name;
-    const goalMatches = baseObj.conversions.filter(obj => obj.unit === unitGoal.toLowerCase());
-    
-    if (goalMatches.length === 0) {
+
+    if (!goalUnit) {
       embed
         .setTitle('Invalid goal unit')
         .setDescription('Unable to identify goal unit.')
@@ -163,14 +194,13 @@ export default class UnitConvert extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-
-    const goalName = goalMatches[0].name;
-    const conversion = goalMatches[0].conversion;
-    const valueConverted = Math.round((conversion(Number(valueBase)) + Number.EPSILON) * 100) / 100;
+      
+    const conversionFn = this.unitStore.getConversion(baseUnit, goalUnit);
+    const valueConverted = Math.round((conversionFn(Number(valueBase)) + Number.EPSILON) * 100) / 100;
 
     embed
       .setColor(client.config.colors.BLUE)
-      .setTitle(`${valueBase} ${baseName} is ${valueConverted} ${goalName}`);
+      .setTitle(`${valueBase} ${baseUnit.name} is ${valueConverted} ${goalUnit.name}`);
     message.channel.send({ embeds: [embed] });
   }
 }
