@@ -85,32 +85,32 @@ export default class UnitConvert extends Command {
       ]],
       // Length
       [{
-        name: 'Meter',
-        aliases: ['Meters', 'Metre', 'Metres', 'm']
+        name: 'Meters',
+        aliases: ['Meter', 'Metre', 'Metres', 'm']
       }, [
         ['km', l => l / 1000],
         ['ft', l => l / 0.3048],
         ['mi', l => l / 1609.344]
       ]],
       [{
-        name: 'Kilometer',
-        aliases: ['Kilometers', 'Kilometre', 'Kilometres', 'km']
+        name: 'Kilometers',
+        aliases: ['Kilometer', 'Kilometre', 'Kilometres', 'km']
       }, [
         ['m', l => l * 1000],
         ['ft', l => l / 0.0003048],
         ['mi', l => l / 1.609344]
       ]],
       [{
-        name: 'Foot',
-        aliases: ['Feet', 'ft']
+        name: 'Feet',
+        aliases: ['Foot', 'ft']
       }, [
         ['m', l => l * 0.3048],
         ['km', l => l * 0.0003048],
         ['mi', l => l / 5280]
       ]],
       [{
-        name: 'Mile',
-        aliases: ['Miles', 'mi']
+        name: 'Miles',
+        aliases: ['Mile', 'mi']
       }, [
         ['m', l => l * 1609.344],
         ['km', l => l * 1.609344],
@@ -118,22 +118,22 @@ export default class UnitConvert extends Command {
       ]],
       // Mass
       [{
-        name: 'Kilogram',
-        aliases: ['Kilograms', 'kg', 'kgs']
+        name: 'Kilograms',
+        aliases: ['Kilogram', 'kg', 'kgs']
       }, [
         ['lb', m => m * 2.20462262],
         ['oz', m => m * 35.2739619]
       ]],
       [{
-        name: 'Pound',
-        aliases: ['Pounds', 'lb', 'lbs']
+        name: 'Pounds',
+        aliases: ['Pound', 'lb', 'lbs']
       }, [
         ['kg', m => m * 0.45359237],
         ['oz', m => m * 16]
       ]],
       [{
-        name: 'Ounce',
-        aliases: ['Ounces', 'oz']
+        name: 'Ounces',
+        aliases: ['Ounce', 'oz']
       }, [
         ['kg', m => m * 0.02834952],
         ['lb', m => m * 0.0625]
