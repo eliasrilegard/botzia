@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
-import Utils from '../../bot/utils';
+import UtilityFunctions from '../../utils/utilities';
 
 export default class Ban extends Command {
   constructor() {
@@ -45,14 +45,14 @@ export default class Ban extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (Utils.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
+    if (UtilityFunctions.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
       embed
         .setTitle('Can\'t ban member')
         .setDescription('You can\'t ban someone equal to or above you');
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (Utils.permHierarchy(member, message.guild.members.resolve(client.user))) {
+    if (UtilityFunctions.permHierarchy(member, message.guild.members.resolve(client.user))) {
       embed
         .setTitle('Can\'t ban member')
         .setDescription('Specified user is above my highest role.');

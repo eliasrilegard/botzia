@@ -2,7 +2,7 @@ import { Message, MessageEmbed, MessageReaction, User } from 'discord.js';
 import fetch from 'node-fetch';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
-import Utils from '../../bot/utils';
+import UtilityFunctions from '../../utils/utilities';
 
 interface TriviaCategory {
   id: number;
@@ -79,15 +79,15 @@ export default class Trivia extends Command {
       return;
     }
 
-    const description = `${data.difficulty === 'easy' ? 'An' : 'A'} ${Utils.capitalize(data.difficulty)} one from the category ${data.category}.`;
+    const description = `${data.difficulty === 'easy' ? 'An' : 'A'} ${UtilityFunctions.capitalize(data.difficulty)} one from the category ${data.category}.`;
     
     let allAnswers: Array<string> = [];
     allAnswers.push(data.correct_answer);
     data.incorrect_answers.forEach((entry: string) => allAnswers.push(entry));
-    allAnswers = allAnswers.length === 2 ? allAnswers.sort().reverse() : Utils.shuffle(allAnswers) as Array<string>; // Sort if true/false, shuffle otherwise
+    allAnswers = allAnswers.length === 2 ? allAnswers.sort().reverse() : UtilityFunctions.shuffle(allAnswers) as Array<string>; // Sort if true/false, shuffle otherwise
 
     const allEmotes = ['🍎', '🍓', '🍐', '🍒', '🍇', '🥕', '🍊', '🍉', '🍋', '🍌', '🥥', '🥑', '🥦', '🌶️', '🌽', '🥝', '🧄', '🍍', '🥬'];
-    const emotes = (Utils.shuffle(allEmotes) as Array<string>).slice(0, allAnswers.length);
+    const emotes = (UtilityFunctions.shuffle(allEmotes) as Array<string>).slice(0, allAnswers.length);
 
     const correctEmote = emotes[allAnswers.indexOf(data.correct_answer)];
 

@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
-import Utils from '../../bot/utils';
+import UtilityFunctions from '../../utils/utilities';
 
 export default class Poll extends Command {
   constructor() {
@@ -29,7 +29,7 @@ export default class Poll extends Command {
 
     const allEmotes = ['🍎', '🍓', '🍐', '🍒', '🍇', '🥕', '🍊', '🍉', '🍋', '🍌', '🥥', '🥑', '🥦', '🌶️', '🌽', '🥝', '🧄', '🍍', '🥬', '<:kekw:743962015411732510>'];
 
-    const emotes = (Utils.shuffle(allEmotes) as Array<string>).slice(0, pollOptions.length);
+    const emotes = (UtilityFunctions.shuffle(allEmotes) as Array<string>).slice(0, pollOptions.length);
 
     let choicesString = '';
     pollOptions.forEach((option, index) => choicesString += `${emotes[index]} - ${option}\n`);
