@@ -10,13 +10,13 @@ Source code for Botzia.
 - `$ npm install` to install dependencies.
 - Create a `.env` file and your token provided by Discord as `TOKEN=YourToken`.
 - Build the JS code with `$ npm run build`.
-- Run the bot with `$ npm start`
+- Run the bot with `$ npm start`.
 
 `tsc` is set to run on `watch` mode by default. Use `$ npm run build` for a one time build.
 
 ### Configuration
 
-Any changes to the database should not be committed.
+Any changes to `.db` files in the database should not be committed.
 
 You can make sure manually, or use some git commands:
 
@@ -27,7 +27,7 @@ $ git update-index --skip-worktree path/to/file
 # Check ignored files (need git bash or other terminal with 'grep' enabled)
 $ git ls-files -v | grep ^S
 
-# Stop ignoring local changes (e.g. to edit the placeholders in config file)
+# Stop ignoring local changes to a file
 $ git update-index --no-skip-worktree path/to/file
 ```
 
