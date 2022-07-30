@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from 'discord.js';
+import DWG from 'directed-weighted-graph';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
-import DWG from '../../utils/dwg';
 
 interface Unit {
   readonly name: string;
