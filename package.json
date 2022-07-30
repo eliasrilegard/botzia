@@ -4,8 +4,8 @@
   "description": "A Discord bot created by Chronozia",
   "main": "dist/shard.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "rebuild": "rm -rf dist && ./node_modules/typescript/bin/tsc"
+    "start": "node .",
+    "build": "rm -rf dist && tsc --watch false"
   },
   "repository": {
     "type": "git",
