@@ -137,6 +137,28 @@ export default class UnitConvert extends Command {
       }, [
         ['kg', m => m * 0.02834952],
         ['lb', m => m * 0.0625]
+      ]],
+      // Volume
+      [{
+        name: 'Liters',
+        aliases: ['Liter', 'Litre', 'Litres', 'l']
+      }, [
+        ['gal', v => v * 0.264172],
+        ['floz', v => v * 33.814]
+      ]],
+      [{
+        name: 'Gallons',
+        aliases: ['Gallon', 'gal']
+      }, [
+        ['l', v => v / 0.264172],
+        ['floz', v => v * 128]
+      ]],
+      [{
+        name: 'FluidOunces',
+        aliases: ['FluidOunce', 'FluidOz', 'floz']
+      }, [
+        ['l', v => v * 0.0295735],
+        ['gal', v => v * 0.0078125]
       ]]
     ]);
   }
