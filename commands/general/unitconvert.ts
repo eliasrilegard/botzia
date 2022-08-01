@@ -5,6 +5,7 @@ import Command from '../../bot/command';
 
 interface Unit {
   readonly name: string;
+  readonly category: string;
   readonly aliases?: Array<string>;
 }
 
@@ -43,9 +44,11 @@ class UnitStore {
     return this.graph.getWeight(unit1, unit2);
   }
 
-  getNameList(): Array<string> {
+  getUnitList(): Array<{ name: string, category: string }> {
     const allUnits = this.graph.getAllVertices();
-    return allUnits.map(unit => unit.name);
+    return allUnits.map(unit => {
+      return { name: unit.name, category: unit.category };
+    });
   }
 }
 
@@ -64,6 +67,7 @@ export default class UnitConvert extends Command {
       // Temperature
       [{
         name: 'Celsius',
+        category: 'Temperature',
         aliases: ['C']
       }, [
         ['F', t => t * 9 / 5 + 32],
@@ -71,6 +75,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'Fahrenheit',
+        category: 'Temperature',
         aliases: ['F']
       }, [
         ['C', t => (t - 32) * 5 / 9],
@@ -78,6 +83,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'Kelvin',
+        category: 'Temperature',
         aliases: ['K']
       }, [
         ['C', t => t - 273.15],
@@ -86,6 +92,7 @@ export default class UnitConvert extends Command {
       // Length
       [{
         name: 'Meters',
+        category: 'Length',
         aliases: ['Meter', 'Metre', 'Metres', 'm']
       }, [
         ['km', l => l / 1000],
@@ -94,6 +101,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'Kilometers',
+        category: 'Length',
         aliases: ['Kilometer', 'Kilometre', 'Kilometres', 'km']
       }, [
         ['m', l => l * 1000],
@@ -102,6 +110,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'Feet',
+        category: 'Length',
         aliases: ['Foot', 'ft']
       }, [
         ['m', l => l * 0.3048],
@@ -110,6 +119,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'Miles',
+        category: 'Length',
         aliases: ['Mile', 'mi']
       }, [
         ['m', l => l * 1609.344],
@@ -119,6 +129,7 @@ export default class UnitConvert extends Command {
       // Mass
       [{
         name: 'Kilograms',
+        category: 'Mass',
         aliases: ['Kilogram', 'kg', 'kgs']
       }, [
         ['lb', m => m * 2.20462262],
@@ -126,6 +137,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'Pounds',
+        category: 'Mass',
         aliases: ['Pound', 'lb', 'lbs']
       }, [
         ['kg', m => m * 0.45359237],
@@ -133,6 +145,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'Ounces',
+        category: 'Mass',
         aliases: ['Ounce', 'oz']
       }, [
         ['kg', m => m * 0.02834952],
@@ -141,6 +154,7 @@ export default class UnitConvert extends Command {
       // Volume
       [{
         name: 'Liters',
+        category: 'Volume',
         aliases: ['Liter', 'Litre', 'Litres', 'l']
       }, [
         ['gal', v => v * 0.264172],
@@ -148,6 +162,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'Gallons',
+        category: 'Volume',
         aliases: ['Gallon', 'gal']
       }, [
         ['l', v => v / 0.264172],
@@ -155,6 +170,7 @@ export default class UnitConvert extends Command {
       ]],
       [{
         name: 'FluidOunces',
+        category: 'Volume',
         aliases: ['FluidOunce', 'FluidOz', 'floz']
       }, [
         ['l', v => v * 0.0295735],
@@ -168,11 +184,23 @@ export default class UnitConvert extends Command {
     const embed = new MessageEmbed().setColor(client.config.colors.RED);
 
     if (args[0] === '--list') {
-      const unitList = this.unitStore.getNameList();
+      // Use with .filter to filter out uniques in array
+      const uniques = (value: string, index: number, list: Array<string>): boolean => list.indexOf(value) === index;
+
+      const unitList = this.unitStore.getUnitList();
+      const categories = unitList.map(unit => unit.category).filter(uniques);
+      const fields = categories.map(category => {
+        return {
+          name: category,
+          value: unitList.filter(unit => unit.category === category).map(unit => unit.name).join('\n')
+        };
+      });
       embed
         .setColor(client.config.colors.BLUE)
         .setTitle('Avalible units')
-        .addField('Here\'s a list of all supported units.', `\`${unitList.join('\`, \`')}\``);
+        .setDescription('Here\'s a list of all supported units.')
+        .addFields(fields)
+        .setFooter({ text: 'I should have most abbreviations covered too. Let me know if there\'s one missing.' });
       message.channel.send({ embeds: [embed] });
       return;
     }
