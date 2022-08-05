@@ -7,67 +7,96 @@ export default class Remindme extends Command {
     super(
       'remindme',
       'Remind you of a message after a given time!',
-      ['[time until reminder]', '[time until reminder]; (message)']
+      ['[time until reminder] (message)']
     );
   }
 
   async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
-    const indexMessageStart = args.indexOf(args.filter(arg => arg.includes(';'))[0]) + 1; // -1 + 1 if no match
-    const reminderMessage = indexMessageStart ? args.slice(indexMessageStart, args.length).join(' ') : '';
-    const timeArgs = indexMessageStart ? [...args.slice(0, indexMessageStart - 1), args[indexMessageStart - 1].slice(0, -1)] : args;
+    // Go through all args. If argument is a pure number, grab the next arg to
+    // resolve unit and fast forward the index by one.
+    // If the arg matches [digit][unit], figure out time from that.
+    // When no more time arguments are found, concatenate the rest of the
+    // arguments to form the reminder message.
 
-    const timeData = [0, 0, 0]; // Days, Hours, Minutes
-    const acceptedWords = ['day', 'hour', 'min'];
+    const time = { days: 0, hours: 0, minutes: 0 };
 
-    timeArgs.forEach((arg, i) => {
-      if (arg.match(/^\d+[dhm]$/i)) {
-        const index = Number(arg.slice(-1).toLowerCase() === 'h') + Number(arg.slice(-1).toLowerCase() === 'm') * 2;
-        timeData[index] = Math.abs(parseInt(arg.slice(0, -1)));
+    let i: number;
+    for (i = 0; i < args.length; i++) {
+      const arg = args[i];
+
+      let unitKey: string, amount: string;
+
+      // If pure number
+      if (/^\d+$/.test(arg)) {
+        // Grab and test the next argument to resolve unit
+        unitKey = args[i + 1];
+        amount = arg;
+        if (!/^(d|day|h|hour|m|min|minute)s?$/.test(unitKey)) { // Error, abort
+          const embed = this.helpMessage(client, await client.prefix(message));
+          message.channel.send({ embeds: [embed] });
+          return;
+        }
+        i++;
       }
-      else if (acceptedWords.some(word => arg.toLowerCase().startsWith(word)) && args[i - 1].match(/^\d+$/)) {
-        const index = Number(arg.slice(0, 1).toLowerCase() === 'h') + Number(arg.slice(0, 1).toLowerCase() === 'm') * 2;
-        timeData[index] = Math.abs(parseInt(timeArgs[i - 1]));
+
+      // If 10d, 2mins, etc
+      else if (/^\d+(d|day|h|hour|m|min|minute)s?$/.test(arg)) {
+        amount = arg.match(/\d+/)[0];
+        unitKey = arg[amount.length];
       }
-    });
-    
-    const time = (timeData[0] * 24 * 60 + timeData[1] * 60 + timeData[2]) * 60000;
-    if (time <= 0) {
-      message.channel.send({ embeds: [this.helpMessage(client, await client.prefix(message))] });
-      return;
+
+      // Done with time arguments, rest of args is reminder message
+      else break;
+      
+      const autocomplete = (val: string, obj: { [key: string]: number }) => 
+        Object.keys(obj).join(' ').match(new RegExp(`${val}\\S*(?=\s)?`))[0];
+
+      const unit = autocomplete(unitKey, time);
+      time[unit] += parseInt(amount);
     }
-    if (time > 2073600000) { // Limit of setTimeout
-      message.channel.send({ embeds: [this.tooLong(client)] });
-      return;
+
+    const msg = args.slice(i).join(' ');
+    const duration = (time.days * 24 * 60 + time.hours * 60 + time.minutes) * 60000;
+
+    if (duration <= 0) {
+      const embed = this.helpMessage(client, await client.prefix(message));
+      message.channel.send({ embeds: [embed] });
     }
-    
-    const UIWords = ['days', 'hours', 'minutes'];
+    if (duration > 2073600000) { // Limit of setTimeout
+      const embed = this.tooLong(client);
+      message.channel.send({ embeds: [embed] });
+    }
+
     const UIArray: Array<string> = [];
-    timeData.forEach((data, i) => {
-      if (data) UIArray.push(`${data} ${data === 1 ? UIWords[i].slice(0, -1) : UIWords[i]}`);
-    });
-    const UIString = UIArray.join(', ').replace(/,(?=[^,]*$)/, ' and'); // Replace last ', ' with ' and '
-    
+    for (const key in time) {
+      const data: number = time[key];
+      if (data > 0) UIArray.push(`${data} ${data === 1 ? key.slice(0, -1) : key}`);
+    }
+    const UIString = UIArray.join(', ').replace(/,(?=[^,]*)/, ' and'); // Replace last ',' with ' and'
+
     const embed = new MessageEmbed()
       .setColor(client.config.colors.GREEN)
       .setTitle('Reminder created')
-      .setDescription(`Okay! I will remind you in ${UIString}.`)
-      .setTimestamp();
-    if (reminderMessage) embed.addField('Message:', reminderMessage);
+      .setDescription(`Got it, I will remind you in ${UIString}.`)
+      .setTimestamp(Date.now() + duration);
+    if (msg) embed.addField('Message:', msg);
     message.channel.send({ embeds: [embed] });
+
+    delete embed.description;
     delete embed.fields;
 
     embed
-      .setColor(client.config.colors.BLUE)
-      .setTitle(`${reminderMessage ? 'Here\'s your reminder!' : 'Ding!'}`)
-      .setDescription(`${reminderMessage ? reminderMessage : 'Here\'s your reminder!'}`);
-    
-    const pingList: Array<string> = [];
-    if (message.mentions.members.size && reminderMessage) message.mentions.members.forEach(member => pingList.push(`${member}`));
+      .setTitle('Ding, here\'s your reminder!')
+      .setTimestamp(Date.now());
+    if (msg) embed.setDescription(msg);
 
-    const sendPingMessage = pingList.length > 0 ?
-      () => message.reply({ content: pingList.join(', '), embeds: [embed] }) :
+    const pingList: Array<string> = [];
+    if (message.mentions.members.size && msg) message.mentions.members.forEach(member => pingList.push(`${member}`));
+
+    const sendReply = pingList.length ?
+      () => message.reply({ content: pingList.join(' '), embeds: [embed] }) :
       () => message.reply({ embeds: [embed] });
-    setTimeout(sendPingMessage, time);
+    setTimeout(sendReply, duration);
   }
 
   private helpMessage(client: Bot, prefix: string): MessageEmbed {
