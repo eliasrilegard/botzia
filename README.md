@@ -8,7 +8,7 @@ Source code for Botzia.
 
 - Clone the repository and `cd` into the root folder.
 - `$ npm install` to install dependencies.
-- Create a `.env` file and your token provided by Discord as `TOKEN=YourToken`.
+- Create a `.env` file and enter your bot token provided by Discord as `TOKEN=YourToken`.
 - Build the JS code with `$ npm run build`.
 - Run the bot with `$ npm start`.
 
