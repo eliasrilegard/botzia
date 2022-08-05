@@ -66,7 +66,7 @@ export default class Command {
   async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     if (!this.category) return; // This should never happen but I'm gonna check it anyways
 
-    const subCommandName = args.shift();
+    const subCommandName = args.shift().toLowerCase();
 
     const subCommand = client.categories.get(this.name).find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
 
