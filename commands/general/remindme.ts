@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -10,6 +10,9 @@ export default class Remindme extends Command {
       'Remind you of a message after a given time!',
       ['[time until reminder] (message)']
     );
+
+    this.updateJobs(); // Load jobs on object creation, then refresh jobs every two weeks
+    setInterval(() => this.updateJobs(), 1_209_600_000);
   }
 
   async execute(message: Message, args: Array<string>): Promise<void> {
@@ -62,10 +65,7 @@ export default class Remindme extends Command {
     if (duration <= 0) {
       const embed = this.helpMessage(await this.client.prefix(message));
       message.channel.send({ embeds: [embed] });
-    }
-    if (duration > 2073600000) { // Limit of setTimeout
-      const embed = this.tooLong();
-      message.channel.send({ embeds: [embed] });
+      return;
     }
 
     const UIArray: Array<string> = [];
@@ -83,21 +83,55 @@ export default class Remindme extends Command {
     if (msg) embed.addField('Message:', msg);
     message.channel.send({ embeds: [embed] });
 
+    const now = Date.now();
+    this.client.database.setReminderJob(`${now + duration}`, message.channelId, message.id, msg);
+
     delete embed.description;
     delete embed.fields;
-
+    
     embed
       .setTitle('Ding, here\'s your reminder!')
       .setTimestamp(Date.now());
     if (msg) embed.setDescription(msg);
-
+    
     const pingList: Array<string> = [];
     if (message.mentions.members.size && msg) message.mentions.members.forEach(member => pingList.push(`${member}`));
+    
+    if (duration < 1_209_600_000) { // If more than 14 days we just store in database
+      setTimeout(() => {
+        this.sendReply(message, embed, pingList);
+        this.client.database.removeReminderJob(`${now + duration}`);
+      }, duration);
+    }
+  }
 
-    const sendReply = pingList.length ?
-      () => message.reply({ content: pingList.join(' '), embeds: [embed] }) :
-      () => message.reply({ embeds: [embed] });
-    setTimeout(sendReply, duration);
+  private sendReply(message: Message, embed: MessageEmbed, pingList: Array<string>): void {
+    message.reply({ embeds: [embed], content: pingList.length > 0 ? pingList.join(' ') : undefined });
+  }
+
+  private async updateJobs(): Promise<void> {
+    const allJobs = this.client.database.getAllReminderJobs();
+    for (const job of allJobs) {
+      const remainingTime = parseInt(job.dueTime) - Date.now(); // ms
+      if (remainingTime < 1_209_600_000) {
+        const channel = await this.client.channels.fetch(job.channelId) as TextChannel;
+        const replyToMessage = await channel.messages.fetch(job.messageId);
+
+        const embed = new MessageEmbed()
+          .setColor(this.client.config.colors.GREEN)
+          .setTitle('Ding, here\'s your reminder!')
+          .setTimestamp(replyToMessage.createdTimestamp);
+        if (job.message) embed.setDescription(job.message);
+
+        const pingList: Array<string> = [];
+        if (replyToMessage.mentions.members.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
+
+        setTimeout(() => {
+          this.sendReply(replyToMessage, embed, pingList);
+          this.client.database.removeReminderJob(job.dueTime);
+        }, remainingTime);
+      }
+    }
   }
 
   private helpMessage(prefix: string): MessageEmbed {
@@ -108,12 +142,5 @@ export default class Remindme extends Command {
       .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
       .addField('\u200b', 'd, day(s)\nh, hour(s)\nm, min(s), minute(s)', true)
       .addField('Command usage', this.howTo(prefix, true));
-  }
-
-  private tooLong(): MessageEmbed {
-    return new MessageEmbed()
-      .setColor(this.client.config.colors.RED)
-      .setTitle('Invalid time')
-      .setDescription('Reminders have an upper time limit of 24 days.');
   }
 }

@@ -71,7 +71,7 @@ export default class NedbClient {
   }
 
   // Remindme
-  async setReminderJob(dueTime: string, channelId: string, messageId: string, message: string): Promise<void> {
+  async setReminderJob(dueTime: string, channelId: string, messageId: string, message?: string): Promise<void> {
     this.reminderJobs.insert({ dueTime, channelId, messageId, message }, (error: DocsError) => {
       // Afaik this should never happen with the way we're saving/loading
       if (error && error.errorType === 'uniqueViolated') {
@@ -80,7 +80,7 @@ export default class NedbClient {
     });
   }
 
-  getAllReminderJobs(): Array<{ dueTime: string, channelId: string, messageId: string, message: string }> {
+  getAllReminderJobs(): Array<{ dueTime: string, channelId: string, messageId: string, message?: string }> {
     return this.reminderJobs.getAllData();
   }
 
