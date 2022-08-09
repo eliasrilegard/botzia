@@ -1,7 +1,7 @@
 import { Client, Collection, ColorResolvable, Message } from 'discord.js';
 import { readdir } from 'fs/promises';
 import { resolve } from 'path';
-import ApiClient from './api';
+import NedbClient from './database';
 import Command from './command';
 import ClientEvent from './event';
 import MhwClient from './mhw';
@@ -25,7 +25,7 @@ export default class Bot extends Client {
   readonly categories: Collection<string, Collection<string, Command>>;
   readonly commands: Collection<string, Command>;
 
-  readonly apiClient: ApiClient;
+  readonly database: NedbClient;
   readonly mhwClient: MhwClient;
 
   constructor(dirname: string, config: ClientConfig) {
@@ -39,7 +39,7 @@ export default class Bot extends Client {
     this.categories = new Collection();
     this.commands = new Collection();
 
-    this.apiClient = new ApiClient(this.root.slice(0, -5).concat('database'));
+    this.database = new NedbClient(this.root.slice(0, -5).concat('database'));
     this.mhwClient = new MhwClient();
 
     this.loadEvents();
@@ -78,7 +78,7 @@ export default class Bot extends Client {
   async prefix(message?: Message): Promise<string> {
     const prefix = this.config.bot.defaultPrefix ? this.config.bot.defaultPrefix : '>';
     if (!message) return prefix;
-    const customPrefix = await this.apiClient.getCustomPrefix(message.guildId);
+    const customPrefix = await this.database.getCustomPrefix(message.guildId);
     return customPrefix ? customPrefix : prefix;
   }
 
