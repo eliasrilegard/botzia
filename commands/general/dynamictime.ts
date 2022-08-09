@@ -73,7 +73,7 @@ export default class DynamicTime extends Command {
       }
     }
     else { // Check if user has a stored timezone, though only if it was omitted in original message
-      const savedOffset = await client.apiClient.getUserTimezone(message.author.id);
+      const savedOffset = await client.database.getUserTimezone(message.author.id);
       dateString += savedOffset ? ` ${savedOffset}` : ' UTC';
     }
 
@@ -128,7 +128,7 @@ export default class DynamicTime extends Command {
         }
 
         // Bind timezone to user id
-        client.apiClient.setUserTimezone(message.author.id, utcOffset);
+        client.database.setUserTimezone(message.author.id, utcOffset);
         const embed = new MessageEmbed()
           .setColor(client.config.colors.GREEN)
           .setTitle('Timezone set')
@@ -138,7 +138,7 @@ export default class DynamicTime extends Command {
       }
 
       case 'reset': {
-        client.apiClient.removeUserTimezone(message.author.id);
+        client.database.removeUserTimezone(message.author.id);
         const embed = new MessageEmbed()
           .setColor(client.config.colors.GREEN)
           .setTitle('Timezone reset')

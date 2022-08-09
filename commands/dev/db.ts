@@ -15,9 +15,8 @@ export default class Database extends Command {
   async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
     switch (args[0]) {
       case 'reload': {
-        client.apiClient.serverPrefixes.loadDatabase();
-        client.apiClient.userTimezones.loadDatabase();
-
+        client.database.reloadAll();
+        
         const embed = new MessageEmbed()
           .setColor(client.config.colors.GREEN)
           .setTitle('Database reloaded')
