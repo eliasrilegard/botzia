@@ -114,6 +114,11 @@ export default class Remindme extends Command {
     for (const job of allJobs) {
       const remainingTime = parseInt(job.dueTime) - Date.now(); // ms
       if (remainingTime < 1_209_600_000) {
+        if (remainingTime < 0) {
+          this.client.database.removeReminderJob(job.dueTime);
+          continue;
+        }
+        
         const channel = await this.client.channels.fetch(job.channelId) as TextChannel;
         const replyToMessage = await channel.messages.fetch(job.messageId);
 
