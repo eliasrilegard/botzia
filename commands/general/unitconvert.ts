@@ -55,8 +55,9 @@ class UnitStore {
 export default class UnitConvert extends Command {
   private readonly unitStore: UnitStore;
 
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'unitconvert',
       'Convert a measure from one unit to another!',
       ['[value] [unit from] [unit to]', '--list'],
@@ -179,9 +180,9 @@ export default class UnitConvert extends Command {
     ]);
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {    
-    const prefix = await client.prefix(message);
-    const embed = new MessageEmbed().setColor(client.config.colors.RED);
+  async execute(message: Message, args: Array<string>): Promise<void> {    
+    const prefix = await this.client.prefix(message);
+    const embed = new MessageEmbed().setColor(this.client.config.colors.RED);
 
     if (args[0] === '--list') {
       // Use with .filter to filter out uniques in array
@@ -196,7 +197,7 @@ export default class UnitConvert extends Command {
         };
       });
       embed
-        .setColor(client.config.colors.BLUE)
+        .setColor(this.client.config.colors.BLUE)
         .setTitle('Avalible units')
         .setDescription('Here\'s a list of all supported units.')
         .addFields(fields)
@@ -249,7 +250,7 @@ export default class UnitConvert extends Command {
     const valueConverted = Math.round((conversionFn(Number(valueBase)) + Number.EPSILON) * 100) / 100;
 
     embed
-      .setColor(client.config.colors.BLUE)
+      .setColor(this.client.config.colors.BLUE)
       .setTitle(`${valueBase} ${baseUnit.name} is ${valueConverted} ${goalUnit.name}`);
     message.channel.send({ embeds: [embed] });
   }

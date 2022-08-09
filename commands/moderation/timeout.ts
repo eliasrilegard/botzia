@@ -4,8 +4,9 @@ import Command from '../../bot/command';
 import UtilityFunctions from '../../utils/utilities';
 
 export default class Timeout extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'timeout',
       'Give a user a timeout',
       ['[@member] [duration]; (reason)', '[@member] remove'],
@@ -13,11 +14,11 @@ export default class Timeout extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     const member = message.mentions.members.first();
 
-    const prefix = await client.prefix(message);
-    const embed = new MessageEmbed().setColor(client.config.colors.RED);
+    const prefix = await this.client.prefix(message);
+    const embed = new MessageEmbed().setColor(this.client.config.colors.RED);
 
     if (!member) {
       embed
@@ -33,14 +34,14 @@ export default class Timeout extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (member.id === client.user.id) {
+    if (member.id === this.client.user.id) {
       embed
         .setTitle('I can\'t timeout myself')
         .setFooter({ text: 'How dare you' });
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (client.isDev(member.id)) {
+    if (this.client.isDev(member.id)) {
       embed
         .setTitle('You may not timeout my dev')
         .setFooter({ text: 'Let\'s not do that shall we c:' });
@@ -54,7 +55,7 @@ export default class Timeout extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (UtilityFunctions.permHierarchy(member, message.guild.members.resolve(client.user))) {
+    if (UtilityFunctions.permHierarchy(member, message.guild.members.resolve(this.client.user))) {
       embed
         .setTitle('Can\'t timeout member')
         .setDescription('Specified user is above my highest role.');
@@ -72,7 +73,7 @@ export default class Timeout extends Command {
     if (member.communicationDisabledUntilTimestamp > Date.now()) { // Workaround for isCommunicationDisabled()
       if (args[1] === 'remove') {
         embed
-          .setColor(client.config.colors.GREEN)
+          .setColor(this.client.config.colors.GREEN)
           .setTitle('Timeout removal successful')
           .setDescription(`Successfully removed timeout for <@${member.user.id}>.`);
         member.disableCommunicationUntil(null);
@@ -105,7 +106,7 @@ export default class Timeout extends Command {
     const time = (timeData[0] * 24 * 60 * 60 + timeData[1] * 60 * 60 + timeData[2] * 60 + timeData[3]) * 1000;
     
     if (time < 0) {
-      message.channel.send({ embeds: [this.helpMessage(client, prefix)] });
+      message.channel.send({ embeds: [this.helpMessage(prefix)] });
       return;
     }
 
@@ -119,7 +120,7 @@ export default class Timeout extends Command {
     const UIString = UIArray.join(', ').replace(/,([^,]*)$/, ' and$1');
 
     embed
-      .setColor(client.config.colors.GREEN)
+      .setColor(this.client.config.colors.GREEN)
       .setTitle('Timeout successful')
       .setDescription(`Successfully timed out <@${member.user.id}> for ${UIString}.`);
 
@@ -127,9 +128,9 @@ export default class Timeout extends Command {
     message.channel.send({ embeds: [embed] });
   }
 
-  private helpMessage(client: Bot, prefix: string): MessageEmbed {
+  private helpMessage(prefix: string): MessageEmbed {
     return new MessageEmbed()
-      .setColor(client.config.colors.RED)
+      .setColor(this.client.config.colors.RED)
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
       .addField('Arguments', '**Days:\nHours:\nMinutes:\nSeconds:**', true)

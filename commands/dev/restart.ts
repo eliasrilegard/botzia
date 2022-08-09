@@ -3,8 +3,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Restart extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'restart',
       'Restarts the bot',
       [''],
@@ -12,13 +13,13 @@ export default class Restart extends Command {
     );
   }
 
-  async execute(message: Message, _args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message): Promise<void> {
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.BLUE)
+      .setColor(this.client.config.colors.BLUE)
       .setTitle('Restarting')
       .setDescription('Sent request to respawn all shards.')
       .setTimestamp();
     await message.channel.send({ embeds: [embed] });
-    client.shard.respawnAll();
+    this.client.shard.respawnAll();
   }
 }

@@ -4,8 +4,9 @@ import Command from '../../bot/command';
 import fetch from 'node-fetch';
 
 export default class Color extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'color',
       'Emulates the forge color mechanic',
       ['[color string]'],
@@ -13,11 +14,11 @@ export default class Color extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     const colorString = args.join('');
     if (!/^,*-?\d{1,3}(,*-?\d{1,3}){0,2},*$/.test(colorString)) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Invalid format')
         .setDescription('Take your character name, remove `<color:` and `>` so you\'re only entering the numbers and commas.');
       message.channel.send({ embeds: [embed] });

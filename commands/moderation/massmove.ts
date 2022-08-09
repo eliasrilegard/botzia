@@ -5,8 +5,9 @@ import Command from '../../bot/command';
 type VC = VoiceChannel | StageChannel;
 
 export default class MassMove extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'massmove',
       'Moves all users in one voice channel to another',
       ['(base channel) [target channel]'],
@@ -14,7 +15,7 @@ export default class MassMove extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot) {
+  async execute(message: Message, args: Array<string>) {
     // If user is in voice, assume base channel is the one they're in, should they only specify one channel
 
     // Filter out all voice channels from the guild
@@ -30,7 +31,7 @@ export default class MassMove extends Command {
     switch (relevantChannels.length) {
       case 0: { // No channels found
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.RED)
+          .setColor(this.client.config.colors.RED)
           .setTitle('Can\'t identify channel')
           .setDescription('Remember that names are Case Sensitive!');
         message.channel.send({ embeds: [embed] });
@@ -40,7 +41,7 @@ export default class MassMove extends Command {
         const baseChannel = await this.getUserVoiceChannel(message);
         if (!baseChannel) {
           const embed = new MessageEmbed()
-            .setColor(client.config.colors.RED)
+            .setColor(this.client.config.colors.RED)
             .setTitle('Unknown base channel')
             .setDescription('Unless you\'re in a voice channel you need to specify both the base and target channels.');
           message.channel.send({ embeds: [embed] });
@@ -48,7 +49,7 @@ export default class MassMove extends Command {
         }
         if (baseChannel.equals(relevantChannels[0])) {
           const embed = new MessageEmbed()
-            .setColor(client.config.colors.RED)
+            .setColor(this.client.config.colors.RED)
             .setTitle('Nothing to move')
             .setDescription('You\'re already in this channel.');
           message.channel.send({ embeds: [embed] });
@@ -56,7 +57,7 @@ export default class MassMove extends Command {
         }
         this.moveAllMembers(baseChannel, relevantChannels[0], message);
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.GREEN)
+          .setColor(this.client.config.colors.GREEN)
           .setTitle('Success')
           .setDescription(`Successfully moved everybody to ${relevantChannels[0].name}.`);
         message.channel.send({ embeds: [embed] });
@@ -65,7 +66,7 @@ export default class MassMove extends Command {
       case 2: { // Source and target channels specified
         if (relevantChannels[0].equals(relevantChannels[1])) {
           const embed = new MessageEmbed()
-            .setColor(client.config.colors.RED)
+            .setColor(this.client.config.colors.RED)
             .setTitle('Nothing to move')
             .setDescription('I can\'t move members from and to the same channel.');
           message.channel.send({ embeds: [embed] });
@@ -73,7 +74,7 @@ export default class MassMove extends Command {
         }
         if (relevantChannels[0].members.size === 0) {
           const embed = new MessageEmbed()
-            .setColor(client.config.colors.RED)
+            .setColor(this.client.config.colors.RED)
             .setTitle('Nobody to move')
             .setDescription('There is nobody in the channel to move from.');
           message.channel.send({ embeds: [embed] });
@@ -81,7 +82,7 @@ export default class MassMove extends Command {
         }
         this.moveAllMembers(relevantChannels[0], relevantChannels[1], message);
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.GREEN)
+          .setColor(this.client.config.colors.GREEN)
           .setTitle('Success')
           .setDescription(`Successfully moved everybody from ${relevantChannels[0].name} to ${relevantChannels[1].name}.`);
         message.channel.send({ embeds: [embed] });
@@ -89,7 +90,7 @@ export default class MassMove extends Command {
       }
       default: {
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.RED)
+          .setColor(this.client.config.colors.RED)
           .setTitle('Error')
           .setDescription('An unknown error occurred :(');
         message.channel.send({ embeds: [embed] });

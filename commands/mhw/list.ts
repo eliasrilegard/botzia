@@ -3,8 +3,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class List extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'list',
       'List all monsters in Monster Hunter World & Iceborne',
       [],
@@ -12,18 +13,18 @@ export default class List extends Command {
     );
   }
 
-  async execute(message: Message<boolean>, _args: Array<string>, client: Bot): Promise<void> {
-    if (client.mhwClient.monsters == null) {
+  async execute(message: Message<boolean>): Promise<void> {
+    if (this.client.mhwClient.monsters == null) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Monster data unavalible')
         .setDescription('Could not access monster data at this time.')
-        .setFooter({ text: `If this issue persists please contact ${client.config.users.chrono_tag}` });
+        .setFooter({ text: `If this issue persists please contact ${this.client.config.users.chrono_tag}` });
       message.channel.send({ embeds: [embed] });
       return;
     }
 
-    const monsterNames = [...client.mhwClient.monsters.values()].map(monster => monster.title).sort((a, b) => a.localeCompare(b));
+    const monsterNames = [...this.client.mhwClient.monsters.values()].map(monster => monster.title).sort((a, b) => a.localeCompare(b));
     const monstersPerPage = 20;
 
     const embeds = monsterNames

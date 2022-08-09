@@ -4,8 +4,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Avatar extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'avatar',
       'Gets the tagged user\'s avatar',
       ['[user]'],
@@ -13,11 +14,11 @@ export default class Avatar extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message): Promise<void> {
     const user = message.mentions.users.first();
     if (!user) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('User not found')
         .setDescription('Could not fetch information for the specified user.')
         .addField('Tip', 'Make sure the user is tagged and is a member of this server.');

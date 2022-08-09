@@ -31,10 +31,10 @@ export default class MessageCreate extends ClientEvent {
       client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); // Or look for potential aliases
     if (!command) return;
 
-    if (!(await command.preRunCheck(message, args, client))) return;
+    if (!(await command.preRunCheck(message, args))) return;
 
     try {
-      command.execute(message, args, client);
+      command.execute(message, args);
     }
     catch (error) {
       console.log(`The following error was caused by ${message.author.tag}:`);

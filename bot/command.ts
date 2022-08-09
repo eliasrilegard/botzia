@@ -36,6 +36,7 @@ export default class Command {
   readonly permissions: string;
 
   /**
+   * @param client The client
    * @param name The command name
    * @param description A short description of the command
    * @param usages One or several usage examples (generalized)
@@ -49,7 +50,7 @@ export default class Command {
    * - guildOnly
    * - permissions
    */
-  protected constructor(readonly name: string, readonly description: string, readonly usages: Array<string>, customOptions?: CommandOptions) {
+  protected constructor(readonly client: Bot, readonly name: string, readonly description: string, readonly usages: Array<string>, customOptions?: CommandOptions) {
     const options = { ...defaultOptions, ...customOptions };
 
     this.aliases = options.aliases;
@@ -63,25 +64,25 @@ export default class Command {
     this.permissions = options.permissions;
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     if (!this.category) return; // This should never happen but I'm gonna check it anyways
 
     const subCommandName = args.shift().toLowerCase();
 
-    const subCommand = client.categories.get(this.name).find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
+    const subCommand = this.client.categories.get(this.name).find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
 
     if (!subCommand) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Subcommand not found');
       message.channel.send({ embeds: [embed] });
       return;
     }
 
-    if (!(await subCommand.preRunCheck(message, args, client))) return;
+    if (!(await subCommand.preRunCheck(message, args))) return;
 
     try {
-      subCommand.execute(message, args, client);
+      subCommand.execute(message, args);
     }
     catch (error) {
       console.log(`The following error was caused by ${message.author.tag}:`);
@@ -90,14 +91,14 @@ export default class Command {
   }
 
   // Return true if all checks passed
-  async preRunCheck(message: Message, args: Array<string>, client: Bot): Promise<boolean> {
+  async preRunCheck(message: Message, args: Array<string>): Promise<boolean> {
     // Ignore non-dev attemps at launching dev commands
-    if (this.devOnly && !client.isDev(message.author.id)) return false;
+    if (this.devOnly && !this.client.isDev(message.author.id)) return false;
 
     // Check if a server-only command being triggered in a DM
     if (this.guildOnly && message.channel instanceof DMChannel) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Server-only command')
         .setDescription('This command cannot be executed inside of DMs.');
       message.channel.send({ embeds: [embed] });
@@ -108,9 +109,9 @@ export default class Command {
     if (this.permissions) {
       const authorPerms = (message.channel as GuildChannel).permissionsFor(message.author);
       if ((!authorPerms || !authorPerms.has(this.permissions as PermissionResolvable)) &&
-        !client.isDev(message.author.id)) {
+        !this.client.isDev(message.author.id)) {
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.RED)
+          .setColor(this.client.config.colors.RED)
           .setTitle('Insufficient permissions')
           .setDescription('You do not have permission to issue this command.');
         message.channel.send({ embeds: [embed] });
@@ -120,10 +121,10 @@ export default class Command {
 
     // Check if arguments are provided if required
     if (this.args && args.length === 0) {
-      const prefix = await client.prefix(message);
+      const prefix = await this.client.prefix(message);
       const commandUsage = this.usages.map(usage => `${prefix}${this.belongsTo ? this.belongsTo + ' ' : ''}${this.name} ${usage}`).join('\n').trim();
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('No arguments given')
         .addField('Usage: ', commandUsage)
         .addField('Description: ', this.description);
@@ -136,14 +137,14 @@ export default class Command {
     if (expirationTime && !this.category) {
       const timeLeft = (expirationTime - Date.now()) / 1000;
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.ORANGE)
+        .setColor(this.client.config.colors.ORANGE)
         .setTitle('Too hasty')
         .setDescription(`Please wait ${timeLeft.toFixed(1)} more second(s) before using \`${this.name}\` again`);
       const embedMessage = await message.channel.send({ embeds: [embed] });
       setTimeout(() => embedMessage.delete(), 7000);
       return false;
     }
-    if (!this.category && !client.isDev(message.author.id)) { // Avoid cooldown for category commands and devs
+    if (!this.category && !this.client.isDev(message.author.id)) { // Avoid cooldown for category commands and devs
       this.cooldowns.set(message.author.id, Date.now() + this.cooldown);
       setTimeout(() => this.cooldowns.delete(message.author.id), this.cooldown);
     }

@@ -4,8 +4,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Wordle extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'wordle',
       'Wordle helper',
       [
@@ -15,13 +16,13 @@ export default class Wordle extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     let words = readFileSync(__dirname.slice(0, -21).concat('database/wordle/allowed_real.txt')).toString().split('\n');
 
     const placed = args[0].toLowerCase(); // Use - to denote empty
     if (placed.length !== 5) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Incorrect length')
         .setDescription('Placed letters argument must be exactly 5.')
         .addField('Tip', 'Use \'-\' to denote empty spots.');
@@ -38,7 +39,7 @@ export default class Wordle extends Command {
     if (args[2]) {
       if (args[1].toLowerCase() !== 'none' && [...args[1]].some(c => args[2].includes(c))) {
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.RED)
+          .setColor(this.client.config.colors.RED)
           .setTitle('Invalid arguments')
           .setDescription('Argument 2 and 3 must not share any characters.');
         message.channel.send({ embeds: [embed] });
@@ -54,7 +55,7 @@ export default class Wordle extends Command {
 
     if (words.length === 0) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.ORANGE)
+        .setColor(this.client.config.colors.ORANGE)
         .setTitle('No words found')
         .setDescription('Did you enter all arguments correctly?');
       message.channel.send({ embeds: [embed] });
@@ -78,7 +79,7 @@ export default class Wordle extends Command {
         )
       )
       .map((embedContent: Array<Array<string>>) => { // Map each chunk of word arrays into an embed message
-        const embed = new MessageEmbed().setColor(client.config.colors.GREEN).setDescription('**Matching words**');
+        const embed = new MessageEmbed().setColor(this.client.config.colors.GREEN).setDescription('**Matching words**');
         embedContent.forEach(wordArr => {
           if (wordArr.length > 0) embed.addField('\u200b', wordArr.join('\n'), true);
         });

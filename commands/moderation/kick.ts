@@ -4,8 +4,9 @@ import Command from '../../bot/command';
 import UtilityFunctions from '../../utils/utilities';
 
 export default class Kick extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'kick',
       'Kick a member',
       ['[@member] (reason)'],
@@ -13,16 +14,16 @@ export default class Kick extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     const member = message.mentions.members.first();
     const reason = args.slice(1).join(' ');
 
-    const embed = new MessageEmbed().setColor(client.config.colors.RED);
+    const embed = new MessageEmbed().setColor(this.client.config.colors.RED);
 
     if (!member) {
       embed
         .setTitle('No user targeted')
-        .addField('Command usage', this.howTo(await client.prefix(message), true));
+        .addField('Command usage', this.howTo(await this.client.prefix(message), true));
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -33,12 +34,12 @@ export default class Kick extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (member.id === client.user.id) {
+    if (member.id === this.client.user.id) {
       embed.setTitle('I can\'t kick myself');
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (client.isDev(member.id)) {
+    if (this.client.isDev(member.id)) {
       embed
         .setTitle('Using my own weapons against me...')
         .setFooter({ text: 'No, I don\'t think that\'ll work' });
@@ -52,7 +53,7 @@ export default class Kick extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (UtilityFunctions.permHierarchy(member, message.guild.members.resolve(client.user))) {
+    if (UtilityFunctions.permHierarchy(member, message.guild.members.resolve(this.client.user))) {
       embed
         .setTitle('Can\'t kick member')
         .setDescription('Specified user is above my highest role.');
@@ -70,7 +71,7 @@ export default class Kick extends Command {
     member.kick(reason);
 
     embed
-      .setColor(client.config.colors.GREEN)
+      .setColor(this.client.config.colors.GREEN)
       .setTitle('Success')
       .setDescription(`Successfully kicked <@${member.user.id}>${reason.length > 0 ? `for ${reason}` : ''}.`);
     message.channel.send({ embeds: [embed] });

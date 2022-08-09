@@ -58,7 +58,7 @@ export default class Bot extends Client {
   private async loadCommands(): Promise<void> {
     for await (const file of this.getFiles(this.root.concat('commands'))) {
       const { default: CommandClass } = await import(file);
-      const command: Command = new CommandClass();
+      const command: Command = new CommandClass(this);
       if (command.category) this.categories.set(command.name, new Collection());
       if (command.belongsTo) this.categories.get(command.belongsTo).set(command.name, command);
       else this.commands.set(command.name, command);

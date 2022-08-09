@@ -3,8 +3,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Res extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'res',
       'Calulates the number of upgrades required to max the resists of ult armor.',
       ['[res 1] (res 2) (res 3) (res 4) (upgrades) (primary stat)'],
@@ -12,12 +13,12 @@ export default class Res extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     const resists = args.slice(0, 4).map(res => parseInt(res)).sort((a, b) => b - a) // Sort resists in descending order
       .concat(args.slice(4).map(stat => parseInt(stat))); // Add upgrades and primary stat to the end
     if (resists.length < 1 || resists.length > 6 || resists.some(res => isNaN(res))) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Bad argument(s)')
         .setDescription('This command takes 1-6 numbers.');
       message.channel.send({ embeds: [embed] });
@@ -47,7 +48,7 @@ export default class Res extends Command {
     }
 
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.BLUE)
+      .setColor(this.client.config.colors.BLUE)
       .setTitle(`It takes ${levelsSpent} levels to max the resistances`);
     if (avalibleUpgrades) {
       const upgradesRemaining = avalibleUpgrades - armorLevel - 1, potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;

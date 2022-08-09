@@ -8,8 +8,9 @@ export default class LTRange extends Command {
   private readonly normal: Array<number>; // +6
   private readonly upped: Array<number>; // +17
 
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'ltrange',
       'Finds the closest LT breakpoints to your current range',
       ['[current range]'],
@@ -20,13 +21,13 @@ export default class LTRange extends Command {
     this.upped = [0, 7, 15, 24, 34, 45, 57, 70, 84, 100, 117, 135, 154, 175, 197, 221, 246, 273, 301, 331, 363, 396, 432, 468, 507, 548, 590, 635, 681, 730, 780, 833, 888, 945, 1004, 1065, 1129, 1195, 1264, 1334, 1408, 1483, 1562, 1643, 1726, 1812, 1901, 1992, 2086, 2183, 2283, 2385, 2490, 2599, 2710, 2824, 2941, 3062, 3185, 3311, 3441, 3574, 3710, 3849, 3991, 4137, 4286, 4439, 4595, 4754, 4917, 5083, 5253, 5427, 5604, 5784, 5969, 6157, 6349, 6545, 6744, 6947, 7154, 7366, 7581, 7799, 8022, 8249, 8480, 8716, 8955, 9198, 9446, 9698, 9954];
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     if (args.length > 1) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('This command takes 1 argument.')
-        .addField('Usage', this.howTo(await client.prefix(message), true));
+        .addField('Usage', this.howTo(await this.client.prefix(message), true));
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -34,10 +35,10 @@ export default class LTRange extends Command {
     const currentRange = parseInt(args[0]);
     if (isNaN(currentRange) || currentRange < 0 || currentRange > 9999) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('This command takes a number between 0 and 9999 as its argument.')
-        .addField('Usage', this.howTo(await client.prefix(message), true));
+        .addField('Usage', this.howTo(await this.client.prefix(message), true));
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -51,7 +52,7 @@ export default class LTRange extends Command {
     const valueUpped = `\`\`\`${closestUpped[0]} - ${indexUpped + 16}\n${closestUpped[1]} - ${indexUpped + 17}\n${closestUpped[2]} - ${indexUpped + 18}\`\`\``;
 
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.BLUE)
+      .setColor(this.client.config.colors.BLUE)
       .setTitle('Closest breakpoints')
       .setDescription('Here are the closest breakpoints to your current range.\n\`Range - Targets\`')
       .addFields(

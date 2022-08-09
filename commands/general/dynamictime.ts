@@ -5,8 +5,9 @@ import Command from '../../bot/command';
 export default class DynamicTime extends Command {
   private readonly timezones: Map<string, number>;
 
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'dynamictime',
       'Convert a timestamp (UTC) to dynamic date-time display',
       ['(YYYY-MM-DD) [HH:MM] (timezone or UTC±offset)', '--list', '--timezone [set or reset]'],
@@ -20,12 +21,12 @@ export default class DynamicTime extends Command {
     ]);
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     // If timezone list requested
     if (args.length === 1 && args[0] === '--list') {
       const offsets = [...this.timezones.values()].map(offset => `${offset > 0 ? '+' : ''}${offset}`);
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.BLUE)
+        .setColor(this.client.config.colors.BLUE)
         .setTitle('Supported timezones')
         .addFields([
           { name: 'Name', value: [...this.timezones.keys()].join('\n'), inline: true },
@@ -35,14 +36,14 @@ export default class DynamicTime extends Command {
       return;
     }
     else if (args[0] === '--timezone') {
-      return this.handleTimezone(message, args, client);
+      return this.handleTimezone(message, args);
     }
 
     // Validate arguments
     if (args.length < 1 || args.length > 3) return;
     if (!/^(\d{4}-\d{2}-\d{2}\s)?\d{2}:\d{2}/.test(args.join(' '))) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Invalid format')
         .setDescription('Make sure the date format is YYYY-MM-DD HH:MM or just HH:MM');
       message.channel.send({ embeds: [embed] });
@@ -65,7 +66,7 @@ export default class DynamicTime extends Command {
       }
       else { // Nothing matched
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.RED)
+          .setColor(this.client.config.colors.RED)
           .setTitle('Invalid timezone')
           .setDescription('Do `UTC±Offset`');
         message.channel.send({ embeds: [embed] });
@@ -73,14 +74,14 @@ export default class DynamicTime extends Command {
       }
     }
     else { // Check if user has a stored timezone, though only if it was omitted in original message
-      const savedOffset = await client.database.getUserTimezone(message.author.id);
+      const savedOffset = await this.client.database.getUserTimezone(message.author.id);
       dateString += savedOffset ? ` ${savedOffset}` : ' UTC';
     }
 
     const unixTime = Math.floor(Date.parse(dateString) / 1000);
     if (isNaN(unixTime)) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Something went wrong')
         .setDescription('Couldn\'t convert the passed arguments. Did you format everything correctly?');
       message.channel.send({ embeds: [embed] });
@@ -89,7 +90,7 @@ export default class DynamicTime extends Command {
 
     const formatted = `<t:${unixTime}:${isDaySpecified ? 'f' : 't'}>`;
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.BLUE)
+      .setColor(this.client.config.colors.BLUE)
       .addFields([
         { name: 'Display', value: formatted },
         { name: 'Raw', value: `\`${formatted}\`` }
@@ -97,13 +98,13 @@ export default class DynamicTime extends Command {
     message.channel.send({ embeds: [embed] });
   }
 
-  private handleTimezone(message: Message, args: Array<string>, client: Bot): void {
+  private handleTimezone(message: Message, args: Array<string>): void {
     const action = args[1].toLowerCase();
     switch (action) {
       case 'set': {
         if (args.length !== 3) {
           const embed = new MessageEmbed()
-            .setColor(client.config.colors.RED)
+            .setColor(this.client.config.colors.RED)
             .setTitle('Invalid format')
             .setDescription('Do `--timezone set [UTC±x or named timezone]`');
           message.channel.send({ embeds: [embed] });
@@ -120,7 +121,7 @@ export default class DynamicTime extends Command {
         else if (/UTC[+-]\d{1,2}/.test(timezone)) utcOffset = timezone;
         else {
           const embed = new MessageEmbed()
-            .setColor(client.config.colors.RED)
+            .setColor(this.client.config.colors.RED)
             .setTitle('Invalid timezone')
             .setDescription('Do `UTC±Offset` or a named timezone.\nSee `--list` for a list of supported timezones.');
           message.channel.send({ embeds: [embed] });
@@ -128,9 +129,9 @@ export default class DynamicTime extends Command {
         }
 
         // Bind timezone to user id
-        client.database.setUserTimezone(message.author.id, utcOffset);
+        this.client.database.setUserTimezone(message.author.id, utcOffset);
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.GREEN)
+          .setColor(this.client.config.colors.GREEN)
           .setTitle('Timezone set')
           .setDescription(`Your offset is now ${utcOffset}`);
         message.channel.send({ embeds: [embed] });
@@ -138,9 +139,9 @@ export default class DynamicTime extends Command {
       }
 
       case 'reset': {
-        client.database.removeUserTimezone(message.author.id);
+        this.client.database.removeUserTimezone(message.author.id);
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.GREEN)
+          .setColor(this.client.config.colors.GREEN)
           .setTitle('Timezone reset')
           .setDescription('Your timezone has been reset');
         message.channel.send({ embeds: [embed] });
@@ -149,7 +150,7 @@ export default class DynamicTime extends Command {
     
       default: {
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.RED)
+          .setColor(this.client.config.colors.RED)
           .setTitle('Invalid action')
           .setDescription('Accepted arguments are `set` and `reset`.');
         message.channel.send({ embeds: [embed] });

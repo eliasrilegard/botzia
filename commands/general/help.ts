@@ -3,8 +3,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Help extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'help',
       'List all commands or get info on a specific command',
       ['(command) (subcommand)'],
@@ -12,14 +13,14 @@ export default class Help extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
-    const prefix = await client.prefix(message);
+  async execute(message: Message, args: Array<string>): Promise<void> {
+    const prefix = await this.client.prefix(message);
 
     // No args - display interactive page to view all commands
     if (args.length === 0) {
       const categories: Array<[Command, Collection<string, Command>]> = [];
-      const categoryNames = [...client.categories.keys()];
-      categoryNames.forEach(name => categories.push([client.commands.get(name), client.categories.get(name)]));
+      const categoryNames = [...this.client.categories.keys()];
+      categoryNames.forEach(name => categories.push([this.client.commands.get(name), this.client.categories.get(name)]));
       
       // Pages dedicated to individual categories
       const categoryEmbeds = categories.map(category => {
@@ -28,7 +29,7 @@ export default class Help extends Command {
         );
         const categoryCommand = category[0];
         const embed = new MessageEmbed()
-          .setColor(client.config.colors.BLUE)
+          .setColor(this.client.config.colors.BLUE)
           .setTitle(categoryCommand.description)
           .setDescription(categoryCommand.howTo(prefix))
           .addField('Avalible subcommands', subCommands.join('\n\n'));
@@ -37,13 +38,13 @@ export default class Help extends Command {
       
       // Build main page
       const categoriesOverview = categories.map(category => `**${prefix}${category[0].name}** - ${category[0].description}`).join('\n');
-      const standaloneCommands = client.commands
+      const standaloneCommands = this.client.commands
         .filter(command => !command.category && !command.devOnly)
         .map(command => `**${prefix}${command.name}** - ${command.description}`)
         .sort((a, b) => a.localeCompare(b))
         .join('\n');
       
-      const mainPage = new MessageEmbed().setColor(client.config.colors.BLUE).setTitle('Avalible commands');
+      const mainPage = new MessageEmbed().setColor(this.client.config.colors.BLUE).setTitle('Avalible commands');
       if (categoriesOverview.length) mainPage.addField('Category commands', categoriesOverview);
       if (standaloneCommands.length) mainPage.addField('General commands', standaloneCommands);
       mainPage.addField('Additional help', `You can send ${this.howTo(prefix, true)} to get additional info on a specific command.`);
@@ -54,18 +55,18 @@ export default class Help extends Command {
 
     // Args present - command has been specified
     const commandName = args[0].toLowerCase();
-    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    const command = this.client.commands.get(commandName) || this.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     
-    if (!command) return this.notFound(message, client, commandName, false);
+    if (!command) return this.notFound(message, commandName, false);
 
     // We're looking for a subcommand if another command is specified after the first one
     const subCommandSpecified = command.category && args.length === 2;
     let subCommand: Command;
     if (subCommandSpecified) {
       const subCommandName = args[1].toLowerCase();
-      const subCommands = client.categories.get(command.name);
+      const subCommands = this.client.categories.get(command.name);
       subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
-      if (!subCommand) return this.notFound(message, client, subCommandName, true);
+      if (!subCommand) return this.notFound(message, subCommandName, true);
     }
 
     // Build data
@@ -79,7 +80,7 @@ export default class Help extends Command {
     const description = (subCommandSpecified ? subCommand : command).description + '\n\u200b';
 
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.BLUE)
+      .setColor(this.client.config.colors.BLUE)
       .setTitle(`Command: ${name}`);
 
     if (aliases.length) embed.addField('Aliases', aliases);
@@ -92,9 +93,9 @@ export default class Help extends Command {
     message.channel.send({ embeds: [embed] });
   }
 
-  private notFound(message: Message, client: Bot, name: string, isSubCommand: boolean): void {
+  private notFound(message: Message, name: string, isSubCommand: boolean): void {
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.RED)
+      .setColor(this.client.config.colors.RED)
       .setTitle('Command not found')
       .setDescription(`There is no ${isSubCommand ? 'sub' : ''}command with name or alias \`${name}\`.`);
     message.channel.send({ embeds: [embed] });

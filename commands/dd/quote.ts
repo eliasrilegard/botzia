@@ -5,8 +5,9 @@ import Command from '../../bot/command';
 export default class Quote extends Command {
   private readonly quoteMap: Map<string, string>;
 
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'quote',
       'Posts a quote',
       ['[quote]', '--list'],
@@ -16,10 +17,10 @@ export default class Quote extends Command {
     this.loadQuotes();
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     if (args[0] === '--list' && args.length === 1) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.BLUE)
+        .setColor(this.client.config.colors.BLUE)
         .setTitle('Quote list')
         .addField('Here\'s a list of all avalible quotes', [...this.quoteMap.keys()].sort((a, b) => a.localeCompare(b)).join('\n'));
       message.channel.send({ embeds: [embed] });
@@ -28,7 +29,7 @@ export default class Quote extends Command {
     const key = args.join('').toLowerCase();
     if (!this.quoteMap.has(key)) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Quote not found');
       message.channel.send({ embeds: [embed] });
       return;

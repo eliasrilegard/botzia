@@ -3,8 +3,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Word extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'word',
       'Fetches the word count of a word by users.',
       ['[word]'],
@@ -12,13 +13,13 @@ export default class Word extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     if (args.length === 0 || args.length > 1) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('This command takes 1 argument.')
-        .addField('Usage', this.howTo(await client.prefix(message), true));
+        .addField('Usage', this.howTo(await this.client.prefix(message), true));
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -34,7 +35,7 @@ export default class Word extends Command {
     const users = messages.filter(msg => msg.content.toLowerCase().includes(word.toLowerCase())).map(msg => msg.author);
     if (users.length === 0) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('No messages found')
         .setDescription('No messages were found containing the word.');
       message.channel.send({ embeds: [embed] });
@@ -46,7 +47,7 @@ export default class Word extends Command {
     }, {});
     const topUsers = Object.keys(userCounts).map(key => ({ id: key, count: userCounts[key] })).sort((a, b) => b.count - a.count);
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.BLUE)
+      .setColor(this.client.config.colors.BLUE)
       .setTitle(`Word count: ${word}`)
       .setDescription(`${topUsers.slice(0, 5).map(user => `<@${user.id}> - ${user.count}`).join('\n')}`)
       .setFooter({ text: `Searched ${limit} messages.` });

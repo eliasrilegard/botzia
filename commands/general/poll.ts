@@ -4,8 +4,9 @@ import Command from '../../bot/command';
 import UtilityFunctions from '../../utils/utilities';
 
 export default class Poll extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'poll',
       'Make a poll about something!',
       ['[question]; [option 1]; [option 2] ...'],
@@ -13,16 +14,16 @@ export default class Poll extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     const pollOptions = args.join(' ').split(';').map(str => str.trim());
     const question = pollOptions.shift();
 
     if (pollOptions.length > 20 || pollOptions.length < 2) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('A poll needs at least 2 and a most 20 options.')
-        .addField('Command usage:', this.howTo(await client.prefix(message), true));
+        .addField('Command usage:', this.howTo(await this.client.prefix(message), true));
       message.channel.send({ embeds: [embed] });
       return;
     }

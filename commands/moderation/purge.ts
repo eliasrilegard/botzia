@@ -3,8 +3,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Purge extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'purge',
       'Clears a specified number of messages.',
       ['[# of messages to remove - max 99]'],
@@ -12,12 +13,12 @@ export default class Purge extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     const count = parseInt(args[0]) + 1;
 
     if (count < 2 || count > 100 || isNaN(count)) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Invalid argument')
         .setDescription('Specify a number between 1 and 99.');
       message.channel.send({ embeds: [embed] });
@@ -28,7 +29,7 @@ export default class Purge extends Command {
     catch (error) {
       console.log(error); // TODO Replace with logger
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Error')
         .setDescription('An error was encountered while trying to delete messages.')
         .addField('Error message', error);
@@ -36,7 +37,7 @@ export default class Purge extends Command {
       return;
     }
     const successEmbed = new MessageEmbed()
-      .setColor(client.config.colors.GREEN)
+      .setColor(this.client.config.colors.GREEN)
       .setTitle('Success')
       .setDescription(`Successfully deleted ${count} messages.`);
     const successMsg = await message.channel.send({ embeds: [successEmbed] });

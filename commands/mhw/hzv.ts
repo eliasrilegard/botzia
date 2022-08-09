@@ -3,8 +3,9 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Hzv extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'hzv',
       'Gets the HZV of a specified monster',
       ['[monster name]'],
@@ -12,41 +13,41 @@ export default class Hzv extends Command {
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     let input = args.join('').toLowerCase();
 
     const isHR = input.startsWith('hr');
     if (isHR) input = input.slice(2);
 
-    if (client.mhwClient.monsters == null) {
+    if (this.client.mhwClient.monsters == null) {
       const embed = new MessageEmbed()
-        .setColor(client.config.colors.RED)
+        .setColor(this.client.config.colors.RED)
         .setTitle('Monster data unavalible')
         .setDescription('Could not access monster data at this time.')
-        .setFooter({ text: `If this issue persists please contact ${client.config.users.chrono_tag}` });
+        .setFooter({ text: `If this issue persists please contact ${this.client.config.users.chrono_tag}` });
       message.channel.send({ embeds: [embed] });
       return;
     }
 
-    for (const [name, monster] of client.mhwClient.monsters.entries()) {
+    for (const [name, monster] of this.client.mhwClient.monsters.entries()) {
       if (monster.aliases && monster.aliases.includes(input) && input.length > 0) {
         input = name;
         break;
       }
     }
 
-    if (client.mhwClient.monsters.has(input)) {
-      const monster = client.mhwClient.monsters.get(input);
-      if (isHR && !('hzv_filepath_hr' in monster)) return this.notFound(message, client);
+    if (this.client.mhwClient.monsters.has(input)) {
+      const monster = this.client.mhwClient.monsters.get(input);
+      if (isHR && !('hzv_filepath_hr' in monster)) return this.notFound(message);
 
-      const [embed, imageStream] = await this.monsterEmbed(client, input, isHR);
+      const [embed, imageStream] = await this.monsterEmbed(input, isHR);
       message.channel.send({ embeds: [embed], files: [...imageStream] });
     }
-    else if (!client.mhwClient.monsters.has(input)) return this.notFound(message, client);
+    else if (!this.client.mhwClient.monsters.has(input)) return this.notFound(message);
   }
 
-  private async monsterEmbed(client: Bot, name: string, isHR: boolean): Promise<[MessageEmbed, Array<MessageAttachment>]> {
-    const monster = client.mhwClient.monsters.get(name);
+  private async monsterEmbed(name: string, isHR: boolean): Promise<[MessageEmbed, Array<MessageAttachment>]> {
+    const monster = this.client.mhwClient.monsters.get(name);
     const hzvFilepath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
     const hzv = isHR ? monster.hzv_hr : monster.hzv;
 
@@ -80,11 +81,11 @@ export default class Hzv extends Command {
     return [embed, [thumbnail, hzvImage]];
   }
 
-  private async notFound(message: Message, client: Bot): Promise<void> {
+  private async notFound(message: Message): Promise<void> {
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.RED)
+      .setColor(this.client.config.colors.RED)
       .setTitle('Monster not found')
-      .setDescription(`That monster doesn't seem to exist!\nCheck out \`${await client.prefix(message)}mhw list\` for the full list.`);
+      .setDescription(`That monster doesn't seem to exist!\nCheck out \`${await this.client.prefix(message)}mhw list\` for the full list.`);
     message.channel.send({ embeds: [embed] });
   }
 }

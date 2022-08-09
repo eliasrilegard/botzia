@@ -3,15 +3,16 @@ import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
 export default class Remindme extends Command {
-  constructor() {
+  constructor(client: Bot) {
     super(
+      client,
       'remindme',
       'Remind you of a message after a given time!',
       ['[time until reminder] (message)']
     );
   }
 
-  async execute(message: Message, args: Array<string>, client: Bot): Promise<void> {
+  async execute(message: Message, args: Array<string>): Promise<void> {
     // Go through all args. If argument is a pure number, grab the next arg to
     // resolve unit and fast forward the index by one.
     // If the arg matches [digit][unit], figure out time from that.
@@ -32,7 +33,7 @@ export default class Remindme extends Command {
         unitKey = args[i + 1];
         amount = arg;
         if (!/^(d|day|h|hour|m|min|minute)s?$/.test(unitKey)) { // Error, abort
-          const embed = this.helpMessage(client, await client.prefix(message));
+          const embed = this.helpMessage(await this.client.prefix(message));
           message.channel.send({ embeds: [embed] });
           return;
         }
@@ -59,11 +60,11 @@ export default class Remindme extends Command {
     const duration = (time.days * 24 * 60 + time.hours * 60 + time.minutes) * 60000;
 
     if (duration <= 0) {
-      const embed = this.helpMessage(client, await client.prefix(message));
+      const embed = this.helpMessage(await this.client.prefix(message));
       message.channel.send({ embeds: [embed] });
     }
     if (duration > 2073600000) { // Limit of setTimeout
-      const embed = this.tooLong(client);
+      const embed = this.tooLong();
       message.channel.send({ embeds: [embed] });
     }
 
@@ -75,7 +76,7 @@ export default class Remindme extends Command {
     const UIString = UIArray.join(', ').replace(/,(?=[^,]*)/, ' and'); // Replace last ',' with ' and'
 
     const embed = new MessageEmbed()
-      .setColor(client.config.colors.GREEN)
+      .setColor(this.client.config.colors.GREEN)
       .setTitle('Reminder created')
       .setDescription(`Got it, I will remind you in ${UIString}.`)
       .setTimestamp(Date.now() + duration);
@@ -99,9 +100,9 @@ export default class Remindme extends Command {
     setTimeout(sendReply, duration);
   }
 
-  private helpMessage(client: Bot, prefix: string): MessageEmbed {
+  private helpMessage(prefix: string): MessageEmbed {
     return new MessageEmbed()
-      .setColor(client.config.colors.RED)
+      .setColor(this.client.config.colors.RED)
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
       .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
@@ -109,9 +110,9 @@ export default class Remindme extends Command {
       .addField('Command usage', this.howTo(prefix, true));
   }
 
-  private tooLong(client: Bot): MessageEmbed {
+  private tooLong(): MessageEmbed {
     return new MessageEmbed()
-      .setColor(client.config.colors.RED)
+      .setColor(this.client.config.colors.RED)
       .setTitle('Invalid time')
       .setDescription('Reminders have an upper time limit of 24 days.');
   }
