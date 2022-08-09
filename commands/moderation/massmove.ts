@@ -37,7 +37,7 @@ export default class MassMove extends Command {
         break;
       }
       case 1: { // Matches one exactly
-        const baseChannel = this.getUserVoiceChannel(message);
+        const baseChannel = await this.getUserVoiceChannel(message);
         if (!baseChannel) {
           const embed = new MessageEmbed()
             .setColor(client.config.colors.RED)
@@ -71,6 +71,14 @@ export default class MassMove extends Command {
           message.channel.send({ embeds: [embed] });
           return;
         }
+        if (relevantChannels[0].members.size === 0) {
+          const embed = new MessageEmbed()
+            .setColor(client.config.colors.RED)
+            .setTitle('Nobody to move')
+            .setDescription('There is nobody in the channel to move from.');
+          message.channel.send({ embeds: [embed] });
+          return;
+        }
         this.moveAllMembers(relevantChannels[0], relevantChannels[1], message);
         const embed = new MessageEmbed()
           .setColor(client.config.colors.GREEN)
@@ -93,8 +101,8 @@ export default class MassMove extends Command {
     base.members.forEach(member => member.voice.setChannel(goal, `Mass move command issued by ${message.member.displayName}`));
   }
 
-  private getUserVoiceChannel(message: Message): VC {
-    const channel = message.member.voice.channel;
+  private async getUserVoiceChannel(message: Message): Promise<VC> {    
+    const channel = await message.member.voice.channel.fetch();
     return channel ? channel : undefined;
   }
 
