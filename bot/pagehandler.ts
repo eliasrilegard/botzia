@@ -1,4 +1,4 @@
-import { GuildChannel, Message, MessageEmbed, MessageReaction, User } from 'discord.js';
+import { EmbedBuilder, GuildChannel, Message, MessageReaction, User } from 'discord.js';
 
 interface PageReactions {
   first: string;
@@ -10,7 +10,7 @@ interface PageReactions {
 
 export default class PageHandler {
   private readonly message: Message;
-  private readonly pages: Array<MessageEmbed>;
+  private readonly pages: Array<EmbedBuilder>;
   private readonly time: number;
   private readonly reactions: PageReactions;
   private pagerMessage: Message;
@@ -18,7 +18,7 @@ export default class PageHandler {
 
   constructor(
     message: Message,
-    pages: Array<MessageEmbed>,
+    pages: Array<EmbedBuilder>,
     time = 120000,
     footerEnabled = false,
     reactions: PageReactions = { first: '⏪', back: '◀️', next: '▶️', last: '⏩', stop: '⏹️' }
@@ -33,7 +33,7 @@ export default class PageHandler {
     if (footerEnabled && pages.length > 1) this.displayPageNumbers();
 
     let isPermissionsMissing = false;
-    if (!(message.channel as GuildChannel).permissionsFor(message.member.guild.me).has(['MANAGE_MESSAGES', 'ADD_REACTIONS'])) {
+    if (!(message.channel as GuildChannel).permissionsFor(message.client.user).has(['ManageMessages', 'AddReactions'])) { // Debug permissionsFor argument
       const checkPermissions = '💡 *I don\'t have* **MANAGE MESSAGES** *and/or* **ADD REACTIONS** *permissions!*';
       isPermissionsMissing = true;
       this.pages[0].setDescription(checkPermissions);

@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -25,7 +25,7 @@ export default class DynamicTime extends Command {
     // If timezone list requested
     if (args.length === 1 && args[0] === '--list') {
       const offsets = [...this.timezones.values()].map(offset => `${offset > 0 ? '+' : ''}${offset}`);
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.BLUE)
         .setTitle('Supported timezones')
         .addFields([
@@ -42,7 +42,7 @@ export default class DynamicTime extends Command {
     // Validate arguments
     if (args.length < 1 || args.length > 3) return;
     if (!/^(\d{4}-\d{2}-\d{2}\s)?\d{2}:\d{2}/.test(args.join(' '))) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Invalid format')
         .setDescription('Make sure the date format is YYYY-MM-DD HH:MM or just HH:MM');
@@ -65,7 +65,7 @@ export default class DynamicTime extends Command {
         dateString += ` ${timezone}`;
       }
       else { // Nothing matched
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
           .setTitle('Invalid timezone')
           .setDescription('Do `UTC±Offset`');
@@ -80,7 +80,7 @@ export default class DynamicTime extends Command {
 
     const unixTime = Math.floor(Date.parse(dateString) / 1000);
     if (isNaN(unixTime)) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Something went wrong')
         .setDescription('Couldn\'t convert the passed arguments. Did you format everything correctly?');
@@ -89,7 +89,7 @@ export default class DynamicTime extends Command {
     }
 
     const formatted = `<t:${unixTime}:${isDaySpecified ? 'f' : 't'}>`;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .addFields([
         { name: 'Display', value: formatted },
@@ -103,7 +103,7 @@ export default class DynamicTime extends Command {
     switch (action) {
       case 'set': {
         if (args.length !== 3) {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(this.client.config.colors.RED)
             .setTitle('Invalid format')
             .setDescription('Do `--timezone set [UTC±x or named timezone]`');
@@ -120,7 +120,7 @@ export default class DynamicTime extends Command {
         }
         else if (/UTC[+-]\d{1,2}/.test(timezone)) utcOffset = timezone;
         else {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(this.client.config.colors.RED)
             .setTitle('Invalid timezone')
             .setDescription('Do `UTC±Offset` or a named timezone.\nSee `--list` for a list of supported timezones.');
@@ -130,7 +130,7 @@ export default class DynamicTime extends Command {
 
         // Bind timezone to user id
         this.client.database.setUserTimezone(message.author.id, utcOffset);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Timezone set')
           .setDescription(`Your offset is now ${utcOffset}`);
@@ -140,7 +140,7 @@ export default class DynamicTime extends Command {
 
       case 'reset': {
         this.client.database.removeUserTimezone(message.author.id);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Timezone reset')
           .setDescription('Your timezone has been reset');
@@ -149,7 +149,7 @@ export default class DynamicTime extends Command {
       }
     
       default: {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
           .setTitle('Invalid action')
           .setDescription('Accepted arguments are `set` and `reset`.');

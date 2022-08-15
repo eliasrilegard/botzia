@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -14,7 +14,7 @@ export default class Restart extends Command {
   }
 
   async execute(message: Message): Promise<void> {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle('Restarting')
       .setDescription('Sent request to respawn all shards.')

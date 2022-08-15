@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import UtilityFunctions from '../../utils/utilities';
@@ -18,12 +18,12 @@ export default class Timeout extends Command {
     const member = message.mentions.members.first();
 
     const prefix = await this.client.prefix(message);
-    const embed = new MessageEmbed().setColor(this.client.config.colors.RED);
+    const embed = new EmbedBuilder().setColor(this.client.config.colors.RED);
 
     if (!member) {
       embed
         .setTitle('No user targeted')
-        .addField('Command usage', this.howTo(prefix, true));
+        .addFields({ name: 'Command usage', value: this.howTo(prefix, true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -48,7 +48,7 @@ export default class Timeout extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (UtilityFunctions.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
+    if (UtilityFunctions.permHierarchy(member, message.member) && !message.member.permissions.has('Administrator')) {
       embed
         .setTitle('Can\'t timeout member')
         .setDescription('You can\'t timeout someone equal to or above you');
@@ -124,17 +124,19 @@ export default class Timeout extends Command {
       .setTitle('Timeout successful')
       .setDescription(`Successfully timed out <@${member.user.id}> for ${UIString}.`);
 
-    if (reasonMessage.length) embed.addField('Reason', reasonMessage);
+    if (reasonMessage.length) embed.addFields({ name: 'Reason', value: reasonMessage });
     message.channel.send({ embeds: [embed] });
   }
 
-  private helpMessage(prefix: string): MessageEmbed {
-    return new MessageEmbed()
+  private helpMessage(prefix: string): EmbedBuilder {
+    return new EmbedBuilder()
       .setColor(this.client.config.colors.RED)
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
-      .addField('Arguments', '**Days:\nHours:\nMinutes:\nSeconds:**', true)
-      .addField('\u200b', 'd, day(s)\nh, hour(s)\nm, min(s), minute(s)\ns, sec, second(s)', true)
-      .addField('Command usage', this.howTo(prefix, true));
+      .addFields([
+        { name: 'Arguments', value: '**Days:\nHours:\nMinutes:\nSeconds:**', inline: true },
+        { name: '\u200b', value: 'd, day(s)\nh, hour(s)\nm, min(s), minute(s)\ns, sec, second(s)', inline: true },
+        { name: 'Command usage', value: this.howTo(prefix, true) }
+      ]);
   }
 }

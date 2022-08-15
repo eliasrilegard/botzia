@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -18,7 +18,7 @@ export default class Database extends Command {
       case 'reload': {
         this.client.database.reloadAll();
         
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Database reloaded')
           .setDescription('Successfully reloaded all databases.');
@@ -27,7 +27,7 @@ export default class Database extends Command {
       }
 
       default: {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
           .setTitle('No such command')
           .setDescription(`The command \`${args[0]}\` couldn't be found.`);

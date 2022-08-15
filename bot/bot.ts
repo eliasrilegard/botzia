@@ -1,4 +1,4 @@
-import { Client, Collection, ColorResolvable, Message } from 'discord.js';
+import { Client, Collection, ColorResolvable, GatewayIntentBits, Message, Partials } from 'discord.js';
 import { readdir } from 'fs/promises';
 import { resolve } from 'path';
 import NedbClient from './database';
@@ -30,8 +30,21 @@ export default class Bot extends Client {
 
   constructor(dirname: string, config: ClientConfig) {
     super({
-      intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INVITES', 'GUILD_PRESENCES', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'GUILD_VOICE_STATES', 'DIRECT_MESSAGES', 'DIRECT_MESSAGE_REACTIONS'],
-      partials: ['CHANNEL']
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildBans,
+        GatewayIntentBits.GuildEmojisAndStickers,
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.DirectMessageReactions,
+        GatewayIntentBits.MessageContent
+      ],
+      partials: [Partials.Channel]
     });
 
     this.root = dirname.slice(0, -3);

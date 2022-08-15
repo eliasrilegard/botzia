@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import UtilityFunctions from '../../utils/utilities';
@@ -19,11 +19,11 @@ export default class Poll extends Command {
     const question = pollOptions.shift();
 
     if (pollOptions.length > 20 || pollOptions.length < 2) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('A poll needs at least 2 and a most 20 options.')
-        .addField('Command usage:', this.howTo(await this.client.prefix(message), true));
+        .addFields({ name: 'Command usage:', value: this.howTo(await this.client.prefix(message), true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -35,11 +35,11 @@ export default class Poll extends Command {
     let choicesString = '';
     pollOptions.forEach((option, index) => choicesString += `${emotes[index]} - ${option}\n`);
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(message.member.displayHexColor)
       .setAuthor({ name: `${message.member.displayName} created a poll`, iconURL: message.member.displayAvatarURL() })
       .setTitle(question)
-      .addField('Choices', choicesString.trim())
+      .addFields({ name: 'Choices', value: choicesString.trim() })
       .setFooter({ text: 'React with your vote below!' })
       .setTimestamp();
     

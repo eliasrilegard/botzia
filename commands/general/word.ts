@@ -1,4 +1,4 @@
-import { ChannelLogsQueryOptions, Message, MessageEmbed, TextChannel } from 'discord.js';
+import { EmbedBuilder, FetchMessagesOptions, Message, TextChannel } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -15,11 +15,11 @@ export default class Word extends Command {
 
   async execute(message: Message, args: Array<string>): Promise<void> {
     if (args.length === 0 || args.length > 1) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('This command takes 1 argument.')
-        .addField('Usage', this.howTo(await this.client.prefix(message), true));
+        .addFields({ name: 'Usage', value: this.howTo(await this.client.prefix(message), true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -34,7 +34,7 @@ export default class Word extends Command {
     const messages = await this.getMessages(message.channel as TextChannel, limit);
     const users = messages.filter(msg => msg.content.toLowerCase().includes(word.toLowerCase())).map(msg => msg.author);
     if (users.length === 0) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('No messages found')
         .setDescription('No messages were found containing the word.');
@@ -46,7 +46,7 @@ export default class Word extends Command {
       return counts;
     }, {});
     const topUsers = Object.keys(userCounts).map(key => ({ id: key, count: userCounts[key] })).sort((a, b) => b.count - a.count);
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle(`Word count: ${word}`)
       .setDescription(`${topUsers.slice(0, 5).map(user => `<@${user.id}> - ${user.count}`).join('\n')}`)
@@ -65,7 +65,7 @@ export default class Word extends Command {
       const rounds = (limit / 100) + (limit % 100 > 0 ? 1 : 0);
       let lastId: string;
       for (let i = 0; i < rounds; i++) {
-        const options: ChannelLogsQueryOptions = { limit: 100 };
+        const options: FetchMessagesOptions = { limit: 100 };
         if (lastId) options.before = lastId;
         const fetched = await channel.messages.fetch(options);
         fetched.forEach(msg => result.push(msg));

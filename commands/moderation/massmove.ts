@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, StageChannel, VoiceChannel } from 'discord.js';
+import { ChannelType, EmbedBuilder, Message, StageChannel, VoiceChannel } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -22,7 +22,7 @@ export default class MassMove extends Command {
     const allChannels = await message.guild.channels.fetch();
     const channels: Array<VC> = [];
     for (const channel of allChannels.values()) {
-      if (channel.isVoice()) channels.push(channel);
+      if (channel.type === ChannelType.GuildVoice) channels.push(channel);
     }
 
     // Find the relevant voice channels the user has specified
@@ -30,7 +30,7 @@ export default class MassMove extends Command {
 
     switch (relevantChannels.length) {
       case 0: { // No channels found
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
           .setTitle('Can\'t identify channel')
           .setDescription('Remember that names are Case Sensitive!');
@@ -40,7 +40,7 @@ export default class MassMove extends Command {
       case 1: { // Matches one exactly
         const baseChannel = await this.getUserVoiceChannel(message);
         if (!baseChannel) {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(this.client.config.colors.RED)
             .setTitle('Unknown base channel')
             .setDescription('Unless you\'re in a voice channel you need to specify both the base and target channels.');
@@ -48,7 +48,7 @@ export default class MassMove extends Command {
           break;
         }
         if (baseChannel.equals(relevantChannels[0])) {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(this.client.config.colors.RED)
             .setTitle('Nothing to move')
             .setDescription('You\'re already in this channel.');
@@ -56,7 +56,7 @@ export default class MassMove extends Command {
           return;
         }
         this.moveAllMembers(baseChannel, relevantChannels[0], message);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Success')
           .setDescription(`Successfully moved everybody to ${relevantChannels[0].name}.`);
@@ -65,7 +65,7 @@ export default class MassMove extends Command {
       }
       case 2: { // Source and target channels specified
         if (relevantChannels[0].equals(relevantChannels[1])) {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(this.client.config.colors.RED)
             .setTitle('Nothing to move')
             .setDescription('I can\'t move members from and to the same channel.');
@@ -73,7 +73,7 @@ export default class MassMove extends Command {
           return;
         }
         if (relevantChannels[0].members.size === 0) {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(this.client.config.colors.RED)
             .setTitle('Nobody to move')
             .setDescription('There is nobody in the channel to move from.');
@@ -81,7 +81,7 @@ export default class MassMove extends Command {
           return;
         }
         this.moveAllMembers(relevantChannels[0], relevantChannels[1], message);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Success')
           .setDescription(`Successfully moved everybody from ${relevantChannels[0].name} to ${relevantChannels[1].name}.`);
@@ -89,7 +89,7 @@ export default class MassMove extends Command {
         break;
       }
       default: {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
           .setTitle('Error')
           .setDescription('An unknown error occurred :(');

@@ -1,4 +1,4 @@
-import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import fetch from 'node-fetch';
@@ -17,7 +17,7 @@ export default class Color extends Command {
   async execute(message: Message, args: Array<string>): Promise<void> {
     const colorString = args.join('');
     if (!/^,*-?\d{1,3}(,*-?\d{1,3}){0,2},*$/.test(colorString)) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Invalid format')
         .setDescription('Take your character name, remove `<color:` and `>` so you\'re only entering the numbers and commas.');
@@ -38,9 +38,9 @@ export default class Color extends Command {
 
     const response = await fetch(apiKey);
     const buffer = await response.buffer();
-    const attachment = new MessageAttachment(buffer, 'color.png');
+    const attachment = new AttachmentBuilder(buffer, { name: 'color.png' });
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(`#${hex}`)
       .setTitle('Resulting color')
       .setImage('attachment://color.png');

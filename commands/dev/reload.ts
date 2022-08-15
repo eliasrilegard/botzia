@@ -1,4 +1,4 @@
-import { Collection, Message, MessageEmbed } from 'discord.js';
+import { Collection, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -18,7 +18,7 @@ export default class Reload extends Command {
 
     if (['-b', '--build'].includes(args[0])) {
       if (args.length !== 2) return;
-      const embed = new MessageEmbed();
+      const embed = new EmbedBuilder();
       const pathToFile = args[1];
       try {
         const { default: CommandClass } = await import(`${commandsDir}/${pathToFile}.js`);
@@ -36,7 +36,7 @@ export default class Reload extends Command {
           .setColor(this.client.config.colors.RED)
           .setTitle('No such file')
           .setDescription(`The file \`commands/${pathToFile}.js\` couldn't be located.`)
-          .addField('Error message', error.message);
+          .addFields({ name: 'Error message', value: error.message });
       }
       message.channel.send({ embeds: [embed] });
       return;
@@ -77,7 +77,7 @@ export default class Reload extends Command {
       if (command.category) this.client.categories.get(command.name).set(newCommand.name, newCommand);
       else this.client.commands.set(newCommand.name, newCommand);
 
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.GREEN)
         .setTitle('Command reloaded')
         .setDescription(`Command \`${isReloadingSubCommand ? subCommand.name : command.name}\` was reloaded.`);
@@ -85,17 +85,17 @@ export default class Reload extends Command {
     }
     catch (error) {
       console.log(error);
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Error')
         .setDescription(`Command \`${isReloadingSubCommand ? subCommand.name : command.name}\` could not be reloaded.`)
-        .addField('Error message:', `\`${error.message}\``);
+        .addFields({ name: 'Error message:', value: `\`${error.message}\`` });
       message.channel.send({ embeds: [embed] });
     }
   }
 
   private notFound(message: Message, name: string, isSubCommand: boolean): void {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.RED)
       .setTitle('Command not found')
       .setDescription(`There is no ${isSubCommand ? 'sub' : ''}command with name or alias \`${name}\`.`);

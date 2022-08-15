@@ -1,4 +1,4 @@
-import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -20,7 +20,7 @@ export default class Hzv extends Command {
     if (isHR) input = input.slice(2);
 
     if (this.client.mhwClient.monsters == null) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Monster data unavalible')
         .setDescription('Could not access monster data at this time.')
@@ -46,43 +46,45 @@ export default class Hzv extends Command {
     else if (!this.client.mhwClient.monsters.has(input)) return this.notFound(message);
   }
 
-  private async monsterEmbed(name: string, isHR: boolean): Promise<[MessageEmbed, Array<MessageAttachment>]> {
+  private async monsterEmbed(name: string, isHR: boolean): Promise<[EmbedBuilder, Array<AttachmentBuilder>]> {
     const monster = this.client.mhwClient.monsters.get(name);
     const hzvFilepath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
     const hzv = isHR ? monster.hzv_hr : monster.hzv;
 
     // Get file name by cutting off everything before and including the last '/'
     // Clean up file name by removing characters that will mess with Discord's API
-    const thumbnail = new MessageAttachment(
+    const thumbnail = new AttachmentBuilder(
       monster.icon_filepath,
-      monster.icon_filepath.slice(monster.icon_filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '')
+      { name: monster.icon_filepath.slice(monster.icon_filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '') }
     );
-    const hzvImage = new MessageAttachment(
+    const hzvImage = new AttachmentBuilder(
       hzvFilepath,
-      hzvFilepath.slice(hzvFilepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '')
+      { name: hzvFilepath.slice(hzvFilepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '') }
     );
 
     const title = `__**${monster.title}**__${monster.threat_level ? `  ${monster.threat_level}` : ''}`;
 
     const attachURL = (fileName: string) => `attachment://${fileName}`;
     
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor('#8fde5d')
       .setTitle(title)
       .setThumbnail(attachURL(thumbnail.name))
       .setImage(attachURL(hzvImage.name))
-      .addField('Classification', monster.species)
-      .addField('Characteristics', monster.description)
-      .addField(
-        `Slash: **${hzv.slash}** Blunt: **${hzv.blunt}** Shot: **${hzv.shot}**`,
-        `🔥 **${hzv.fire}** 💧 **${hzv.water}** ⚡ **${hzv.thunder}** ❄ **${hzv.ice}** 🐉 **${hzv.dragon}**`
-      );
+      .addFields([
+        { name: 'Classification', value: monster.species },
+        { name: 'Characteristics', value: monster.description },
+        {
+          name: `Slash: **${hzv.slash}** Blunt: **${hzv.blunt}** Shot: **${hzv.shot}**`,
+          value: `🔥 **${hzv.fire}** 💧 **${hzv.water}** ⚡ **${hzv.thunder}** ❄ **${hzv.ice}** 🐉 **${hzv.dragon}**`
+        }
+      ]);
     
     return [embed, [thumbnail, hzvImage]];
   }
 
   private async notFound(message: Message): Promise<void> {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.RED)
       .setTitle('Monster not found')
       .setDescription(`That monster doesn't seem to exist!\nCheck out \`${await this.client.prefix(message)}mhw list\` for the full list.`);

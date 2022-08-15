@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -15,7 +15,7 @@ export default class List extends Command {
 
   async execute(message: Message<boolean>): Promise<void> {
     if (this.client.mhwClient.monsters == null) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Monster data unavalible')
         .setDescription('Could not access monster data at this time.')
@@ -35,9 +35,9 @@ export default class List extends Command {
         return result;
       }, [])
       .map(chunk => { // Map each chunk to an embed message
-        return new MessageEmbed()
+        return new EmbedBuilder()
           .setColor('#8fde5d')
-          .addField('Monsters list', chunk.join('\n'));
+          .addFields({ name: 'Monsters list', value: chunk.join('\n') });
       });
       
     this.sendMenu(message, embeds);

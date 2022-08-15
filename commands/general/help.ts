@@ -1,4 +1,4 @@
-import { Collection, Message, MessageEmbed } from 'discord.js';
+import { Collection, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -28,11 +28,11 @@ export default class Help extends Command {
           `**${prefix}${category[0].name} ${commandEntry[0]}** - ${commandEntry[1].description}`
         );
         const categoryCommand = category[0];
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.BLUE)
           .setTitle(categoryCommand.description)
           .setDescription(categoryCommand.howTo(prefix))
-          .addField('Avalible subcommands', subCommands.join('\n\n'));
+          .addFields({ name: 'Avalible subcommands', value: subCommands.join('\n\n') });
         return embed;
       });
       
@@ -44,10 +44,10 @@ export default class Help extends Command {
         .sort((a, b) => a.localeCompare(b))
         .join('\n');
       
-      const mainPage = new MessageEmbed().setColor(this.client.config.colors.BLUE).setTitle('Avalible commands');
-      if (categoriesOverview.length) mainPage.addField('Category commands', categoriesOverview);
-      if (standaloneCommands.length) mainPage.addField('General commands', standaloneCommands);
-      mainPage.addField('Additional help', `You can send ${this.howTo(prefix, true)} to get additional info on a specific command.`);
+      const mainPage = new EmbedBuilder().setColor(this.client.config.colors.BLUE).setTitle('Avalible commands');
+      if (categoriesOverview.length) mainPage.addFields({ name: 'Category commands', value: categoriesOverview });
+      if (standaloneCommands.length) mainPage.addFields({ name: 'General commands', value: standaloneCommands });
+      mainPage.addFields({ name: 'Additional help', value: `You can send ${this.howTo(prefix, true)} to get additional info on a specific command.` });
 
       this.sendMenu(message, [mainPage, ...categoryEmbeds]);
       return;
@@ -79,11 +79,11 @@ export default class Help extends Command {
     ).join('\n').trim();
     const description = (subCommandSpecified ? subCommand : command).description + '\n\u200b';
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle(`Command: ${name}`);
 
-    if (aliases.length) embed.addField('Aliases', aliases);
+    if (aliases.length) embed.addFields({ name: 'Aliases', value: aliases });
     embed.addFields([
       { name: 'Usage', value: commandUsage },
       { name: 'Description', value: description },
@@ -94,7 +94,7 @@ export default class Help extends Command {
   }
 
   private notFound(message: Message, name: string, isSubCommand: boolean): void {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.RED)
       .setTitle('Command not found')
       .setDescription(`There is no ${isSubCommand ? 'sub' : ''}command with name or alias \`${name}\`.`);

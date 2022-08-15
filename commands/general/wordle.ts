@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import { readFileSync } from 'fs';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
@@ -21,11 +21,11 @@ export default class Wordle extends Command {
 
     const placed = args[0].toLowerCase(); // Use - to denote empty
     if (placed.length !== 5) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Incorrect length')
         .setDescription('Placed letters argument must be exactly 5.')
-        .addField('Tip', 'Use \'-\' to denote empty spots.');
+        .addFields({ name: 'Tip', value: 'Use \'-\' to denote empty spots.' });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -38,7 +38,7 @@ export default class Wordle extends Command {
 
     if (args[2]) {
       if (args[1].toLowerCase() !== 'none' && [...args[1]].some(c => args[2].includes(c))) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
           .setTitle('Invalid arguments')
           .setDescription('Argument 2 and 3 must not share any characters.');
@@ -54,7 +54,7 @@ export default class Wordle extends Command {
     words = words.filter(word => rePlaced.test(word));
 
     if (words.length === 0) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.ORANGE)
         .setTitle('No words found')
         .setDescription('Did you enter all arguments correctly?');
@@ -79,9 +79,9 @@ export default class Wordle extends Command {
         )
       )
       .map((embedContent: Array<Array<string>>) => { // Map each chunk of word arrays into an embed message
-        const embed = new MessageEmbed().setColor(this.client.config.colors.GREEN).setDescription('**Matching words**');
+        const embed = new EmbedBuilder().setColor(this.client.config.colors.GREEN).setDescription('**Matching words**');
         embedContent.forEach(wordArr => {
-          if (wordArr.length > 0) embed.addField('\u200b', wordArr.join('\n'), true);
+          if (wordArr.length > 0) embed.addFields({ name: '\u200b', value: wordArr.join('\n'), inline: true });
         });
         return embed;
       });

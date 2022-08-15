@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -17,7 +17,7 @@ export default class Res extends Command {
     const resists = args.slice(0, 4).map(res => parseInt(res)).sort((a, b) => b - a) // Sort resists in descending order
       .concat(args.slice(4).map(stat => parseInt(stat))); // Add upgrades and primary stat to the end
     if (resists.length < 1 || resists.length > 6 || resists.some(res => isNaN(res))) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Bad argument(s)')
         .setDescription('This command takes 1-6 numbers.');
@@ -47,7 +47,7 @@ export default class Res extends Command {
       armorLevel++;
     }
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle(`It takes ${levelsSpent} levels to max the resistances`);
     if (avalibleUpgrades) {

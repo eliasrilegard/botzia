@@ -1,5 +1,5 @@
 import { getColorFromURL } from 'color-thief-node';
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -17,11 +17,11 @@ export default class Avatar extends Command {
   async execute(message: Message): Promise<void> {
     const user = message.mentions.users.first();
     if (!user) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('User not found')
         .setDescription('Could not fetch information for the specified user.')
-        .addField('Tip', 'Make sure the user is tagged and is a member of this server.');
+        .addFields({ name: 'Tip', value: 'Make sure the user is tagged and is a member of this server.' });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -30,7 +30,7 @@ export default class Avatar extends Command {
     const requestUrl = avatarUrl.endsWith('.webp') ? avatarUrl.slice(0, -4).concat('png').concat('?size=1024') : avatarUrl;
     const dominantColor = await getColorFromURL(requestUrl, 1);
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(dominantColor)
       .setDescription(`Dominant color: #${this.hexify(dominantColor)}`)
       .setAuthor({ name: user.tag, iconURL: avatarUrl })

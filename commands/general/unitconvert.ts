@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import DWG from 'directed-weighted-graph';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
@@ -182,7 +182,7 @@ export default class UnitConvert extends Command {
 
   async execute(message: Message, args: Array<string>): Promise<void> {    
     const prefix = await this.client.prefix(message);
-    const embed = new MessageEmbed().setColor(this.client.config.colors.RED);
+    const embed = new EmbedBuilder().setColor(this.client.config.colors.RED);
 
     if (args[0] === '--list') {
       // Use with .filter to filter out uniques in array
@@ -211,7 +211,7 @@ export default class UnitConvert extends Command {
       embed
         .setTitle('Invalid value')
         .setDescription('Unable to resolve the value.')
-        .addField('Command usage', this.howTo(prefix, true));
+        .addFields({ name: 'Command usage', value: this.howTo(prefix, true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -220,7 +220,7 @@ export default class UnitConvert extends Command {
       embed
         .setTitle('Invalid arguments')
         .setDescription('This command takes 3 arguments.')
-        .addField('Command usage', this.howTo(prefix, true));
+        .addFields({ name: 'Command usage', value: this.howTo(prefix, true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -232,7 +232,7 @@ export default class UnitConvert extends Command {
       embed
         .setTitle('Invalid base unit')
         .setDescription('Unable to identify base unit.')
-        .addField('Command usage', this.howTo(prefix, true));
+        .addFields({ name: 'Command usage', value: this.howTo(prefix, true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -241,7 +241,7 @@ export default class UnitConvert extends Command {
       embed
         .setTitle('Invalid goal unit')
         .setDescription('Unable to identify goal unit.')
-        .addField('Command usage', this.howTo(prefix, true));
+        .addFields({ name: 'Command usage', value: this.howTo(prefix, true) });
       message.channel.send({ embeds: [embed] });
       return;
     }

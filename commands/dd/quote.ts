@@ -1,4 +1,4 @@
-import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -19,25 +19,25 @@ export default class Quote extends Command {
 
   async execute(message: Message, args: Array<string>): Promise<void> {
     if (args[0] === '--list' && args.length === 1) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.BLUE)
         .setTitle('Quote list')
-        .addField('Here\'s a list of all avalible quotes', [...this.quoteMap.keys()].sort((a, b) => a.localeCompare(b)).join('\n'));
+        .addFields({ name: 'Here\'s a list of all avalible quotes', value: [...this.quoteMap.keys()].sort((a, b) => a.localeCompare(b)).join('\n') });
       message.channel.send({ embeds: [embed] });
       return;
     }
     const key = args.join('').toLowerCase();
     if (!this.quoteMap.has(key)) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Quote not found');
       message.channel.send({ embeds: [embed] });
       return;
     }
     const filepath = this.quoteMap.get(key);
-    const quoteImage = new MessageAttachment(
+    const quoteImage = new AttachmentBuilder(
       filepath,
-      filepath.slice(filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '') // See mhw/hzv
+      { name: filepath.slice(filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '') } // See mhw/hzv
     );
     message.channel.send({ files: [quoteImage] });
   }

@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 import UtilityFunctions from '../../utils/utilities';
@@ -18,12 +18,12 @@ export default class Ban extends Command {
     const member = message.mentions.members.first();
     const reason = args.slice(1).join(' ');
 
-    const embed = new MessageEmbed().setColor(this.client.config.colors.RED);
+    const embed = new EmbedBuilder().setColor(this.client.config.colors.RED);
 
     if (!member) {
       embed
         .setTitle('No user targeted')
-        .addField('Command usage', this.howTo(await this.client.prefix(message), true));
+        .addFields({ name: 'Command usage', value: this.howTo(await this.client.prefix(message), true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -46,7 +46,7 @@ export default class Ban extends Command {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (UtilityFunctions.permHierarchy(member, message.member) && !message.member.permissions.has('ADMINISTRATOR')) {
+    if (UtilityFunctions.permHierarchy(member, message.member) && !message.member.permissions.has('Administrator')) {
       embed
         .setTitle('Can\'t ban member')
         .setDescription('You can\'t ban someone equal to or above you');

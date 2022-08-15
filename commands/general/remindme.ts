@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { EmbedBuilder, Message, TextChannel } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -75,19 +75,19 @@ export default class Remindme extends Command {
     }
     const UIString = UIArray.join(', ').replace(/,(?=[^,]*)/, ' and'); // Replace last ',' with ' and'
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.GREEN)
       .setTitle('Reminder created')
       .setDescription(`Got it, I will remind you in ${UIString}.`)
       .setTimestamp(Date.now() + duration);
-    if (msg) embed.addField('Message:', msg);
+    if (msg) embed.addFields({ name: 'Message:', value: msg });
     message.channel.send({ embeds: [embed] });
 
     const now = Date.now();
     this.client.database.setReminderJob(`${now + duration}`, message.channelId, message.id, msg);
 
-    delete embed.description;
-    delete embed.fields;
+    delete embed.data.description;
+    delete embed.data.fields;
     
     embed
       .setTitle('Ding, here\'s your reminder!')
@@ -105,7 +105,7 @@ export default class Remindme extends Command {
     }
   }
 
-  private sendReply(message: Message, embed: MessageEmbed, pingList: Array<string>): void {
+  private sendReply(message: Message, embed: EmbedBuilder, pingList: Array<string>): void {
     message.reply({ embeds: [embed], content: pingList.length > 0 ? pingList.join(' ') : undefined });
   }
 
@@ -122,7 +122,7 @@ export default class Remindme extends Command {
         const channel = await this.client.channels.fetch(job.channelId) as TextChannel;
         const replyToMessage = await channel.messages.fetch(job.messageId);
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Ding, here\'s your reminder!')
           .setTimestamp(replyToMessage.createdTimestamp);
@@ -139,13 +139,15 @@ export default class Remindme extends Command {
     }
   }
 
-  private helpMessage(prefix: string): MessageEmbed {
-    return new MessageEmbed()
+  private helpMessage(prefix: string): EmbedBuilder {
+    return new EmbedBuilder()
       .setColor(this.client.config.colors.RED)
       .setTitle('Invalid time')
       .setDescription('Maybe check your arguments?')
-      .addField('Arguments', '**Days:\nHours:\nMinutes:**', true)
-      .addField('\u200b', 'd, day(s)\nh, hour(s)\nm, min(s), minute(s)', true)
-      .addField('Command usage', this.howTo(prefix, true));
+      .addFields([
+        { name: 'Arguments', value: '**Days:\nHours:\nMinutes:**', inline: true },
+        { name: '\u200b', value: 'd, day(s)\nh, hour(s)\nm, min(s), minute(s)', inline: true },
+        { name: 'Command usage', value: this.howTo(prefix, true) }
+      ]);
   }
 }

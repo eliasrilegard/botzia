@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -23,22 +23,22 @@ export default class LTRange extends Command {
 
   async execute(message: Message, args: Array<string>): Promise<void> {
     if (args.length > 1) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('This command takes 1 argument.')
-        .addField('Usage', this.howTo(await this.client.prefix(message), true));
+        .addFields({ name: 'Usage', value: this.howTo(await this.client.prefix(message), true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
 
     const currentRange = parseInt(args[0]);
     if (isNaN(currentRange) || currentRange < 0 || currentRange > 9999) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Check arguments')
         .setDescription('This command takes a number between 0 and 9999 as its argument.')
-        .addField('Usage', this.howTo(await this.client.prefix(message), true));
+        .addFields({ name: 'Usage', value: this.howTo(await this.client.prefix(message), true) });
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -51,14 +51,14 @@ export default class LTRange extends Command {
     const valueNormal = `\`\`\`${closestNormal[0]} - ${indexNormal + 5}\n${closestNormal[1]} - ${indexNormal + 6}\n${closestNormal[2]} - ${indexNormal + 7}\`\`\``;
     const valueUpped = `\`\`\`${closestUpped[0]} - ${indexUpped + 16}\n${closestUpped[1]} - ${indexUpped + 17}\n${closestUpped[2]} - ${indexUpped + 18}\`\`\``;
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle('Closest breakpoints')
       .setDescription('Here are the closest breakpoints to your current range.\n\`Range - Targets\`')
-      .addFields(
+      .addFields([
         { name: 'Normal', value: valueNormal, inline: true },
         { name: 'Upgraded', value: valueUpped, inline: true }
-      );
+      ]);
     message.channel.send({ embeds: [embed] });
   }
 

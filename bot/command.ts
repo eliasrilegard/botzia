@@ -1,4 +1,4 @@
-import { DMChannel, GuildChannel, Message, MessageEmbed, PermissionResolvable } from 'discord.js';
+import { DMChannel, EmbedBuilder, GuildChannel, Message, PermissionResolvable } from 'discord.js';
 import Bot from './bot';
 import PageHandler from './pagehandler';
 
@@ -72,7 +72,7 @@ export default class Command {
     const subCommand = this.client.categories.get(this.name).find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
 
     if (!subCommand) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Subcommand not found');
       message.channel.send({ embeds: [embed] });
@@ -97,7 +97,7 @@ export default class Command {
 
     // Check if a server-only command being triggered in a DM
     if (this.guildOnly && message.channel instanceof DMChannel) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Server-only command')
         .setDescription('This command cannot be executed inside of DMs.');
@@ -110,7 +110,7 @@ export default class Command {
       const authorPerms = (message.channel as GuildChannel).permissionsFor(message.author);
       if ((!authorPerms || !authorPerms.has(this.permissions as PermissionResolvable)) &&
         !this.client.isDev(message.author.id)) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
           .setTitle('Insufficient permissions')
           .setDescription('You do not have permission to issue this command.');
@@ -123,11 +123,13 @@ export default class Command {
     if (this.args && args.length === 0) {
       const prefix = await this.client.prefix(message);
       const commandUsage = this.usages.map(usage => `${prefix}${this.belongsTo ? this.belongsTo + ' ' : ''}${this.name} ${usage}`).join('\n').trim();
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('No arguments given')
-        .addField('Usage: ', commandUsage)
-        .addField('Description: ', this.description);
+        .addFields([
+          { name: 'Usage: ', value: commandUsage },
+          { name: 'Description: ', value: this.description }
+        ]);
       message.channel.send({ embeds: [embed] });
       return false;
     }
@@ -136,7 +138,7 @@ export default class Command {
     const expirationTime = this.cooldowns.get(message.author.id);
     if (expirationTime && !this.category) {
       const timeLeft = (expirationTime - Date.now()) / 1000;
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.ORANGE)
         .setTitle('Too hasty')
         .setDescription(`Please wait ${timeLeft.toFixed(1)} more second(s) before using \`${this.name}\` again`);
@@ -156,7 +158,7 @@ export default class Command {
     return `${codeblock ? '\`' : ''}${prefix}${this.belongsTo ? this.belongsTo + ' ' : ''}${this.name} ${this.usages[0]}${codeblock ? '\`' : ''}`;
   }
 
-  protected sendMenu(message: Message, pages: Array<MessageEmbed>): PageHandler {
+  protected sendMenu(message: Message, pages: Array<EmbedBuilder>): PageHandler {
     return new PageHandler(message, pages, undefined, true);
   }
 }

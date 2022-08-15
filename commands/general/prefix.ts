@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
 
@@ -19,7 +19,7 @@ export default class Prefix extends Command {
     const serverPrefix = await this.client.database.getCustomPrefix(message.guild.id);
 
     if (!args.length) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.BLUE)
         .setTitle('Current prefix')
         .setDescription(`The prefix for this server is \`${serverPrefix ? serverPrefix : defaultPrefix}\``);
@@ -31,7 +31,7 @@ export default class Prefix extends Command {
 
     // Is prefix too long?
     if (requestedPrefix.length > 6) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Prefix too long')
         .setDescription('New prefix is too long - maximum length is 6 characters.')
@@ -43,7 +43,7 @@ export default class Prefix extends Command {
     // Is user trying to reset prefix?
     if ([defaultPrefix, 'reset'].includes(requestedPrefix) && serverPrefix) {
       this.client.database.removeCustomPrefix(message.guild.id);
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.GREEN)
         .setTitle('Prefix reset')
         .setDescription(`Successfully reset prefix to default: \`${defaultPrefix}\``);
@@ -53,7 +53,7 @@ export default class Prefix extends Command {
 
     // Is the requested prefix already in use, or is the user trying to set the prefix from default to default?
     if (requestedPrefix === serverPrefix || (!serverPrefix && requestedPrefix === defaultPrefix)) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Invalid prefix')
         .setDescription('Please use a different prefix.');
@@ -63,7 +63,7 @@ export default class Prefix extends Command {
 
     this.client.database.setCustomPrefix(message.guild.id, requestedPrefix);
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.GREEN)
       .setTitle('Prefix set')
       .setDescription(`Prefix has been updated to \`${requestedPrefix}\``);

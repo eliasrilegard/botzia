@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../bot/bot';
 import ClientEvent from '../bot/event';
 
@@ -14,7 +14,7 @@ export default class MessageCreate extends ClientEvent {
     const prefix = await client.prefix(message);
 
     if (message.content.startsWith(`<@!${client.user.id}>`)) {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(client.config.colors.GREEN)
         .setTitle('Getting started')
         .setDescription(`Use \`${prefix}help\` to get started!`);

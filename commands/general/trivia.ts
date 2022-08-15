@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, MessageReaction, User } from 'discord.js';
+import { EmbedBuilder, Message, MessageReaction, User } from 'discord.js';
 import fetch from 'node-fetch';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
@@ -51,11 +51,13 @@ export default class Trivia extends Command {
       const categories: Array<string> = [];
       this.triviaCategories.forEach(category => categories.push(category.name));
       categories.sort();
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.BLUE)
         .setTitle('All categories')
-        .addField('Here\'s a list of all categories:', categories.slice(0, Math.ceil(categories.length / 2)).join('\n'), true)
-        .addField('\u200b', categories.slice(Math.ceil(categories.length / 2), categories.length).join('\n'), true);
+        .addFields([
+          { name: 'Here\'s a list of all categories:', value: categories.slice(0, Math.ceil(categories.length / 2)).join('\n'), inline: true },
+          { name: '\u200b', value: categories.slice(Math.ceil(categories.length / 2), categories.length).join('\n'), inline: true }
+        ]);
       message.channel.send({ embeds: [embed] });
       return;
     }
@@ -95,11 +97,13 @@ export default class Trivia extends Command {
     let answerString = '';
     allAnswers.forEach((ans, index) => answerString += `${emotes[index]} - ${ans}\n`);
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle(`${message.member ? message.member.displayName : message.author.username}, here's a question!`) // Respect nicknames on servers
       .setDescription(description)
-      .addField('Question', this.cleanup(data.question))
-      .addField('Choices', this.cleanup(answerString))
+      .addFields([
+        { name: 'Question', value: this.cleanup(data.question) },
+        { name: 'Choices', value: this.cleanup(answerString) }
+      ])
       .setFooter({ text: 'Answer by reacting to the corresponding emote' })
       .setTimestamp();
 
@@ -124,7 +128,7 @@ export default class Trivia extends Command {
 
     const collector = triviaMessage.createReactionCollector({ filter, max: 1, time: 25000 });
     let reacted = false;
-    const embedAns = new MessageEmbed();
+    const embedAns = new EmbedBuilder();
 
     collector.on('collect', reaction => {
       reacted = true;
@@ -155,11 +159,11 @@ export default class Trivia extends Command {
   }
 
   private postErrorMessage(message: Message, errorMessage: string): void {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.RED)
       .setTitle('Error')
       .setDescription('An error was encountered')
-      .addField('Error message:', `\`${errorMessage}\``);
+      .addFields({ name: 'Error message:', value: `\`${errorMessage}\`` });
     message.channel.send({ embeds: [embed] });
   }
 
@@ -208,7 +212,7 @@ export default class Trivia extends Command {
       const respose = await fetch(`https://opentdb.com/api_token.php?command=reset&token=${token}`);
       const data = await respose.json();
       if (data.response_code === 0) {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Token reset');
         message.channel.send({ embeds: [embed] });

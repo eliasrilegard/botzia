@@ -4,7 +4,7 @@
   "description": "A Discord bot created by Chronozia",
   "main": "dist/shard.js",
   "scripts": {
-    "start": "node .",
+    "start": "node dist/shard.js",
     "build": "rm -rf dist && tsc --watch false"
   },
   "repository": {
@@ -20,7 +20,7 @@
   "dependencies": {
     "color-thief-node": "^1.0.4",
     "directed-weighted-graph": "^1.1.0",
-    "discord.js": "^13.6.0",
+    "discord.js": "^14.2.0",
     "dotenv": "^16.0.0",
     "nedb": "^1.8.0",
     "typescript": "^4.6.2"
