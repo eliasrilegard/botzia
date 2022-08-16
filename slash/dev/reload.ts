@@ -9,7 +9,7 @@ export default class Reload extends SlashCommand {
       .setName('reload')
       .setDescription('Reload a command')
       .addStringOption(option => option
-        .setName('name')
+        .setName('command')
         .setDescription('The command to reload. Use spaces to reload a subcommand')
         .setRequired(true)
       );
@@ -19,7 +19,7 @@ export default class Reload extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const commandsDir = this.client.root.concat('slash');
 
-    const commandNames = interaction.options.getString('name').toLowerCase().split(/\s+/);
+    const commandNames = interaction.options.getString('command').toLowerCase().split(/\s+/);
     const commandName = commandNames[0];
     const command = this.client.slashCommands.get(commandName);
     
