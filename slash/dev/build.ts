@@ -6,7 +6,7 @@ export default class Build extends SlashCommand {
   constructor(client?: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('build')
-      .setDescription('Builds a command')
+      .setDescription('Build a command')
       .addStringOption(option => option
         .setName('path')
         .setDescription('path/to/file for the command to build')

@@ -7,7 +7,7 @@ export default class Reload extends SlashCommand {
   constructor(client?: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('reload')
-      .setDescription('Reloads a command')
+      .setDescription('Reload a command')
       .addStringOption(option => option
         .setName('name')
         .setDescription('The command to reload. Use spaces to reload a subcommand')
