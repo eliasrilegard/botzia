@@ -1,4 +1,6 @@
 import { GuildMember } from 'discord.js';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 
 // A utility class with common functions required by some modules to run.
 
@@ -8,6 +10,18 @@ export default class UtilityFunctions {
    */
   static capitalize(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  /**
+   * Generator method to recursively get all files within a directory.
+   */
+  static async* getFiles(rootPath: string): AsyncGenerator<string> {
+    const fileNames = await fs.readdir(rootPath, { withFileTypes: true });
+    for (const fileName of fileNames) {
+      const pathName = path.resolve(rootPath, fileName.name);
+      if (fileName.isDirectory()) yield* this.getFiles(pathName);
+      else yield pathName;
+    }
   }
 
   /**

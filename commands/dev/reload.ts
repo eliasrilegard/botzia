@@ -1,6 +1,7 @@
 import { Collection, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import Command from '../../bot/command';
+import UtilityFunctions from '../../utils/utilities';
 
 export default class Reload extends Command {
   constructor(client: Bot) {
@@ -50,7 +51,7 @@ export default class Reload extends Command {
     if (!command) return this.notFound(message, commandName, false);
 
     const files: Array<string> = [];
-    for await (const file of this.client.getFiles(commandsDir)) files.push(file);
+    for await (const file of UtilityFunctions.getFiles(commandsDir)) files.push(file);
 
     // This might need to be > 1 if we're allowing sub-subcommands
     const isReloadingSubCommand = command.category && args.length === 2;

@@ -1,10 +1,9 @@
 import { Client, Collection, ColorResolvable, GatewayIntentBits, Message, Partials } from 'discord.js';
-import { readdir } from 'fs/promises';
-import { resolve } from 'path';
 import NedbClient from './database';
 import Command from './command';
 import ClientEvent from './event';
 import MhwClient from './mhw';
+import UtilityFunctions from '../utils/utilities';
 
 export interface ClientConfig {
   readonly bot: {
@@ -60,7 +59,7 @@ export default class Bot extends Client {
   }
 
   private async loadEvents(): Promise<void> {
-    for await (const file of this.getFiles(this.root.concat('events'))) {
+    for await (const file of UtilityFunctions.getFiles(this.root.concat('events'))) {
       const { default: EventClass } = await import(file);
       const event: ClientEvent = new EventClass();
       if (event.isOnce) this.once(event.name, (...args) => event.execute(this, ...args));
@@ -69,22 +68,12 @@ export default class Bot extends Client {
   }
 
   private async loadCommands(): Promise<void> {
-    for await (const file of this.getFiles(this.root.concat('commands'))) {
+    for await (const file of UtilityFunctions.getFiles(this.root.concat('commands'))) {
       const { default: CommandClass } = await import(file);
       const command: Command = new CommandClass(this);
       if (command.category) this.categories.set(command.name, new Collection());
       if (command.belongsTo) this.categories.get(command.belongsTo).set(command.name, command);
       else this.commands.set(command.name, command);
-    }
-  }
-
-  // Generator method to recursively get all files within a directory
-  async* getFiles(rootPath: string): AsyncGenerator<string> {
-    const fileNames = await readdir(rootPath, { withFileTypes: true });
-    for (const fileName of fileNames) {
-      const path = resolve(rootPath, fileName.name);
-      if (fileName.isDirectory()) yield* this.getFiles(path);
-      else yield path;
     }
   }
 
