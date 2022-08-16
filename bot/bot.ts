@@ -4,6 +4,7 @@ import Command from './command';
 import ClientEvent from './event';
 import MhwClient from './mhw';
 import UtilityFunctions from '../utils/utilities';
+import SlashCommand from './slash';
 
 export interface ClientConfig {
   readonly bot: {
@@ -23,6 +24,7 @@ export default class Bot extends Client {
   readonly config: ClientConfig;
   readonly categories: Collection<string, Collection<string, Command>>;
   readonly commands: Collection<string, Command>;
+  readonly slashes: Collection<string, SlashCommand>;
 
   readonly database: NedbClient;
   readonly mhwClient: MhwClient;
@@ -50,12 +52,14 @@ export default class Bot extends Client {
     this.config = config;
     this.categories = new Collection();
     this.commands = new Collection();
+    this.slashes = new Collection();
 
     this.database = new NedbClient(this.root.slice(0, -5).concat('database'));
     this.mhwClient = new MhwClient();
 
     this.loadEvents();
     this.loadCommands();
+    this.loadSlashes();
   }
 
   private async loadEvents(): Promise<void> {
@@ -74,6 +78,14 @@ export default class Bot extends Client {
       if (command.category) this.categories.set(command.name, new Collection());
       if (command.belongsTo) this.categories.get(command.belongsTo).set(command.name, command);
       else this.commands.set(command.name, command);
+    }
+  }
+
+  private async loadSlashes(): Promise<void> {
+    for await (const file of UtilityFunctions.getFiles(this.root.concat('slash'))) {
+      const { default: CommandClass } = await import(file);
+      const command: SlashCommand = new CommandClass(this);
+      this.slashes.set(command.data.name, command);
     }
   }
 

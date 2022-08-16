@@ -5,7 +5,8 @@
   "main": "dist/shard.js",
   "scripts": {
     "start": "node dist/shard.js",
-    "build": "rm -rf dist && tsc --watch false"
+    "build": "rm -rf dist && tsc --watch false",
+    "register": "node dist/deploy-commands.js"
   },
   "repository": {
     "type": "git",
