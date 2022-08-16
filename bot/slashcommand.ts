@@ -18,7 +18,7 @@ export default class SlashCommand {
 
   protected constructor(
     readonly data: SlashCommandBuilder | SlashCommandSubcommandBuilder,
-    readonly client?: Bot,
+    readonly client: Bot,
     customOptions?: SlashCommandOptions
   ) {
     const commandOptions: SlashCommandOptions = { ...defaultOptions, ...customOptions };
