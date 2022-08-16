@@ -1,4 +1,4 @@
-import { EmbedBuilder, GuildChannel, Message, MessageReaction, User } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, Message, MessageReaction, User } from 'discord.js';
 
 interface PageReactions {
   first: string;
@@ -9,54 +9,37 @@ interface PageReactions {
 }
 
 export default class PageHandler {
-  private readonly message: Message;
-  private readonly pages: Array<EmbedBuilder>;
-  private readonly time: number;
-  private readonly reactions: PageReactions;
-  private pagerMessage: Message;
   private page: number;
+  private pagerMessage: Message;
 
   constructor(
-    message: Message,
-    pages: Array<EmbedBuilder>,
-    time = 120000,
+    private readonly interaction: ChatInputCommandInteraction | Message,
+    private readonly pages: Array<EmbedBuilder>,
+    private readonly time = 120_000,
     footerEnabled = false,
-    reactions: PageReactions = { first: '⏪', back: '◀️', next: '▶️', last: '⏩', stop: '⏹️' }
+    private readonly reactions: PageReactions = { first: '⏪', back: '◀️', next: '▶️', last: '⏩', stop: '⏹️' }
   ) {
-    this.message = message;
-    this.pages = pages;
-    this.time = time;
-    this.reactions = reactions;
     this.page = 1;
 
-    // Only add page numbers when it's enabled if there are multiple pages
-    if (footerEnabled && pages.length > 1) this.displayPageNumbers();
+    if (footerEnabled && this.pages.length > 1) this.displayPageNumbers();
 
-    let isPermissionsMissing = false;
-    if (!(message.channel as GuildChannel).permissionsFor(message.client.user).has(['ManageMessages', 'AddReactions'])) { // Debug permissionsFor argument
-      const checkPermissions = '💡 *I don\'t have* **MANAGE MESSAGES** *and/or* **ADD REACTIONS** *permissions!*';
-      isPermissionsMissing = true;
-      this.pages[0].setDescription(checkPermissions);
+    if (!(interaction.channel as GuildTextBasedChannel).permissionsFor(interaction.guild.members.me).has(['ManageMessages', 'AddReactions'])) {
+      this.pages[0].setDescription('*I don\'t have* **MANAGE MESSAGES** *and/or* **ADD REACTIONS** *permissions!*');
+      interaction.reply({ embeds: [this.pages[0]] });
+      return;
     }
 
-    this.init(isPermissionsMissing); // Make this method and remove this line?
+    this.init();
   }
 
   private displayPageNumbers(): void {
-    for (let i = 0; i < this.pages.length; i++) {
-      this.pages[i].setFooter({
-        text: `Page ${i + 1} / ${this.pages.length}`,
-        iconURL: this.message.channel.client.user.avatarURL()
-      });
-    }
+    for (let i = 0; i < this.pages.length; i++) this.pages[i].setFooter({ text: `Page ${i + 1} / ${this.pages.length}` });
   }
 
-  private async init(isPermissionsMissing: boolean): Promise<void> {
-    this.pagerMessage = await this.message.channel.send({ embeds: [this.pages[0]] });
-    if (!isPermissionsMissing) {
-      this.addReactions();
-      this.createCollector();
-    }
+  private async init(): Promise<void> {
+    this.pagerMessage = await this.interaction.reply({ embeds: [this.pages[0]], fetchReply: true });
+    this.addReactions();
+    this.createCollector();
   }
 
   private addReactions(): void {
@@ -64,8 +47,12 @@ export default class PageHandler {
   }
 
   private createCollector(): void {
+    const userId = this.interaction instanceof ChatInputCommandInteraction ? this.interaction.user.id : this.interaction.author.id;
+
     const collector = this.pagerMessage.createReactionCollector({
-      filter: (_: MessageReaction, user: User) => user.id === this.message.author.id,
+      filter: (_: MessageReaction, user: User) => {
+        return user.id === userId;
+      },
       time: this.time
     });
 
@@ -87,7 +74,7 @@ export default class PageHandler {
           collector.stop();
           break;
       }
-      reaction.users.remove(this.message.author.id);
+      reaction.users.remove(userId);
     });
 
     collector.on('end', () => this.pagerMessage.reactions.removeAll());
