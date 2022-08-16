@@ -1,9 +1,9 @@
 import { getColorFromURL } from 'color-thief-node';
 import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 
-export default class Avatar extends Command {
+export default class Avatar extends TextCommand {
   constructor(client: Bot) {
     super(
       client,

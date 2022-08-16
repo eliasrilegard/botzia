@@ -1,8 +1,8 @@
 import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 
-export default class DynamicTime extends Command {
+export default class DynamicTime extends TextCommand {
   private readonly timezones: Map<string, number>;
 
   constructor(client: Bot) {

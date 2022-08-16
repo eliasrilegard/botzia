@@ -1,9 +1,9 @@
 import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 import UtilityFunctions from '../../utils/utilities';
 
-export default class Poll extends Command {
+export default class Poll extends TextCommand {
   constructor(client: Bot) {
     super(
       client,

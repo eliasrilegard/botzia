@@ -1,8 +1,8 @@
 import { EmbedBuilder, FetchMessagesOptions, Message, TextChannel } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 
-export default class Word extends Command {
+export default class Word extends TextCommand {
   constructor(client: Bot) {
     super(
       client,

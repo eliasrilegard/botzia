@@ -10,7 +10,7 @@ export default class InteractionCreate extends ClientEvent {
   async execute(client: Bot, interaction: BaseInteraction): Promise<void> {
     if (!interaction.isChatInputCommand()) return;
 
-    const command = client.slashes.get(interaction.commandName);
+    const command = client.slashCommands.get(interaction.commandName);
 
     if (!command) return;
 

@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import Bot from '../../bot/bot';
-import SlashCommand from '../../bot/slash';
+import SlashCommand from '../../bot/slashcommand';
 import UtilityFunctions from '../../utils/utilities';
 
 export default class Reload extends SlashCommand {
@@ -21,7 +21,7 @@ export default class Reload extends SlashCommand {
 
     const commandNames = interaction.options.getString('name').toLowerCase().split(/\s+/);
     const commandName = commandNames[0];
-    const command = this.client.slashes.get(commandName);
+    const command = this.client.slashCommands.get(commandName);
     
     if (!command) {
       const embed = new EmbedBuilder()
@@ -40,7 +40,7 @@ export default class Reload extends SlashCommand {
     let pathToFile: string;
     if (isReloadingSubcommand) {
       const subCommandName = commandNames[1];
-      subCommand = this.client.slashes.find(cmd => cmd.data.name === subCommandName && cmd.belongsTo === commandName);
+      subCommand = this.client.slashCommands.find(cmd => cmd.data.name === subCommandName && cmd.belongsTo === commandName);
       if (!subCommand) {
         const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
@@ -59,7 +59,7 @@ export default class Reload extends SlashCommand {
     try {
       const { default: CommandClass } = await import(pathToFile);
       const newCommand: SlashCommand = new CommandClass(this.client);
-      this.client.slashes.set(newCommand.data.name, newCommand);
+      this.client.slashCommands.set(newCommand.data.name, newCommand);
       
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.GREEN)

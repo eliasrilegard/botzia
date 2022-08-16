@@ -1,6 +1,6 @@
 import { config } from 'dotenv'; config();
 import { REST, RESTPostAPIApplicationCommandsJSONBody, Routes, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
-import SlashCommand from './bot/slash';
+import SlashCommand from './bot/slashcommand';
 import UtilityFunctions from './utils/utilities';
 
 const commands: Array<RESTPostAPIApplicationCommandsJSONBody> = [];

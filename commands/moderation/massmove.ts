@@ -1,10 +1,10 @@
 import { ChannelType, EmbedBuilder, Message, StageChannel, VoiceChannel } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 
 type VC = VoiceChannel | StageChannel;
 
-export default class MassMove extends Command {
+export default class MassMove extends TextCommand {
   constructor(client: Bot) {
     super(
       client,

@@ -1,9 +1,9 @@
 import { Collection, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 import UtilityFunctions from '../../utils/utilities';
 
-export default class Reload extends Command {
+export default class Reload extends TextCommand {
   constructor(client: Bot) {
     super(
       client,
@@ -23,10 +23,10 @@ export default class Reload extends Command {
       const pathToFile = args[1];
       try {
         const { default: CommandClass } = await import(`${commandsDir}/${pathToFile}.js`);
-        const command: Command = new CommandClass(this.client);
-        if (command.category) this.client.categories.set(command.name, new Collection());
-        if (command.belongsTo) this.client.categories.get(command.belongsTo).set(command.name, command);
-        else this.client.commands.set(command.name, command);
+        const command: TextCommand = new CommandClass(this.client);
+        if (command.category) this.client.textCommandCategories.set(command.name, new Collection());
+        if (command.belongsTo) this.client.textCommandCategories.get(command.belongsTo).set(command.name, command);
+        else this.client.textCommands.set(command.name, command);
         embed
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Command added')
@@ -45,8 +45,8 @@ export default class Reload extends Command {
 
     // Get command name or alias
     const commandName = args[0].toLowerCase();
-    const command = this.client.commands.get(commandName) ||
-    this.client.commands.find(cmd => cmd.aliases.includes(commandName));
+    const command = this.client.textCommands.get(commandName) ||
+    this.client.textCommands.find(cmd => cmd.aliases.includes(commandName));
 
     if (!command) return this.notFound(message, commandName, false);
 
@@ -56,12 +56,12 @@ export default class Reload extends Command {
     // This might need to be > 1 if we're allowing sub-subcommands
     const isReloadingSubCommand = command.category && args.length === 2;
 
-    let subCommand: Command;
+    let subCommand: TextCommand;
     let pathToFile: string;
     if (isReloadingSubCommand) {
       // If we're reloading a subcommand we're gonna have to do everything pretty much once again
       const subCommandName = args[1];
-      const subCommands = this.client.categories.get(command.name);
+      const subCommands = this.client.textCommandCategories.get(command.name);
       subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
       if (!subCommand) return this.notFound(message, subCommandName, true);
       pathToFile = files.filter(file => file.endsWith(`${command.name}/${subCommand.name}.js`))[0];
@@ -74,9 +74,9 @@ export default class Reload extends Command {
     // Re-import the file
     try {
       const { default: CommandClass } = await import(pathToFile);
-      const newCommand: Command = new CommandClass(this.client);
-      if (command.category) this.client.categories.get(command.name).set(newCommand.name, newCommand);
-      else this.client.commands.set(newCommand.name, newCommand);
+      const newCommand: TextCommand = new CommandClass(this.client);
+      if (command.category) this.client.textCommandCategories.get(command.name).set(newCommand.name, newCommand);
+      else this.client.textCommands.set(newCommand.name, newCommand);
 
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.GREEN)

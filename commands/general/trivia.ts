@@ -1,7 +1,7 @@
 import { EmbedBuilder, Message, MessageReaction, User } from 'discord.js';
 import fetch from 'node-fetch';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 import UtilityFunctions from '../../utils/utilities';
 
 interface TriviaCategory {
@@ -18,7 +18,7 @@ interface TriviaQuestion {
   incorrect_answers: Array<string>;
 }
 
-export default class Trivia extends Command {
+export default class Trivia extends TextCommand {
   private readonly serverTokens: Map<string, string>;
   private triviaCategories: Array<TriviaCategory>;
 

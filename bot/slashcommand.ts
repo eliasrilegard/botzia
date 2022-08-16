@@ -26,7 +26,7 @@ export default class SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const subCommands = this.client.slashes.filter(cmd => cmd.belongsTo === this.data.name);
+    const subCommands = this.client.slashCommands.filter(cmd => cmd.belongsTo === this.data.name);
 
     const subCommandName = interaction.options.getSubcommand();
 

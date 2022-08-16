@@ -1,8 +1,8 @@
 import { Collection, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 
-export default class Help extends Command {
+export default class Help extends TextCommand {
   constructor(client: Bot) {
     super(
       client,
@@ -18,9 +18,9 @@ export default class Help extends Command {
 
     // No args - display interactive page to view all commands
     if (args.length === 0) {
-      const categories: Array<[Command, Collection<string, Command>]> = [];
-      const categoryNames = [...this.client.categories.keys()];
-      categoryNames.forEach(name => categories.push([this.client.commands.get(name), this.client.categories.get(name)]));
+      const categories: Array<[TextCommand, Collection<string, TextCommand>]> = [];
+      const categoryNames = [...this.client.textCommandCategories.keys()];
+      categoryNames.forEach(name => categories.push([this.client.textCommands.get(name), this.client.textCommandCategories.get(name)]));
       
       // Pages dedicated to individual categories
       const categoryEmbeds = categories.map(category => {
@@ -38,7 +38,7 @@ export default class Help extends Command {
       
       // Build main page
       const categoriesOverview = categories.map(category => `**${prefix}${category[0].name}** - ${category[0].description}`).join('\n');
-      const standaloneCommands = this.client.commands
+      const standaloneCommands = this.client.textCommands
         .filter(command => !command.category && !command.devOnly)
         .map(command => `**${prefix}${command.name}** - ${command.description}`)
         .sort((a, b) => a.localeCompare(b))
@@ -55,16 +55,16 @@ export default class Help extends Command {
 
     // Args present - command has been specified
     const commandName = args[0].toLowerCase();
-    const command = this.client.commands.get(commandName) || this.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    const command = this.client.textCommands.get(commandName) || this.client.textCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     
     if (!command) return this.notFound(message, commandName, false);
 
     // We're looking for a subcommand if another command is specified after the first one
     const subCommandSpecified = command.category && args.length === 2;
-    let subCommand: Command;
+    let subCommand: TextCommand;
     if (subCommandSpecified) {
       const subCommandName = args[1].toLowerCase();
-      const subCommands = this.client.categories.get(command.name);
+      const subCommands = this.client.textCommandCategories.get(command.name);
       subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
       if (!subCommand) return this.notFound(message, subCommandName, true);
     }

@@ -24,7 +24,7 @@ const defaultOptions: CommandOptions = {
   permissions: ''
 };
 
-export default class Command {
+export default class TextCommand {
   readonly aliases: Array<string>;
   readonly args: boolean;
   readonly belongsTo: string;
@@ -69,7 +69,7 @@ export default class Command {
 
     const subCommandName = args.shift().toLowerCase();
 
-    const subCommand = this.client.categories.get(this.name).find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
+    const subCommand = this.client.textCommandCategories.get(this.name).find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
 
     if (!subCommand) {
       const embed = new EmbedBuilder()

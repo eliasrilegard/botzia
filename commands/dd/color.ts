@@ -1,9 +1,9 @@
 import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 import fetch from 'node-fetch';
 
-export default class Color extends Command {
+export default class Color extends TextCommand {
   constructor(client: Bot) {
     super(
       client,

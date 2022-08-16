@@ -1,7 +1,7 @@
 import { EmbedBuilder, Message } from 'discord.js';
 import DWG from 'directed-weighted-graph';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 
 interface Unit {
   readonly name: string;
@@ -52,7 +52,7 @@ class UnitStore {
   }
 }
 
-export default class UnitConvert extends Command {
+export default class UnitConvert extends TextCommand {
   private readonly unitStore: UnitStore;
 
   constructor(client: Bot) {

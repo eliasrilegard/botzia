@@ -1,10 +1,10 @@
 import { Client, Collection, ColorResolvable, GatewayIntentBits, Message, Partials } from 'discord.js';
 import NedbClient from './database';
-import Command from './command';
 import ClientEvent from './event';
 import MhwClient from './mhw';
 import UtilityFunctions from '../utils/utilities';
-import SlashCommand from './slash';
+import SlashCommand from './slashcommand';
+import TextCommand from './textcommand';
 
 export interface ClientConfig {
   readonly bot: {
@@ -22,9 +22,9 @@ export interface ClientConfig {
 export default class Bot extends Client {
   readonly root: string;
   readonly config: ClientConfig;
-  readonly categories: Collection<string, Collection<string, Command>>;
-  readonly commands: Collection<string, Command>;
-  readonly slashes: Collection<string, SlashCommand>;
+  readonly textCommandCategories: Collection<string, Collection<string, TextCommand>>;
+  readonly textCommands: Collection<string, TextCommand>;
+  readonly slashCommands: Collection<string, SlashCommand>;
 
   readonly database: NedbClient;
   readonly mhwClient: MhwClient;
@@ -50,9 +50,9 @@ export default class Bot extends Client {
 
     this.root = dirname.slice(0, -3);
     this.config = config;
-    this.categories = new Collection();
-    this.commands = new Collection();
-    this.slashes = new Collection();
+    this.textCommandCategories = new Collection();
+    this.textCommands = new Collection();
+    this.slashCommands = new Collection();
 
     this.database = new NedbClient(this.root.slice(0, -5).concat('database'));
     this.mhwClient = new MhwClient();
@@ -74,10 +74,10 @@ export default class Bot extends Client {
   private async loadCommands(): Promise<void> {
     for await (const file of UtilityFunctions.getFiles(this.root.concat('commands'))) {
       const { default: CommandClass } = await import(file);
-      const command: Command = new CommandClass(this);
-      if (command.category) this.categories.set(command.name, new Collection());
-      if (command.belongsTo) this.categories.get(command.belongsTo).set(command.name, command);
-      else this.commands.set(command.name, command);
+      const command: TextCommand = new CommandClass(this);
+      if (command.category) this.textCommandCategories.set(command.name, new Collection());
+      if (command.belongsTo) this.textCommandCategories.get(command.belongsTo).set(command.name, command);
+      else this.textCommands.set(command.name, command);
     }
   }
 
@@ -85,7 +85,7 @@ export default class Bot extends Client {
     for await (const file of UtilityFunctions.getFiles(this.root.concat('slash'))) {
       const { default: CommandClass } = await import(file);
       const command: SlashCommand = new CommandClass(this);
-      this.slashes.set(command.data.name, command);
+      this.slashCommands.set(command.data.name, command);
     }
   }
 

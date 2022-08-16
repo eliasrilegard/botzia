@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import Bot from '../../bot/bot';
-import SlashCommand from '../../bot/slash';
+import SlashCommand from '../../bot/slashcommand';
 
 export default class Build extends SlashCommand {
   constructor(client?: Bot) {
@@ -23,7 +23,7 @@ export default class Build extends SlashCommand {
     try {
       const { default: CommandClass } = await import(`${commandsDir}/${path}.js`);
       const command: SlashCommand = new CommandClass(this.client);
-      this.client.slashes.set(command.data.name, command);
+      this.client.slashCommands.set(command.data.name, command);
 
       embed
         .setColor(this.client.config.colors.GREEN)

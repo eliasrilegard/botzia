@@ -1,8 +1,8 @@
 import { AttachmentBuilder, EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
-import Command from '../../bot/command';
+import TextCommand from '../../bot/textcommand';
 
-export default class Quote extends Command {
+export default class Quote extends TextCommand {
   private readonly quoteMap: Map<string, string>;
 
   constructor(client: Bot) {

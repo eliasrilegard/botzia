@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import Bot from '../../bot/bot';
-import SlashCommand from '../../bot/slash';
+import SlashCommand from '../../bot/slashcommand';
 
 export default class Dev extends SlashCommand {
   constructor(client?: Bot) {
@@ -21,7 +21,7 @@ export default class Dev extends SlashCommand {
     }
 
     // Continue as usual
-    const subCommands = this.client.slashes.filter(cmd => cmd.belongsTo === this.data.name);
+    const subCommands = this.client.slashCommands.filter(cmd => cmd.belongsTo === this.data.name);
     const subCommandName = interaction.options.getSubcommand();
     const subCommand = subCommands.get(subCommandName);
     subCommand.execute(interaction);

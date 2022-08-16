@@ -27,8 +27,8 @@ export default class MessageCreate extends ClientEvent {
     const args = message.content.slice(prefix.length).trim().split(/ +/); // Split every word of message into list
     const commandName = args.shift().toLowerCase(); // Extract command name and finalize args list
 
-    const command = client.commands.get(commandName) || // Search for command name
-      client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); // Or look for potential aliases
+    const command = client.textCommands.get(commandName) || // Search for command name
+      client.textCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); // Or look for potential aliases
     if (!command) return;
 
     if (!(await command.preRunCheck(message, args))) return;
