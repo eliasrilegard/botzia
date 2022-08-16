@@ -7,7 +7,8 @@ export default class Dev extends SlashCommand {
     const data = new SlashCommandBuilder()
       .setName('dev')
       .setDescription('Development commands')
-      .setDefaultMemberPermissions(0);
+      .setDefaultMemberPermissions(0)
+      .setDMPermission(false);
     super(data, client, { isCategory: true });
   }
 
