@@ -1,5 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import Bot from './bot';
+import PageHandler from './pagehandler';
 
 interface SlashCommandOptions {
   belongsTo?: string;
@@ -32,5 +33,9 @@ export default class SlashCommand {
 
     const subCommand = subCommands.get(subCommandName);
     subCommand.execute(interaction);
+  }
+
+  protected sendMenu(interaction: ChatInputCommandInteraction, pages: Array<EmbedBuilder>): PageHandler {
+    return new PageHandler(interaction, pages, undefined, true);
   }
 }
