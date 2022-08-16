@@ -3,14 +3,17 @@ import Bot from './bot';
 
 interface SlashCommandOptions {
   belongsTo?: string;
+  isCategory?: boolean;
 }
 
 const defaultOptions: SlashCommandOptions = {
-  belongsTo: undefined
+  belongsTo: undefined,
+  isCategory: false
 };
 
 export default class SlashCommand {
-  readonly belongsTo?: string;
+  readonly belongsTo: string;
+  readonly isCategory: boolean;
 
   protected constructor(
     readonly data: SlashCommandBuilder | SlashCommandSubcommandBuilder,
@@ -19,8 +22,15 @@ export default class SlashCommand {
   ) {
     const commandOptions: SlashCommandOptions = { ...defaultOptions, ...customOptions };
     this.belongsTo = commandOptions.belongsTo;
+    this.isCategory = commandOptions.isCategory;
   }
 
-  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-  async execute(interaction: ChatInputCommandInteraction): Promise<void> {}
+  async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+    const subCommands = this.client.slashes.filter(cmd => cmd.belongsTo === this.data.name);
+
+    const subCommandName = interaction.options.getSubcommand();
+
+    const subCommand = subCommands.get(subCommandName);
+    subCommand.execute(interaction);
+  }
 }
