@@ -16,7 +16,7 @@ export default class Dev extends SlashCommand {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Developer only command');
-      interaction.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
 
