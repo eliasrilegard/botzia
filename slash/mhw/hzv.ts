@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
 
 export default class Hzv extends SlashCommand {
-  constructor(client?: Bot) {
+  constructor(client: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('hzv')
       .setDescription('Get the HZV (Hitzone Value) of a specified monster')

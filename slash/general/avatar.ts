@@ -4,7 +4,7 @@ import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
 
 export default class Avatar extends SlashCommand {
-  constructor(client?: Bot) {
+  constructor(client: Bot) {
     const data = new SlashCommandBuilder()
       .setName('avatar')
       .setDescription('Get the avatar of a user')

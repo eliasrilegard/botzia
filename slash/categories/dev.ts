@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
 
 export default class Dev extends SlashCommand {
-  constructor(client?: Bot) {
+  constructor(client: Bot) {
     const data = new SlashCommandBuilder()
       .setName('dev')
       .setDescription('Development commands')

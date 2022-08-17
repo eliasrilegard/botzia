@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
 
 export default class Res extends SlashCommand {
-  constructor(client?: Bot) {
+  constructor(client: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('res')
       .setDescription('Calulate the number of upgrades required to max the resists of ult armor.')

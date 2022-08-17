@@ -8,7 +8,7 @@ export default class LTRange extends SlashCommand {
   private readonly normal: Array<number>; // +6
   private readonly upped: Array<number>; // +17
 
-  constructor(client?: Bot) {
+  constructor(client: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('ltrange')
       .setDescription('Find the closest LT breakpoints to your current range')

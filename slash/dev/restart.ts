@@ -3,7 +3,7 @@ import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
 
 export default class Restart extends SlashCommand {
-  constructor(client?: Bot) {
+  constructor(client: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('restart')
       .setDescription('Restart the bot');

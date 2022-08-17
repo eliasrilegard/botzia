@@ -4,7 +4,7 @@ import SlashCommand from '../../bot/slashcommand';
 import UtilityFunctions from '../../utils/utilities';
 
 export default class Reload extends SlashCommand {
-  constructor(client?: Bot) {
+  constructor(client: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('reload')
       .setDescription('Reload a command')

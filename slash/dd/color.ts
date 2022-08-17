@@ -4,7 +4,7 @@ import SlashCommand from '../../bot/slashcommand';
 import fetch from 'node-fetch';
 
 export default class Color extends SlashCommand {
-  constructor(client?: Bot) {
+  constructor(client: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('color')
       .setDescription('Emulate the forge color mechanic')
