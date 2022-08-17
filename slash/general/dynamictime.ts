@@ -9,7 +9,8 @@ export default class DynamicTime extends SlashCommand {
     const timezones = new Map([
       ['UTC', 0],
       ['CET', 1],
-      ['CEST/EET', 2]
+      ['CEST', 2],
+      ['EET', 2]
     ]);
 
     const data = new SlashCommandBuilder()
