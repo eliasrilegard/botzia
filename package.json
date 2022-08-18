@@ -22,7 +22,7 @@
   "homepage": "https://github.com/eliasrilegard/botzia#readme",
   "dependencies": {
     "color-thief-node": "^1.0.4",
-    "directed-weighted-graph": "^1.1.0",
+    "directed-weighted-graph": "^1.2.0",
     "discord.js": "^14.2.0",
     "dotenv": "^16.0.0",
     "nedb": "^1.8.0",

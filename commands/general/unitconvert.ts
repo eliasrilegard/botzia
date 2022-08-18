@@ -40,7 +40,7 @@ class UnitStore {
   }
 
   getConversion(unit1: Unit, unit2: Unit): convertFn | null {
-    if (!this.graph.has(unit1) || !this.graph.has(unit2)) return null;
+    if (!this.graph.hasVertex(unit1) || !this.graph.hasVertex(unit2)) return null;
     return this.graph.getWeight(unit1, unit2);
   }
 
@@ -52,8 +52,7 @@ class UnitStore {
   }
 
   isSameType(unit1: Unit, unit2: Unit): boolean {
-    const foundUnits = this.graph.getEdges(unit1)!.find(u => u[0] === unit2);
-    return foundUnits !== undefined;
+    return this.graph.hasEdge(unit1, unit2);
   }
 }
 
