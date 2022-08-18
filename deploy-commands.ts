@@ -8,7 +8,7 @@ const commandFiles = UtilityFunctions.getFiles(__dirname.concat('/slash'));
 
 const clientId = '780420556637339648';
 
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN!);
 
 (async () => {
   console.log('Building command data...');
@@ -21,7 +21,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
   }
 
   for (const command of allCommands) {
-    if (command.belongsTo) continue;
+    if (command.belongsTo || command.data.name === 'dev') continue;
     const commandData = command.data as SlashCommandBuilder;
     const subCommands = allCommands.filter(cmd => cmd.belongsTo === commandData.name);
     // This will be empty if command isn't a category
