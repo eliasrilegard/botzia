@@ -20,6 +20,6 @@ export default class Restart extends TextCommand {
       .setDescription('Sent request to respawn all shards.')
       .setTimestamp();
     await message.channel.send({ embeds: [embed] });
-    this.client.shard.respawnAll();
+    this.client.shard!.respawnAll();
   }
 }

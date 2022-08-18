@@ -24,7 +24,7 @@ export default class Dev extends SlashCommand {
     // Continue as usual
     const subCommands = this.client.slashCommands.filter(cmd => cmd.belongsTo === this.data.name);
     const subCommandName = interaction.options.getSubcommand();
-    const subCommand = subCommands.get(subCommandName);
+    const subCommand = subCommands.get(subCommandName)!;
     subCommand.execute(interaction);
   }
 }

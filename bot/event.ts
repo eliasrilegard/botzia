@@ -9,7 +9,7 @@ export default class ClientEvent {
   protected constructor(readonly name: string, readonly isOnce: boolean) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  execute(client: Bot, ...args): void {
+  execute(client: Bot, ...args: unknown[]): void {
     throw new Error('Method not implemented.');
   }
 }

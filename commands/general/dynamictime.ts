@@ -58,7 +58,7 @@ export default class DynamicTime extends TextCommand {
     if (args[args.length - 1].match(/^\w{3,4}/)) { // If last specified argument starts with 3 or 4 letters
       const timezone = args[args.length - 1];
       if (this.timezones.has(timezone)) {
-        const offset = this.timezones.get(timezone);
+        const offset = this.timezones.get(timezone)!;
         dateString += ` UTC${offset < 0 ? '' : '+'}${offset}`;
       }
       else if (/UTC[+-]\d{1,2}/.test(timezone)) {
@@ -115,7 +115,7 @@ export default class DynamicTime extends TextCommand {
         const timezone = args[2].toUpperCase();
         let utcOffset: string;
         if (this.timezones.has(timezone)) {
-          const offset = this.timezones.get(timezone);
+          const offset = this.timezones.get(timezone)!;
           utcOffset = `UTC${offset < 0 ? '' : '+'}${offset}`;
         }
         else if (/UTC[+-]\d{1,2}/.test(timezone)) utcOffset = timezone;

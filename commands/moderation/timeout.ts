@@ -15,7 +15,7 @@ export default class Timeout extends TextCommand {
   }
 
   async execute(message: Message, args: Array<string>): Promise<void> {
-    const member = message.mentions.members.first();
+    const member = message.mentions.members?.first();
 
     const prefix = await this.client.prefix(message);
     const embed = new EmbedBuilder().setColor(this.client.config.colors.RED);
@@ -34,7 +34,7 @@ export default class Timeout extends TextCommand {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (member.id === this.client.user.id) {
+    if (member.id === this.client.user!.id) {
       embed
         .setTitle('I can\'t timeout myself')
         .setFooter({ text: 'How dare you' });
@@ -48,14 +48,14 @@ export default class Timeout extends TextCommand {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (UtilityFunctions.permHierarchy(member, message.member) && !message.member.permissions.has('Administrator')) {
+    if (UtilityFunctions.permHierarchy(member, message.member!) && !message.member!.permissions.has('Administrator')) {
       embed
         .setTitle('Can\'t timeout member')
         .setDescription('You can\'t timeout someone equal to or above you');
       message.channel.send({ embeds: [embed] });
       return;
     }
-    if (UtilityFunctions.permHierarchy(member, message.guild.members.resolve(this.client.user))) {
+    if (UtilityFunctions.permHierarchy(member, message.guild!.members.resolve(message.guild!.members.me!))) {
       embed
         .setTitle('Can\'t timeout member')
         .setDescription('Specified user is above my highest role.');
@@ -70,7 +70,7 @@ export default class Timeout extends TextCommand {
       return;
     }
 
-    if (member.communicationDisabledUntilTimestamp > Date.now()) { // Workaround for isCommunicationDisabled()
+    if (member.communicationDisabledUntilTimestamp && member.communicationDisabledUntilTimestamp > Date.now()) { // Workaround for isCommunicationDisabled()
       if (args[1] === 'remove') {
         embed
           .setColor(this.client.config.colors.GREEN)

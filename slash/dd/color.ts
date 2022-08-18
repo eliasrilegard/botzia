@@ -17,7 +17,7 @@ export default class Color extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const colorString = interaction.options.getString('color-string');
+    const colorString = interaction.options.getString('color-string')!;
     if (!/^[,\s]*-?\d{1,3}([,\s]*-?\d{1,3}){0,2}[,\s]*$/.test(colorString)) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
@@ -27,7 +27,7 @@ export default class Color extends SlashCommand {
       return;
     }
 
-    const vals = colorString.match(/-?\d{1,3}/g).map(val => parseInt(val));
+    const vals = colorString.match(/-?\d{1,3}/g)!.map(val => parseInt(val));
 
     for (let i = 0; i < vals.length; i++) {
       while (vals[i] < 0) vals[i] += 255;

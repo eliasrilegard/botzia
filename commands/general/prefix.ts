@@ -16,7 +16,7 @@ export default class Prefix extends TextCommand {
   async execute(message: Message, args: Array<string>): Promise<void> {
     const defaultPrefix = this.client.config.bot.defaultPrefix;
 
-    const serverPrefix = await this.client.database.getCustomPrefix(message.guild.id);
+    const serverPrefix = await this.client.database.getCustomPrefix(message.guild!.id);
 
     if (!args.length) {
       const embed = new EmbedBuilder()
@@ -42,7 +42,7 @@ export default class Prefix extends TextCommand {
 
     // Is user trying to reset prefix?
     if ([defaultPrefix, 'reset'].includes(requestedPrefix) && serverPrefix) {
-      this.client.database.removeCustomPrefix(message.guild.id);
+      this.client.database.removeCustomPrefix(message.guild!.id);
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.GREEN)
         .setTitle('Prefix reset')
@@ -61,7 +61,7 @@ export default class Prefix extends TextCommand {
       return;
     }
 
-    this.client.database.setCustomPrefix(message.guild.id, requestedPrefix);
+    this.client.database.setCustomPrefix(message.guild!.id, requestedPrefix);
 
     const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.GREEN)

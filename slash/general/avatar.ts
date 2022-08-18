@@ -17,7 +17,7 @@ export default class Avatar extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const user = interaction.options.getUser('user');
+    const user = interaction.options.getUser('user')!;
 
     const avatarUrl = user.displayAvatarURL();
     const requestUrl = avatarUrl.endsWith('.webp') ? avatarUrl.slice(0, -4).concat('png') : avatarUrl;

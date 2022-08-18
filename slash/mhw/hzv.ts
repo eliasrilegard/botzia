@@ -16,7 +16,7 @@ export default class Hzv extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const input = interaction.options.getString('monster').split(/\s+/).join('').toLowerCase();
+    const input = interaction.options.getString('monster')!.split(/\s+/).join('').toLowerCase();
     const isHR = input.startsWith('hr');
     let monsterName = isHR ? input.slice(2) : input;
 
@@ -38,7 +38,7 @@ export default class Hzv extends SlashCommand {
     }
 
     if (this.client.mhwClient.monsters.has(monsterName)) {
-      const monster = this.client.mhwClient.monsters.get(monsterName);
+      const monster = this.client.mhwClient.monsters.get(monsterName)!;
       if (isHR && !('hzv_filepath_hr' in monster)) return this.notFound(interaction);
 
       const [embed, imageStream] = await this.monsterEmbed(monsterName, isHR);
@@ -48,9 +48,9 @@ export default class Hzv extends SlashCommand {
   }
 
   private async monsterEmbed(name: string, isHR: boolean): Promise<[EmbedBuilder, Array<AttachmentBuilder>]> {
-    const monster = this.client.mhwClient.monsters.get(name);
-    const hzvFilepath = isHR ? monster.hzv_filepath_hr : monster.hzv_filepath;
-    const hzv = isHR ? monster.hzv_hr : monster.hzv;
+    const monster = this.client.mhwClient.monsters.get(name)!;
+    const hzvFilepath = isHR ? monster.hzv_filepath_hr! : monster.hzv_filepath;
+    const hzv = isHR ? monster.hzv_hr! : monster.hzv;
 
     // Get file name by cutting off everything before and including the last '/'
     // Clean up file name by removing characters that will mess with Discord's API
@@ -70,8 +70,8 @@ export default class Hzv extends SlashCommand {
     const embed = new EmbedBuilder()
       .setColor('#8fde5d')
       .setTitle(title)
-      .setThumbnail(attachURL(thumbnail.name))
-      .setImage(attachURL(hzvImage.name))
+      .setThumbnail(attachURL(thumbnail.name!))
+      .setImage(attachURL(hzvImage.name!))
       .addFields([
         { name: 'Classification', value: monster.species },
         { name: 'Characteristics', value: monster.description },

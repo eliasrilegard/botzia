@@ -36,9 +36,9 @@ export default class Poll extends TextCommand {
     pollOptions.forEach((option, index) => choicesString += `${emotes[index]} - ${option}\n`);
 
     const embed = new EmbedBuilder()
-      .setColor(message.member.displayHexColor)
-      .setAuthor({ name: `${message.member.displayName} created a poll`, iconURL: message.member.displayAvatarURL() })
-      .setTitle(question)
+      .setColor(message.member?.displayHexColor ?? this.client.config.colors.BLUE)
+      .setAuthor({ name: `${message.member!.displayName} created a poll`, iconURL: message.member!.displayAvatarURL() })
+      .setTitle(question!)
       .addFields({ name: 'Choices', value: choicesString.trim() })
       .setFooter({ text: 'React with your vote below!' })
       .setTimestamp();

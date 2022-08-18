@@ -96,10 +96,10 @@ export default class DynamicTime extends SlashCommand {
         }
         case 'set': {
           // Find offset specified by checking if it's a key in this.timezones or if matches UTC±x
-          const timezone = interaction.options.getString('timezone');
+          const timezone = interaction.options.getString('timezone')!;
           let utcOffset: string;
           if (this.timezones.has(timezone)) {
-            const offset = this.timezones.get(timezone);
+            const offset = this.timezones.get(timezone)!;
             utcOffset = `UTC${offset < 0 ? '' : '+'}${offset}`;
           }
           else if (/UTC[+-]\d{1,2}/.test(timezone)) utcOffset = timezone;
@@ -134,7 +134,7 @@ export default class DynamicTime extends SlashCommand {
     }
 
     // Normal stuff from here on out
-    const timestamp = interaction.options.getString('timestamp'); /* 20:00 */
+    const timestamp = interaction.options.getString('timestamp')!; /* 20:00 */
 
     // Validate timestamp
     const isDaySpecified = /^\d{4}-\d{2}-\d{2}/.test(timestamp); /* false */

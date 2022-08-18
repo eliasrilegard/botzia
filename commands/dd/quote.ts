@@ -34,7 +34,7 @@ export default class Quote extends TextCommand {
       message.channel.send({ embeds: [embed] });
       return;
     }
-    const filepath = this.quoteMap.get(key);
+    const filepath = this.quoteMap.get(key)!;
     const quoteImage = new AttachmentBuilder(
       filepath,
       { name: filepath.slice(filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '') } // See mhw/hzv
@@ -44,7 +44,7 @@ export default class Quote extends TextCommand {
 
   private async loadQuotes(): Promise<void> {
     delete require.cache[require.resolve('../../database/dungeon_defenders/quotes/quotemap.json')];
-    const quoteData = await import('../../database/dungeon_defenders/quotes/quotemap.json');
+    const quoteData = (await import('../../database/dungeon_defenders/quotes/quotemap.json')) as Array<{ name: string, filepath: string }>;
     for (const [, v] of Object.entries(quoteData)) this.quoteMap.set(v.name, v.filepath);
   }
 }

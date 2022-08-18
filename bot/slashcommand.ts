@@ -13,8 +13,8 @@ const defaultOptions: SlashCommandOptions = {
 };
 
 export default class SlashCommand {
-  readonly belongsTo: string;
-  readonly isCategory: boolean;
+  readonly belongsTo?: string;
+  readonly isCategory?: boolean;
 
   protected constructor(
     readonly data: SlashCommandBuilder | SlashCommandSubcommandBuilder,
@@ -32,7 +32,7 @@ export default class SlashCommand {
     const subCommandName = interaction.options.getSubcommand();
 
     const subCommand = subCommands.get(subCommandName);
-    subCommand.execute(interaction);
+    subCommand!.execute(interaction);
   }
 
   protected sendMenu(interaction: ChatInputCommandInteraction, pages: Array<EmbedBuilder>): PageHandler {

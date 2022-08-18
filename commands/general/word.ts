@@ -63,13 +63,13 @@ export default class Word extends TextCommand {
     }
     else {
       const rounds = (limit / 100) + (limit % 100 > 0 ? 1 : 0);
-      let lastId: string;
+      let lastId = '';
       for (let i = 0; i < rounds; i++) {
         const options: FetchMessagesOptions = { limit: 100 };
         if (lastId) options.before = lastId;
         const fetched = await channel.messages.fetch(options);
         fetched.forEach(msg => result.push(msg));
-        lastId = fetched.last().id;
+        lastId = fetched.last()!.id;
       }
     }
     return result;

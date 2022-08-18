@@ -16,7 +16,7 @@ export default class Color extends TextCommand {
 
   async execute(message: Message, args: Array<string>): Promise<void> {
     const colorString = args.join('');
-    if (!/^,*-?\d{1,3}(,*-?\d{1,3}){0,2},*$/.test(colorString)) {
+    if (!/^([\s,]*-?\d{1,3}){1,3},*$/.test(colorString)) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Invalid format')
@@ -25,7 +25,7 @@ export default class Color extends TextCommand {
       return;
     }
 
-    const vals = colorString.match(/-?\d{1,3}/g).map(val => parseInt(val));
+    const vals = colorString.match(/-?\d{1,3}/g)!.map(val => parseInt(val));
 
     for (let i = 0; i < vals.length; i++) {
       while (vals[i] < 0) vals[i] += 255;

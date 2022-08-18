@@ -24,7 +24,7 @@ export default class Res extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const resists = interaction.options.getString('resistances').split(/\s+/).map(res => parseInt(res));
+    const resists = interaction.options.getString('resistances')!.split(/\s+/).map(res => parseInt(res));
 
     if (resists.length > 4) {
       const embed = new EmbedBuilder()
@@ -37,8 +37,8 @@ export default class Res extends SlashCommand {
 
     const data = [...resists].sort((a, b) => b - a);
 
-    const avalibleUpgrades = interaction.options.getInteger('upgrades');
-    const primaryStat = interaction.options.getInteger('stat');
+    const avalibleUpgrades = interaction.options.getInteger('upgrades') ?? 0;
+    const primaryStat = interaction.options.getInteger('stat') ?? 0;
 
     let armorLevel = 1, levelsSpent = 0, intoPrimaryStat = 0;
 

@@ -20,7 +20,7 @@ export default class Help extends TextCommand {
     if (args.length === 0) {
       const categories: Array<[TextCommand, Collection<string, TextCommand>]> = [];
       const categoryNames = [...this.client.textCommandCategories.keys()];
-      categoryNames.forEach(name => categories.push([this.client.textCommands.get(name), this.client.textCommandCategories.get(name)]));
+      categoryNames.forEach(name => categories.push([this.client.textCommands.get(name)!, this.client.textCommandCategories.get(name)!]));
       
       // Pages dedicated to individual categories
       const categoryEmbeds = categories.map(category => {
@@ -61,23 +61,24 @@ export default class Help extends TextCommand {
 
     // We're looking for a subcommand if another command is specified after the first one
     const subCommandSpecified = command.category && args.length === 2;
-    let subCommand: TextCommand;
+    let subCommandFound: TextCommand;
     if (subCommandSpecified) {
       const subCommandName = args[1].toLowerCase();
-      const subCommands = this.client.textCommandCategories.get(command.name);
-      subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
+      const subCommands = this.client.textCommandCategories.get(command.name)!;
+      const subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
       if (!subCommand) return this.notFound(message, subCommandName, true);
+      subCommandFound = subCommand;
     }
 
     // Build data
-    const name = (subCommandSpecified ? subCommand : command).name;
-    const aliases = (subCommandSpecified ? subCommand : command).aliases.join(', ');
+    const name = (subCommandSpecified ? subCommandFound! : command).name;
+    const aliases = (subCommandSpecified ? subCommandFound! : command).aliases.join(', ');
     const commandUsage = (
       subCommandSpecified ?
-        subCommand.usages.map(usage => `${prefix}${command.name} ${subCommand.name} ${usage}`) :
+        subCommandFound!.usages.map(usage => `${prefix}${command.name} ${subCommandFound!.name} ${usage}`) :
         command.usages.map(usage => `${prefix}${command.name} ${usage}`)
     ).join('\n').trim();
-    const description = (subCommandSpecified ? subCommand : command).description + '\n\u200b';
+    const description = (subCommandSpecified ? subCommandFound! : command).description + '\n\u200b';
 
     const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)

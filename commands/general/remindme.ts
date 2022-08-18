@@ -22,7 +22,7 @@ export default class Remindme extends TextCommand {
     // When no more time arguments are found, concatenate the rest of the
     // arguments to form the reminder message.
 
-    const time = { days: 0, hours: 0, minutes: 0 };
+    const time: { [key: string]: number } = { days: 0, hours: 0, minutes: 0 };
 
     let i: number;
     for (i = 0; i < args.length; i++) {
@@ -45,7 +45,7 @@ export default class Remindme extends TextCommand {
 
       // If 10d, 2mins, etc
       else if (/^\d+(d|day|h|hour|m|min|minute)s?$/.test(arg)) {
-        amount = arg.match(/\d+/)[0];
+        amount = arg.match(/\d+/)![0];
         unitKey = arg[amount.length];
       }
 
@@ -53,7 +53,7 @@ export default class Remindme extends TextCommand {
       else break;
       
       const autocomplete = (val: string, obj: { [key: string]: number }) => 
-        Object.keys(obj).join(' ').match(new RegExp(`${val}\\S*(?=\s)?`))[0];
+        Object.keys(obj).join(' ').match(new RegExp(`${val}\\S*(?=\s)?`))![0];
 
       const unit = autocomplete(unitKey, time);
       time[unit] += parseInt(amount);
@@ -95,7 +95,7 @@ export default class Remindme extends TextCommand {
     if (msg) embed.setDescription(msg);
     
     const pingList: Array<string> = [];
-    if (message.mentions.members.size && msg) message.mentions.members.forEach(member => pingList.push(`${member}`));
+    if (message.mentions.members?.size && msg) message.mentions.members.forEach(member => pingList.push(`${member}`));
     
     if (duration < 1_209_600_000) { // If more than 14 days we just store in database
       setTimeout(() => {
@@ -129,7 +129,7 @@ export default class Remindme extends TextCommand {
         if (job.message) embed.setDescription(job.message);
 
         const pingList: Array<string> = [];
-        if (replyToMessage.mentions.members.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
+        if (replyToMessage.mentions.members?.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
 
         setTimeout(() => {
           this.sendReply(replyToMessage, embed, pingList);

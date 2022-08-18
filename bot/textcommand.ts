@@ -27,7 +27,7 @@ const defaultOptions: CommandOptions = {
 export default class TextCommand {
   readonly aliases: Array<string>;
   readonly args: boolean;
-  readonly belongsTo: string;
+  readonly belongsTo: string | undefined;
   readonly category: boolean;
   readonly cooldown: number;
   readonly cooldowns: Map<string, number>;
@@ -53,23 +53,23 @@ export default class TextCommand {
   protected constructor(readonly client: Bot, readonly name: string, readonly description: string, readonly usages: Array<string>, customOptions?: CommandOptions) {
     const options = { ...defaultOptions, ...customOptions };
 
-    this.aliases = options.aliases;
-    this.args = options.args;
+    this.aliases = options.aliases!;
+    this.args = options.args!;
     this.belongsTo = options.belongsTo;
-    this.category = options.category;
-    this.cooldown = options.cooldown;
+    this.category = options.category!;
+    this.cooldown = options.cooldown!;
     this.cooldowns = new Map();
-    this.devOnly = options.devOnly;
-    this.guildOnly = options.guildOnly;
-    this.permissions = options.permissions;
+    this.devOnly = options.devOnly!;
+    this.guildOnly = options.guildOnly!;
+    this.permissions = options.permissions!;
   }
 
   async execute(message: Message, args: Array<string>): Promise<void> {
     if (!this.category) return; // This should never happen but I'm gonna check it anyways
 
-    const subCommandName = args.shift().toLowerCase();
+    const subCommandName = args.shift()!.toLowerCase();
 
-    const subCommand = this.client.textCommandCategories.get(this.name).find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
+    const subCommand = this.client.textCommandCategories.get(this.name)!.find(cmd => cmd.name === subCommandName || cmd.aliases.includes(subCommandName));
 
     if (!subCommand) {
       const embed = new EmbedBuilder()

@@ -25,7 +25,7 @@ export default class Reload extends TextCommand {
         const { default: CommandClass } = await import(`${commandsDir}/${pathToFile}.js`);
         const command: TextCommand = new CommandClass(this.client);
         if (command.category) this.client.textCommandCategories.set(command.name, new Collection());
-        if (command.belongsTo) this.client.textCommandCategories.get(command.belongsTo).set(command.name, command);
+        if (command.belongsTo) this.client.textCommandCategories.get(command.belongsTo)!.set(command.name, command);
         else this.client.textCommands.set(command.name, command);
         embed
           .setColor(this.client.config.colors.GREEN)
@@ -33,11 +33,13 @@ export default class Reload extends TextCommand {
           .setDescription(`Successfully built the command \`commands/${pathToFile}.js\`.`);
       }
       catch (error) {
+        const isNormal = error instanceof Error;
         embed
           .setColor(this.client.config.colors.RED)
           .setTitle('No such file')
           .setDescription(`The file \`commands/${pathToFile}.js\` couldn't be located.`)
-          .addFields({ name: 'Error message', value: error.message });
+          .addFields({ name: 'Error message', value: isNormal ? error.message : 'Critical error' });
+        if (!isNormal) console.error(error);
       }
       message.channel.send({ embeds: [embed] });
       return;
@@ -56,15 +58,16 @@ export default class Reload extends TextCommand {
     // This might need to be > 1 if we're allowing sub-subcommands
     const isReloadingSubCommand = command.category && args.length === 2;
 
-    let subCommand: TextCommand;
+    let subCommandFound: TextCommand;
     let pathToFile: string;
     if (isReloadingSubCommand) {
       // If we're reloading a subcommand we're gonna have to do everything pretty much once again
       const subCommandName = args[1];
-      const subCommands = this.client.textCommandCategories.get(command.name);
-      subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
+      const subCommands = this.client.textCommandCategories.get(command.name)!;
+      const subCommand = subCommands.get(subCommandName) || subCommands.find(cmd => cmd.aliases.includes(subCommandName));
       if (!subCommand) return this.notFound(message, subCommandName, true);
       pathToFile = files.filter(file => file.endsWith(`${command.name}/${subCommand.name}.js`))[0];
+      subCommandFound = subCommand;
     }
     else pathToFile = files.filter(file => file.endsWith(`${command.name}.js`))[0];
 
@@ -75,13 +78,13 @@ export default class Reload extends TextCommand {
     try {
       const { default: CommandClass } = await import(pathToFile);
       const newCommand: TextCommand = new CommandClass(this.client);
-      if (command.category) this.client.textCommandCategories.get(command.name).set(newCommand.name, newCommand);
+      if (command.category) this.client.textCommandCategories.get(command.name)!.set(newCommand.name, newCommand);
       else this.client.textCommands.set(newCommand.name, newCommand);
 
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.GREEN)
         .setTitle('Command reloaded')
-        .setDescription(`Command \`${isReloadingSubCommand ? subCommand.name : command.name}\` was reloaded.`);
+        .setDescription(`Command \`${isReloadingSubCommand ? subCommandFound!.name : command.name}\` was reloaded.`);
       message.channel.send({ embeds: [embed] });
     }
     catch (error) {
@@ -89,8 +92,8 @@ export default class Reload extends TextCommand {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Error')
-        .setDescription(`Command \`${isReloadingSubCommand ? subCommand.name : command.name}\` could not be reloaded.`)
-        .addFields({ name: 'Error message:', value: `\`${error.message}\`` });
+        .setDescription(`Command \`${isReloadingSubCommand ? subCommandFound!.name : command.name}\` could not be reloaded.`)
+        .addFields({ name: 'Error message:', value: `\`${error instanceof Error ? error.message : 'Critical error'}\`` });
       message.channel.send({ embeds: [embed] });
     }
   }

@@ -24,7 +24,7 @@ export default class LTRange extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const currentRange = interaction.options.getInteger('range');
+    const currentRange = interaction.options.getInteger('range')!;
 
     if (isNaN(currentRange) || currentRange < 0 || currentRange > 9999) { // isNaN is probably unnecessay here
       const embed = new EmbedBuilder()

@@ -10,7 +10,7 @@ interface PageReactions {
 
 export default class PageHandler {
   private page: number;
-  private pagerMessage: Message;
+  private pagerMessage!: Message;
 
   constructor(
     private readonly interaction: ChatInputCommandInteraction | Message,
@@ -23,10 +23,13 @@ export default class PageHandler {
 
     if (footerEnabled && this.pages.length > 1) this.displayPageNumbers();
 
-    if (!(interaction.channel as GuildTextBasedChannel).permissionsFor(interaction.guild.members.me).has(['ManageMessages', 'AddReactions'])) {
-      this.pages[0].setDescription('*I don\'t have* **MANAGE MESSAGES** *and/or* **ADD REACTIONS** *permissions!*');
-      interaction.reply({ embeds: [this.pages[0]] });
-      return;
+    if (interaction.guild) {
+      const channel = interaction.channel as GuildTextBasedChannel;
+      if (!channel.permissionsFor(interaction.guild.members.me!).has(['ManageMessages', 'AddReactions'])) {
+        this.pages[0].setDescription('*I don\'t have* **MANAGE MESSAGES** *and/or* **ADD REACTIONS** *permissions!*');
+        interaction.reply({ embeds: [this.pages[0]] });
+        return;
+      }
     }
 
     this.init();
@@ -43,7 +46,7 @@ export default class PageHandler {
   }
 
   private addReactions(): void {
-    for (const key in this.reactions) this.pagerMessage.react(this.reactions[key]);
+    for (const emote of Object.values(this.reactions)) this.pagerMessage.react(emote);
   }
 
   private createCollector(): void {

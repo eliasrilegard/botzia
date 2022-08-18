@@ -13,7 +13,7 @@ export default class MessageCreate extends ClientEvent {
 
     const prefix = await client.prefix(message);
 
-    if (message.content.startsWith(`<@!${client.user.id}>`)) {
+    if (message.content.startsWith(`<@!${client.user!.id}>`)) {
       const embed = new EmbedBuilder()
         .setColor(client.config.colors.GREEN)
         .setTitle('Getting started')
@@ -25,7 +25,7 @@ export default class MessageCreate extends ClientEvent {
     if (!(message.content.startsWith(prefix))) return; // Ignore non-commands
 
     const args = message.content.slice(prefix.length).trim().split(/ +/); // Split every word of message into list
-    const commandName = args.shift().toLowerCase(); // Extract command name and finalize args list
+    const commandName = args.shift()!.toLowerCase(); // Extract command name and finalize args list
 
     const command = client.textCommands.get(commandName) || // Search for command name
       client.textCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); // Or look for potential aliases

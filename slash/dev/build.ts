@@ -35,7 +35,7 @@ export default class Build extends SlashCommand {
         .setColor(this.client.config.colors.RED)
         .setTitle('No such file')
         .setDescription(`The file \`commands/${path}.js\` couldn't be located.`)
-        .addFields({ name: 'Error message', value: error.message });
+        .addFields({ name: 'Error message', value: error instanceof Error ? error.message : 'Critical error' });
     }
     interaction.reply({ embeds: [embed] });
   }

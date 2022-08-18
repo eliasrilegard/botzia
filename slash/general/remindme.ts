@@ -30,9 +30,9 @@ export default class RemindMe extends SlashCommand {
     // When no more time arguments are found, concatenate the rest of the
     // arguments to form the reminder message.
 
-    const timerArgs = interaction.options.getString('timer').split(/\s+/);
+    const timerArgs = interaction.options.getString('timer')!.split(/\s+/);
 
-    const time = { days: 0, hours: 0, minutes: 0 };
+    const time: { [key: string]: number } = { days: 0, hours: 0, minutes: 0 };
 
     for (let i = 0; i < timerArgs.length; i++) {
       const arg = timerArgs[i];
@@ -54,7 +54,7 @@ export default class RemindMe extends SlashCommand {
 
       // If 10d, 2mins, etc
       else if (/^\d+(d|day|h|hour|m|min|minute)s?$/.test(arg)) {
-        amount = arg.match(/\d+/)[0];
+        amount = arg.match(/\d+/)![0];
         unitKey = arg[amount.length];
       }
 
@@ -74,7 +74,7 @@ export default class RemindMe extends SlashCommand {
       }
       
       const autocomplete = (val: string, obj: { [key: string]: number }) => 
-        Object.keys(obj).join(' ').match(new RegExp(`${val}\\S*(?=\s)?`))[0];
+        Object.keys(obj).join(' ').match(new RegExp(`${val}\\S*(?=\s)?`))![0];
 
       const unit = autocomplete(unitKey, time);
       time[unit] += parseInt(amount);
@@ -105,7 +105,7 @@ export default class RemindMe extends SlashCommand {
     const okMessage = await interaction.reply({ embeds: [embed], fetchReply: true });
 
     const now = Date.now();
-    this.client.database.setReminderJob(`${now + duration}`, interaction.channelId, okMessage.id, message);
+    this.client.database.setReminderJob(`${now + duration}`, interaction.channelId, okMessage.id, message ?? undefined);
 
     delete embed.data.description;
     delete embed.data.fields;

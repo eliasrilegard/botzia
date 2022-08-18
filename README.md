@@ -12,8 +12,6 @@ Source code for Botzia.
 - Build the JS code with `$ npm run build`.
 - Run the bot with `$ npm start`.
 
-`tsc` is set to run on `watch` mode by default. Use `$ npm run build` for a one time build.
-
 ### Configuration
 
 Any changes to `.db` files in the database should not be committed.

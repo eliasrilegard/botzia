@@ -76,7 +76,7 @@ export default class Bot extends Client {
       const { default: CommandClass } = await import(file);
       const command: TextCommand = new CommandClass(this);
       if (command.category) this.textCommandCategories.set(command.name, new Collection());
-      if (command.belongsTo) this.textCommandCategories.get(command.belongsTo).set(command.name, command);
+      if (command.belongsTo) this.textCommandCategories.get(command.belongsTo)!.set(command.name, command);
       else this.textCommands.set(command.name, command);
     }
   }
@@ -91,7 +91,7 @@ export default class Bot extends Client {
 
   async prefix(message?: Message): Promise<string> {
     const prefix = this.config.bot.defaultPrefix ? this.config.bot.defaultPrefix : '>';
-    if (!message) return prefix;
+    if (!message || !message.guildId) return prefix;
     const customPrefix = await this.database.getCustomPrefix(message.guildId);
     return customPrefix ? customPrefix : prefix;
   }

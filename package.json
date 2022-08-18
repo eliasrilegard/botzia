@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/shard.js",
     "prestart": "npm run build",
-    "build": "rm -rf dist && tsc --watch false",
+    "build": "rm -rf dist && tsc",
     "postbuild": "npm run register",
     "register": "node dist/deploy-commands.js"
   },

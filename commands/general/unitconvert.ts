@@ -26,7 +26,7 @@ class UnitStore {
     // Go through every connection and add as necessary
     for (const [baseUnit, destUnits] of input) {
       for (const [goalName, conversion] of destUnits) {
-        const goalUnits = this.graph.find(v => [v.name, ...v.aliases].includes(goalName));
+        const goalUnits = this.graph.find(v => (v.aliases ? [v.name, ...v.aliases] : [v.name]).includes(goalName));
         for (const goalUnit of goalUnits) this.graph.addEdge(baseUnit, goalUnit, conversion);
       }
     }
@@ -34,13 +34,13 @@ class UnitStore {
 
   getUnits(name: string): Array<Unit> {
     return this.graph.find(unit => {
-      const searchList = [unit.name, ...unit.aliases].map(str => str.toLowerCase());
+      const searchList = (unit.aliases ? [unit.name, ...unit.aliases] : [unit.name]).map(str => str.toLowerCase());
       return searchList.includes(name.toLowerCase());
     });
   }
 
-  getConversion(unit1: Unit, unit2: Unit): convertFn {
-    if (!this.graph.has(unit1) || !this.graph.has(unit2)) return;
+  getConversion(unit1: Unit, unit2: Unit): convertFn | null {
+    if (!this.graph.has(unit1) || !this.graph.has(unit2)) return null;
     return this.graph.getWeight(unit1, unit2);
   }
 
@@ -49,6 +49,11 @@ class UnitStore {
     return allUnits.map(unit => {
       return { name: unit.name, category: unit.category };
     });
+  }
+
+  isSameType(unit1: Unit, unit2: Unit): boolean {
+    const foundUnits = this.graph.getEdges(unit1)!.find(u => u[0] === unit2);
+    return foundUnits !== undefined;
   }
 }
 
@@ -245,8 +250,14 @@ export default class UnitConvert extends TextCommand {
       message.channel.send({ embeds: [embed] });
       return;
     }
+
+    if (!this.unitStore.isSameType(baseUnit, goalUnit)) { // Rework base package
+      embed.setTitle('Units are not of same type');
+      message.channel.send({ embeds: [embed] });
+      return;
+    }
       
-    const conversionFn = this.unitStore.getConversion(baseUnit, goalUnit);
+    const conversionFn = this.unitStore.getConversion(baseUnit, goalUnit)!;
     const valueConverted = Math.round((conversionFn(Number(valueBase)) + Number.EPSILON) * 100) / 100;
 
     embed

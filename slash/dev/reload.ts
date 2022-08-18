@@ -19,7 +19,7 @@ export default class Reload extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const commandsDir = this.client.root.concat('slash');
 
-    const commandNames = interaction.options.getString('command').toLowerCase().split(/\s+/);
+    const commandNames = interaction.options.getString('command')!.toLowerCase().split(/\s+/);
     const commandName = commandNames[0];
     const command = this.client.slashCommands.get(commandName);
     
@@ -36,11 +36,11 @@ export default class Reload extends SlashCommand {
     
     const isReloadingSubcommand = commandNames.length === 2 && command.isCategory;
     
-    let subCommand: SlashCommand;
+    let subCommandFound: SlashCommand;
     let pathToFile: string;
     if (isReloadingSubcommand) {
       const subCommandName = commandNames[1];
-      subCommand = this.client.slashCommands.find(cmd => cmd.data.name === subCommandName && cmd.belongsTo === commandName);
+      const subCommand = this.client.slashCommands.find(cmd => cmd.data.name === subCommandName && cmd.belongsTo === commandName);
       if (!subCommand) {
         const embed = new EmbedBuilder()
           .setColor(this.client.config.colors.RED)
@@ -48,9 +48,10 @@ export default class Reload extends SlashCommand {
         interaction.reply({ embeds: [embed] });
         return;
       }
-      pathToFile = files.find(file => file.endsWith(`${command.data.name}/${subCommand.data.name}.js`));
+      pathToFile = files.find(file => file.endsWith(`${command.data.name}/${subCommand.data.name}.js`))!;
+      subCommandFound = subCommand;
     }
-    else pathToFile = files.find(file => file.endsWith(`${command.data.name}.js`));
+    else pathToFile = files.find(file => file.endsWith(`${command.data.name}.js`))!;
 
     // Delete
     delete require.cache[require.resolve(pathToFile)];
@@ -64,7 +65,7 @@ export default class Reload extends SlashCommand {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.GREEN)
         .setTitle('Command reloaded')
-        .setDescription(`Command \`${isReloadingSubcommand ? subCommand.data.name : command.data.name}\` was reloaded.`);
+        .setDescription(`Command \`${isReloadingSubcommand ? subCommandFound!.data.name : command.data.name}\` was reloaded.`);
       interaction.reply({ embeds: [embed] });
     }
     catch (error) {
@@ -72,8 +73,8 @@ export default class Reload extends SlashCommand {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Error')
-        .setDescription(`Command \`${isReloadingSubcommand ? subCommand.data.name : command.data.name}\` could not be reloaded.`)
-        .addFields({ name: 'Error message:', value: `\`${error.message}\`` });
+        .setDescription(`Command \`${isReloadingSubcommand ? subCommandFound!.data.name : command.data.name}\` could not be reloaded.`)
+        .addFields({ name: 'Error message:', value: `\`${error instanceof Error ? error.message : 'Critical error'}\`` });
       interaction.reply({ embeds: [embed] });
     }
   }

@@ -19,7 +19,7 @@ export default class MassMove extends TextCommand {
     // If user is in voice, assume base channel is the one they're in, should they only specify one channel
 
     // Filter out all voice channels from the guild
-    const allChannels = await message.guild.channels.fetch();
+    const allChannels = await message.guild!.channels.fetch();
     const channels: Array<VC> = [];
     for (const channel of allChannels.values()) {
       if (channel.type === ChannelType.GuildVoice) channels.push(channel);
@@ -99,11 +99,11 @@ export default class MassMove extends TextCommand {
   }
 
   private moveAllMembers(base: VC, goal: VC, message: Message): void {
-    base.members.forEach(member => member.voice.setChannel(goal, `Mass move command issued by ${message.member.displayName}`));
+    base.members.forEach(member => member.voice.setChannel(goal, `Mass move command issued by ${message.member!.displayName}`));
   }
 
-  private async getUserVoiceChannel(message: Message): Promise<VC> {    
-    const channel = await message.member.voice.channel.fetch();
+  private async getUserVoiceChannel(message: Message): Promise<VC | undefined> {    
+    const channel = await message.member!.voice.channel!.fetch();
     return channel ? channel : undefined;
   }
 

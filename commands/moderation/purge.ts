@@ -32,7 +32,7 @@ export default class Purge extends TextCommand {
         .setColor(this.client.config.colors.RED)
         .setTitle('Error')
         .setDescription('An error was encountered while trying to delete messages.')
-        .addFields({ name: 'Error message', value: error });
+        .addFields({ name: 'Error message', value: error instanceof Error ? error.message : 'Error' });
       message.channel.send({ embeds: [embed] });
       return;
     }

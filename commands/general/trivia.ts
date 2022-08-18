@@ -20,7 +20,7 @@ interface TriviaQuestion {
 
 export default class Trivia extends TextCommand {
   private readonly serverTokens: Map<string, string>;
-  private triviaCategories: Array<TriviaCategory>;
+  private triviaCategories!: Array<TriviaCategory>;
 
   constructor(client: Bot) {
     super(
@@ -36,15 +36,16 @@ export default class Trivia extends TextCommand {
   
   async execute(message: Message, args: Array<string>): Promise<void> {
     if (args[0] === '--reset' && args.length === 1) {
-      const token = this.serverTokens.get(message.guildId);
+      if (!message.guild) return;
+      const token = this.serverTokens.get(message.guild.id);
       // const token = client.tokens.get('OTDB');
       if (token) {
         try { return this.resetToken(message) }
-        catch (error) { this.postErrorMessage(message, error.message) }
+        catch (error) { this.postErrorMessage(message, error instanceof Error ? error.message : 'Could not reset the token') }
       }
       else {
         try { return this.generateNewToken(message) }
-        catch (error) { this.postErrorMessage(message, error.message) }
+        catch (error) { this.postErrorMessage(message, error instanceof Error ? error.message : 'Could not generate new token') }
       }
     }
     else if (args[0] === '--categories' && args.length === 1) {
@@ -78,7 +79,7 @@ export default class Trivia extends TextCommand {
       data = await this.getQuestion(message, categoryId);
     }
     catch (error) {
-      this.postErrorMessage(message, error.message);
+      this.postErrorMessage(message, error instanceof Error ? error.message : 'Could not get question');
       return;
     }
 
@@ -123,8 +124,8 @@ export default class Trivia extends TextCommand {
     const triviaMessage = await message.channel.send({ embeds: [embed] });
     emotes.forEach(emote => triviaMessage.react(emote));
 
-    // Compact notation for function
-    const filter = (reaction: MessageReaction, user: User) => user.id === message.author.id && emotes.includes(reaction.emoji.name);
+    // Compact notation for function                                                                           I might be missing something but can an emoji have a null name?
+    const filter = (reaction: MessageReaction, user: User) => user.id === message.author.id && emotes.includes(reaction.emoji.name!);
 
     const collector = triviaMessage.createReactionCollector({ filter, max: 1, time: 25000 });
     let reacted = false;
@@ -168,7 +169,7 @@ export default class Trivia extends TextCommand {
   }
 
   private async getQuestion(message: Message, categoryId: number): Promise <TriviaQuestion> {
-    const token = this.serverTokens.get(message.guildId);
+    const token = this.serverTokens.get(message.guild ? message.guild.id : message.author.id);
     if (token) {
       let URL = 'https://opentdb.com/api.php?amount=1';
       if (categoryId !== -1) URL += `&category=${categoryId}`;
@@ -202,12 +203,12 @@ export default class Trivia extends TextCommand {
     const response = await fetch('https://opentdb.com/api_token.php?command=request');
     const data = await response.json();
 
-    if (data.response_code === 0) this.serverTokens.set(message.guildId, data.token);
+    if (data.response_code === 0) this.serverTokens.set(message.guild ? message.guild.id : message.author.id, data.token);
     else throw new Error(`Could not generate new token.\nResponse code ${data.response_code}`);
   }
 
   private async resetToken(message: Message): Promise<void> {
-    const token = this.serverTokens.get(message.guildId);
+    const token = this.serverTokens.get(message.guild ? message.guild.id : message.author.id);
     if (token) {
       const respose = await fetch(`https://opentdb.com/api_token.php?command=reset&token=${token}`);
       const data = await respose.json();

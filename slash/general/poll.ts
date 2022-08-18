@@ -30,16 +30,18 @@ export default class Poll extends SlashCommand {
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const question = interaction.options.getString('title');
-    const options = interaction.options.getString('options').split(';').map(str => str.trim());
+    const options = interaction.options.getString('options')!.split(';').map(str => str.trim());
     const channel = interaction.options.getChannel('channel') as GuildTextBasedChannel ?? interaction.channel;
 
-    if (!channel.permissionsFor(interaction.guild.members.me).has('SendMessages')) {
-      const embed = new EmbedBuilder()
-        .setColor(this.client.config.colors.RED)
-        .setTitle('Insufficient permissions')
-        .setDescription(`I cannot send messages in ${channel}.`);
-      interaction.reply({ embeds: [embed], ephemeral: true });
-      return;
+    if (interaction.guild) {
+      if (!channel.permissionsFor(interaction.guild.members.me!).has('SendMessages')) {
+        const embed = new EmbedBuilder()
+          .setColor(this.client.config.colors.RED)
+          .setTitle('Insufficient permissions')
+          .setDescription(`I cannot send messages in ${channel}.`);
+        interaction.reply({ embeds: [embed], ephemeral: true });
+        return;
+      }
     }
 
     if (options.length > 20 || options.length < 2) {

@@ -17,6 +17,6 @@ export default class Restart extends SlashCommand {
       .setDescription('Sent request to respawn all shards.')
       .setTimestamp();
     await interaction.reply({ embeds: [embed] });
-    this.client.shard.respawnAll();
+    this.client.shard!.respawnAll();
   }
 }
