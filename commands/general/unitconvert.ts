@@ -50,10 +50,6 @@ class UnitStore {
       return { name: unit.name, category: unit.category };
     });
   }
-
-  isSameType(unit1: Unit, unit2: Unit): boolean {
-    return this.graph.hasEdge(unit1, unit2);
-  }
 }
 
 export default class UnitConvert extends TextCommand {
@@ -250,7 +246,13 @@ export default class UnitConvert extends TextCommand {
       return;
     }
 
-    if (!this.unitStore.isSameType(baseUnit, goalUnit)) { // Rework base package
+    if (baseUnit.name === goalUnit.name) {
+      embed.setTitle('Really?');
+      message.channel.send({ embeds: [embed] });
+      return;
+    }
+
+    if (baseUnit.category !== goalUnit.category) {
       embed.setTitle('Units are not of same type');
       message.channel.send({ embeds: [embed] });
       return;

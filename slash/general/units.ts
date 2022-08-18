@@ -46,10 +46,6 @@ class UnitStore {
       return { name: unit.name, category: unit.category };
     });
   }
-
-  isSameType(unit1: Unit, unit2: Unit): boolean {
-    return this.graph.hasEdge(unit1, unit2);
-  }
 }
 
 export default class Units extends SlashCommand {
@@ -222,7 +218,13 @@ export default class Units extends SlashCommand {
     const baseUnit = this.unitStore.getUnits(interaction.options.getString('base')!)[0];
     const goalUnit = this.unitStore.getUnits(interaction.options.getString('target')!)[0];
 
-    if (!this.unitStore.isSameType(baseUnit, goalUnit)) {
+    if (baseUnit.name === goalUnit.name) {
+      embed.setTitle('Really?');
+      interaction.reply({ embeds: [embed], ephemeral: true });
+      return;
+    }
+
+    if (baseUnit.category !== goalUnit.category) {
       embed.setTitle('Units are not of same type');
       interaction.reply({ embeds: [embed], ephemeral: true });
       return;
