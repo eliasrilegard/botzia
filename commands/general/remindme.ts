@@ -26,14 +26,14 @@ export default class Remindme extends TextCommand {
 
     let i: number;
     for (i = 0; i < args.length; i++) {
-      const arg = args[i];
+      const arg = args[i].toLowerCase();
 
       let unitKey: string, amount: string;
 
       // If pure number
       if (/^\d+$/.test(arg)) {
         // Grab and test the next argument to resolve unit
-        unitKey = args[i + 1];
+        unitKey = args[i + 1].toLowerCase();
         amount = arg;
         if (!/^(d|day|h|hour|m|min|minute)s?$/.test(unitKey)) { // Error, abort
           const embed = this.helpMessage(await this.client.prefix(message));

@@ -35,14 +35,14 @@ export default class RemindMe extends SlashCommand {
     const time: { [key: string]: number } = { days: 0, hours: 0, minutes: 0 };
 
     for (let i = 0; i < timerArgs.length; i++) {
-      const arg = timerArgs[i];
+      const arg = timerArgs[i].toLowerCase();
 
       let unitKey: string, amount: string;
 
       // If pure number
       if (/^\d+$/.test(arg)) {
         // Grab and test the next argument to resolve unit
-        unitKey = timerArgs[i + 1];
+        unitKey = timerArgs[i + 1].toLowerCase();
         amount = arg;
         if (!/^(d|day|h|hour|m|min|minute)s?$/.test(unitKey)) { // Error, abort
           const embed = this.helpMessage();
