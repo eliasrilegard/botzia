@@ -43,6 +43,8 @@ export default class MhwClient {
 
   constructor() {
     this.monsters = new Map();
-    for (const [, monster] of Object.entries(monsterData)) this.monsters.set(monster.name, monster.details);
+    for (const [, monster] of Object.entries(monsterData)) {
+      if (monster.name) this.monsters.set(monster.name, monster.details);
+    }
   }
 }
