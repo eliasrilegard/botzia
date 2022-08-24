@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import Bot from './bot';
 import PageHandler from './pagehandler';
 
@@ -33,6 +33,15 @@ export default class SlashCommand {
 
     const subCommand = subCommands.get(subCommandName);
     subCommand!.execute(interaction);
+  }
+
+  async handleAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
+    const subCommands = this.client.slashCommands.filter(cmd => cmd.belongsTo === this.data.name);
+
+    const subCommandName = interaction.options.getSubcommand();
+
+    const subCommand = subCommands.get(subCommandName);
+    subCommand!.handleAutocomplete(interaction);
   }
 
   protected sendMenu(interaction: ChatInputCommandInteraction, pages: Array<EmbedBuilder>): PageHandler {

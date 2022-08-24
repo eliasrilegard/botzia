@@ -1,4 +1,4 @@
-import { AttachmentBuilder, ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
+import { AttachmentBuilder, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
 
@@ -10,6 +10,7 @@ export default class Hzv extends SlashCommand {
       .addStringOption(option => option
         .setName('monster')
         .setDescription('The monster for whom to find their HZV')
+        .setAutocomplete(true)
         .setRequired(true)
       );
     super(data, client, { belongsTo: 'mhw' });
@@ -45,6 +46,17 @@ export default class Hzv extends SlashCommand {
       interaction.reply({ embeds: [embed], files: imageStream });
     }
     else if (!this.client.mhwClient.monsters.has(input)) return this.notFound(interaction);
+  }
+
+  async handleAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
+    const focusedValue = interaction.options.getFocused().toLowerCase().replace(/\s+/g, '');
+    const options: Array<{ name: string, value: string }> = [];
+    for (const [name, details] of this.client.mhwClient.monsters.entries()) {
+      if ([name, ...details.aliases].some(identifier => identifier.includes(focusedValue))) {
+        options.push({ name: details.title, value: name });
+      }
+    }
+    await interaction.respond(options.length < 26 ? options : ([{ name: 'Too many options!', value: '' }]));
   }
 
   private async monsterEmbed(name: string, isHR: boolean): Promise<[EmbedBuilder, Array<AttachmentBuilder>]> {

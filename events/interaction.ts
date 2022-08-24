@@ -8,11 +8,21 @@ export default class InteractionCreate extends ClientEvent {
   }
 
   async execute(client: Bot, interaction: BaseInteraction): Promise<void> {
-    if (!interaction.isChatInputCommand()) return;
+    if (!interaction.isChatInputCommand() && !interaction.isAutocomplete()) return;
 
     const command = client.slashCommands.get(interaction.commandName);
 
     if (!command) return;
+
+    if (interaction.isAutocomplete()) {
+      try {
+        await command.handleAutocomplete(interaction);
+      }
+      catch (error) {
+        console.log(error);
+      }
+      return;
+    }
 
     try {
       await command.execute(interaction);
