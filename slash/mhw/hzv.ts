@@ -56,7 +56,7 @@ export default class Hzv extends SlashCommand {
         options.push({ name: details.title, value: name });
       }
     }
-    await interaction.respond(options.length < 26 ? options : ([{ name: 'Too many options!', value: '' }]));
+    await interaction.respond(options.length < 26 ? options : []);
   }
 
   private async monsterEmbed(name: string, isHR: boolean): Promise<[EmbedBuilder, Array<AttachmentBuilder>]> {
