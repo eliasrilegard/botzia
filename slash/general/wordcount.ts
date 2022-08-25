@@ -24,6 +24,15 @@ export default class WordCount extends SlashCommand {
     const word = interaction.options.getString('word')!;
     const limit = interaction.options.getInteger('limit') ?? 10000;
 
+    if (limit > 50_000) {
+      const embed = new EmbedBuilder()
+        .setColor(this.client.config.colors.RED)
+        .setTitle('Limit too big')
+        .setDescription('Set the limit to 50000 or less.');
+      interaction.reply({ embeds: [embed], ephemeral: true });
+      return;
+    }
+
     const messages = await this.getMessages(interaction.channel as TextChannel, limit);
     const users = messages.filter(msg => msg.content.toLowerCase().includes(word.toLowerCase())).map(msg => msg.author);
 
