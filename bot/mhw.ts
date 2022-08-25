@@ -1,4 +1,4 @@
-import * as monsterData from '../database/monster_hunter/monster_data/mhw_monster_data.json';
+import monsterData from '../database/monster_hunter/monster_data/mhw_monster_data.json';
 
 interface HzvSummary {
   readonly slash: string;

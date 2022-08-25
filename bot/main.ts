@@ -1,5 +1,5 @@
 import Bot, { ClientConfig } from './bot';
-import * as config from '../config.json';
+import config from '../config.json';
 
 const client = new Bot(__dirname, config as ClientConfig);
 
