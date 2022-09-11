@@ -668,6 +668,7 @@
     "name": "jyuratodus",
     "details": {
       "aliases": [
+        "fish",
         "jyura"
       ],
       "title": "Jyuratodus",
@@ -1012,7 +1013,7 @@
       ],
       "title": "Lavasioth",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Lavasioth",
-      "description": "Lavasioth utilize molten lava as armor. They are extremely aggressive and will attack without prejudice until the threat has been eliminated",
+      "description": "Lavasioth utilize molten lava as armor. They are extremely aggressive and will attack without prejudice until the threat has been eliminated.",
       "thumbnail": "https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/gthumbnails/mhw-lavasioth_icon.png",
       "elements": [
         "Fire"
@@ -1829,7 +1830,7 @@
       ],
       "title": "Teostra",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Teostra",
-      "description": "A brutal elder dragon wreathed in flames that spits blazing fire. Teostra are of such a fierce and deadly nature that the Guild closely monitors their movements",
+      "description": "A brutal elder dragon wreathed in flames that spits blazing fire. Teostra are of such a fierce and deadly nature that the Guild closely monitors their movements.",
       "thumbnail": "https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/gthumbnails/mhw-teostra_icon.png",
       "elements": [
         "Fire"
@@ -2933,7 +2934,7 @@
       ],
       "title": "Fulgur Anjanath",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Fulgur+Anjanath",
-      "description": "Feared as the 'Thunderjaw Wyvern,' this Anjanath subspecies electrifies its jaws and dorsal membrane with every blow.",
+      "description": "Feared as the 'Thunderjaw Wyvern', this Anjanath subspecies electrifies its jaws and dorsal membrane with every blow.",
       "thumbnail": "https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/gthumbnails/mhwi-fulgur_anjanath_icon.png",
       "elements": [
         "Thunder"
@@ -2967,7 +2968,7 @@
           "color": "0x8ABEEB"
         }
       ],
-      "info": "Feared as the \"Thunderjaw Wyvern,\" this Anjanath subspecies electrifies its jaws and dorsal membrane with every blow.",
+      "info": "Feared as the \"Thunderjaw Wyvern\", this Anjanath subspecies electrifies its jaws and dorsal membrane with every blow.",
       "hzv": {
         "slash": "65",
         "blunt": "60",
@@ -3011,7 +3012,7 @@
       ],
       "title": "Ebony Odogaron",
       "url": "https://monsterhunterworld.wiki.fextralife.com/Ebony+Odogaron",
-      "description": "This Odogaron subspecies is forever on the prowl for its next meal, and is often seen carrying fresh kills in its mouth. Reports indicate it goes into a frenzy upon eating",
+      "description": "This Odogaron subspecies is forever on the prowl for its next meal, and is often seen carrying fresh kills in its mouth. Reports indicate it goes into a frenzy upon eating.",
       "thumbnail": "https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/gthumbnails/mhwi-ebony_odogaron_icon.png",
       "elements": [
         "Dragon"
