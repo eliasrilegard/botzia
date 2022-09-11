@@ -12,14 +12,18 @@ export default class Hzv extends SlashCommand {
         .setDescription('The monster for whom to find their HZV')
         .setAutocomplete(true)
         .setRequired(true)
+      )
+      .addBooleanOption(option => option
+        .setName('hr')
+        .setDescription('Get HR hitzones in the case that both HR and MR (default) exists')
       );
     super(data, client, { belongsTo: 'mhw' });
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const input = interaction.options.getString('monster')!.split(/\s+/).join('').toLowerCase();
-    const isHR = input.startsWith('hr');
-    let monsterName = isHR ? input.slice(2) : input;
+    const isHR = interaction.options.getBoolean('hr') ?? false;
+    let monsterName = input.startsWith('hr') ? input.slice(2) : input;
 
     if (this.client.mhwClient.monsters == null) {
       const embed = new EmbedBuilder()
