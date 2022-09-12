@@ -27,7 +27,7 @@ export default class Bot extends Client {
   readonly slashCommands: Collection<string, SlashCommand>;
 
   readonly database: NedbClient;
-  readonly mhwClient: MhwClient;
+  readonly mhw: MhwClient;
 
   constructor(dirname: string, config: ClientConfig) {
     super({
@@ -55,7 +55,7 @@ export default class Bot extends Client {
     this.slashCommands = new Collection();
 
     this.database = new NedbClient(this.root.slice(0, -5).concat('database'));
-    this.mhwClient = new MhwClient();
+    this.mhw = new MhwClient();
 
     this.loadEvents();
     this.loadCommands();

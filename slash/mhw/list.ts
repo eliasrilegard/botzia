@@ -11,7 +11,7 @@ export default class List extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    if (this.client.mhwClient.monsters == null) {
+    if (this.client.mhw.monsters == null) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Monster data unavalible')
@@ -21,7 +21,7 @@ export default class List extends SlashCommand {
       return;
     }
 
-    const monsterNames = [...this.client.mhwClient.monsters.values()].map(monster => monster.title).sort((a, b) => a.localeCompare(b));
+    const monsterNames = [...this.client.mhw.monsters.values()].map(monster => monster.title).sort((a, b) => a.localeCompare(b));
     const monstersPerPage = 20;
 
     const embeds = monsterNames
