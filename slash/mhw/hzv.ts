@@ -21,11 +21,11 @@ export default class Hzv extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const input = interaction.options.getString('monster')!.split(/\s+/).join('').toLowerCase();
+    const input = interaction.options.getString('monster')!.split(/\s+/).join(' ').toLowerCase();
     const isHR = interaction.options.getBoolean('hr') ?? false;
     let monsterName = input.startsWith('hr') ? input.slice(2) : input;
 
-    if (this.client.mhwClient.monsters == null) {
+    if (this.client.mhw.monsters == null) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Monster data unavalible')
@@ -35,36 +35,33 @@ export default class Hzv extends SlashCommand {
       return;
     }
 
-    for (const [name, monster] of this.client.mhwClient.monsters.entries()) {
-      if (monster.aliases && monster.aliases.includes(input) && input.length > 0) {
+    for (const [name, monster] of this.client.mhw.monsters.entries()) {
+      if (input.length > 0 && monster.aliases.includes(input)) {
         monsterName = name;
         break;
       }
     }
 
-    if (this.client.mhwClient.monsters.has(monsterName)) {
-      const monster = this.client.mhwClient.monsters.get(monsterName)!;
-      if (isHR && !('hzv_filepath_hr' in monster)) return this.notFound(interaction);
+    const monster = this.client.mhw.monsters.get(monsterName);
 
-      const [embed, imageStream] = await this.monsterEmbed(monsterName, isHR);
-      interaction.reply({ embeds: [embed], files: imageStream });
+    if (!monster) {
+      const embed = new EmbedBuilder()
+        .setColor(this.client.config.colors.RED)
+        .setTitle('Monster not found')
+        .setDescription('That monster doesn\'t seem to exist!\nCheck out `/mhw list` for the full list.');
+      interaction.reply({ embeds: [embed] });
+      return;
     }
-    else if (!this.client.mhwClient.monsters.has(input)) return this.notFound(interaction);
-  }
 
-  async handleAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
-    const focusedValue = interaction.options.getFocused().toLowerCase().replace(/\s+/g, '');
-    const options: Array<{ name: string, value: string }> = [];
-    for (const [name, details] of this.client.mhwClient.monsters.entries()) {
-      if ([name, ...details.aliases].some(identifier => identifier.includes(focusedValue))) {
-        options.push({ name: details.title, value: name });
-      }
+    if (isHR && !('hzv_filepath_hr' in monster)) {
+      const embed = new EmbedBuilder()
+        .setColor(this.client.config.colors.RED)
+        .setTitle('High rank hitzones not found')
+        .setDescription('Could not locate the HR HZV. If the monster only exists in high rank, omit specifying this option.');
+      interaction.reply({ embeds: [embed] });
+      return;
     }
-    await interaction.respond(options.length < 26 ? options : []);
-  }
 
-  private async monsterEmbed(name: string, isHR: boolean): Promise<[EmbedBuilder, Array<AttachmentBuilder>]> {
-    const monster = this.client.mhwClient.monsters.get(name)!;
     const hzvFilepath = isHR ? monster.hzv_filepath_hr! : monster.hzv_filepath;
     const hzv = isHR ? monster.hzv_hr! : monster.hzv;
 
@@ -79,13 +76,11 @@ export default class Hzv extends SlashCommand {
       { name: hzvFilepath.slice(hzvFilepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '') }
     );
 
-    const title = `__**${monster.title}**__${monster.threat_level ? `  ${monster.threat_level}` : ''}`;
-
     const attachURL = (fileName: string) => `attachment://${fileName}`;
     
     const embed = new EmbedBuilder()
       .setColor('#8fde5d')
-      .setTitle(title)
+      .setTitle(`__**${monster.title}**__${monster.threat_level ? `  ${monster.threat_level}` : ''}`)
       .setThumbnail(attachURL(thumbnail.name!))
       .setImage(attachURL(hzvImage.name!))
       .addFields([
@@ -96,15 +91,17 @@ export default class Hzv extends SlashCommand {
           value: `🔥 **${hzv.fire}** 💧 **${hzv.water}** ⚡ **${hzv.thunder}** ❄ **${hzv.ice}** 🐉 **${hzv.dragon}**`
         }
       ]);
-    
-    return [embed, [thumbnail, hzvImage]];
+    interaction.reply({ embeds: [embed], files: [thumbnail, hzvImage] });
   }
 
-  private notFound(interaction: ChatInputCommandInteraction): void {
-    const embed = new EmbedBuilder()
-      .setColor(this.client.config.colors.RED)
-      .setTitle('Monster not found')
-      .setDescription('That monster doesn\'t seem to exist!\nCheck out `/mhw list` for the full list.');
-    interaction.reply({ embeds: [embed] });
+  async handleAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
+    const focusedValue = interaction.options.getFocused().toLowerCase().replace(/\s+/g, '');
+    const options: Array<{ name: string, value: string }> = [];
+    for (const [name, details] of this.client.mhw.monsters.entries()) {
+      if ([name, ...details.aliases].some(identifier => identifier.includes(focusedValue))) {
+        options.push({ name: details.title, value: name });
+      }
+    }
+    await interaction.respond(options.length < 26 ? options : []);
   }
 }
