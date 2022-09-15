@@ -53,7 +53,7 @@ export default class Hzv extends SlashCommand {
       return;
     }
 
-    if (isHR && !('hzv_filepath_hr' in monster)) {
+    if (isHR && !('hzv_filepath_hr' in monster && 'hzv_hr' in monster)) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('High rank hitzones not found')
