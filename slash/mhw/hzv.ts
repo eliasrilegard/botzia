@@ -21,7 +21,7 @@ export default class Hzv extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const input = interaction.options.getString('monster')!.split(/\s+/).join(' ').toLowerCase();
+    const input = interaction.options.getString('monster')!.replace(/\s+/g, '').toLowerCase();
     const isHR = interaction.options.getBoolean('hr') ?? false;
     let monsterName = input.startsWith('hr') ? input.slice(2) : input;
 
