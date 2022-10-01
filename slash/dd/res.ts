@@ -6,47 +6,89 @@ export default class Res extends SlashCommand {
   constructor(client: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('res')
-      .setDescription('Calulate the number of upgrades required to max the resists of ult armor.')
+      .setDescription('Get the number of ups required to max the res of ult and above armor')
       .addStringOption(option => option
         .setName('resistances')
-        .setDescription('The resistances of the piece, separated by spaces. Maximum 4.')
+        .setDescription('The resistances of the piece, separated by spaces')
         .setRequired(true)
       )
       .addIntegerOption(option => option
         .setName('upgrades')
-        .setDescription('The upgrades of the piece')
+        .setDescription('The number of upgrades on the piece')
       )
       .addIntegerOption(option => option
-        .setName('stat')
-        .setDescription('The main stat you want to upgrade')
+        .setName('primary-stat')
+        .setDescription('The primary stat of the piece, which will be upgraded alongside the resistances')
+      )
+      .addIntegerOption(option => option
+        .setName('secondary-stat')
+        .setDescription('The secondary stat if you want to get the stat total of the piece. Doesn\'t get upgraded')
+      )
+      .addIntegerOption(option => option
+        .setName('fix-slot')
+        .setDescription('The slot to upgrade further to fix another 3 res piece. (Number between 1-4)')
       );
+
     super(data, client, { belongsTo: 'dd' });
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const resists = interaction.options.getString('resistances')!.split(/\s+/).map(res => parseInt(res));
+    
+    const upgrades = interaction.options.getInteger('upgrades');
+    const primaryStat = interaction.options.getInteger('primary-stat');
+    const secondaryStat = interaction.options.getInteger('secondary-stat');
+    const fixSlot = interaction.options.getInteger('fix-slot');
 
-    if (resists.length > 4) {
+    if ([...resists, upgrades, primaryStat, secondaryStat, fixSlot].some(res => res !== null ? Math.abs(res) > 1000 : false)) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
-        .setTitle('Maximum number of resistances reached')
-        .setDescription('A piece cannot have more than 4 resistances.');
+        .setTitle('Reasonable numbers expected');
+      interaction.reply({ embeds: [embed] });
+      return;
+    }
+
+    if (resists.length < 3 || resists.length > 4) {
+      const embed = new EmbedBuilder()
+        .setColor(this.client.config.colors.RED)
+        .setTitle('3 or 4 resistances expected')
+        .setDescription('Separate the resistances by spaces.');
       interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
 
+    if (fixSlot != null) {
+      if (resists.length === 3) {
+        const embed = new EmbedBuilder()
+          .setColor(this.client.config.colors.RED)
+          .setTitle('<a:HUHH:1019679010466304061>  What are you trying to calculate?');
+        interaction.reply({ embeds: [embed] });
+        return;
+      }
+      if (fixSlot < 1 || fixSlot > 4) {
+        const embed = new EmbedBuilder()
+          .setColor(this.client.config.colors.RED)
+          .setTitle('Invalid slot')
+          .setDescription('Specify a number between 1 and 4.');
+        interaction.reply({ embeds: [embed], ephemeral: true });
+        return;
+      }
+    }
+    
+    const loneRes = fixSlot != null ? resists[fixSlot - 1] : -1;
     const data = [...resists].sort((a, b) => b - a);
+    const loneIndex = data.indexOf(loneRes);
 
-    const avalibleUpgrades = interaction.options.getInteger('upgrades') ?? 0;
-    const primaryStat = interaction.options.getInteger('stat') ?? 0;
+    const targetLevel = resists.length === 3 ? 35 : loneIndex !== -1 ? 23 : 29;
 
     let armorLevel = 1, levelsSpent = 0, intoPrimaryStat = 0;
 
-    const canUp = (res: number, level: number) => (res < 22 || (level + 1) % 10 === 0) && res < 29;
+    const getTargetLevel = (index: number) => index === loneIndex ? 58 : targetLevel;
+    const canUp = (index: number) => (data[index] < 22 || (armorLevel + 1) % 10 === 0) && data[index] < getTargetLevel(index);
     const getUpAmount = (res: number) => res < 22 ? Math.max(Math.trunc(0.15 * Math.abs(res)), 1) : 1;
-    const upBestTarget = () => {
+    const upgrade = () => {
       for (let i = 0; i < data.length; i++) {
-        if (canUp(data[i], armorLevel)) {
+        if (canUp(i)) {
           levelsSpent++;
           data[i] += getUpAmount(data[i]);
           if (data[i] === 0) data[i] = 1;
@@ -56,19 +98,27 @@ export default class Res extends SlashCommand {
       intoPrimaryStat++;
     };
 
-    while (data[data.length - 1] < 29) {
-      upBestTarget();
+    while (data[data.length - 1] < targetLevel || (loneIndex !== -1 && data[loneIndex] < 58)) {
+      upgrade();
       armorLevel++;
     }
 
     const embed = new EmbedBuilder()
-      .setColor('Blue')
+      .setColor(this.client.config.colors.BLUE)
       .setTitle(`It takes ${levelsSpent} levels to max the resistances`)
-      .setFooter({ text: `Resistances: ${resists.join(' ')}${avalibleUpgrades ? '  |  Avalible upgrades: ' + avalibleUpgrades : ''}${primaryStat ? '  |  Main stat: ' + primaryStat : ''}` });
-    if (avalibleUpgrades) {
-      const upgradesRemaining = avalibleUpgrades - armorLevel - 1, potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
-      if (primaryStat) embed.setDescription(`The piece will end up with ${potentialTotal} in the stat, or ${Math.ceil(1.4 * potentialTotal)} with boost.`);
-      else embed.setDescription(`This leaves you with to invest a total of ${intoPrimaryStat + upgradesRemaining} points into a stat.`);
+      .setFooter({ text: `Resistances: ${resists.join(' ')}${upgrades ? '  |  Avalible upgrades: ' + upgrades : ''}${primaryStat ? '  |  Main stat: ' + primaryStat : ''}${secondaryStat ? '  | Secondary stat: ' + secondaryStat : ''}` });
+    
+    if (upgrades) {
+      const upgradesRemaining = upgrades - armorLevel - 1;
+      let description: string;
+      if (primaryStat) {
+        const potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
+        description = `The piece will end up at ${potentialTotal} in the primary stat, or ${Math.ceil(1.4 * potentialTotal)} with set bonus.`;
+        if (secondaryStat) description += `\nThis results in a stat total of ${Math.ceil(1.4 * potentialTotal) + Math.ceil(1.4 * secondaryStat)}.`;
+        description += `\nThe final upgrade will be on lvl ${armorLevel}.`;
+      }
+      else description = `This leaves you with a total of ${intoPrimaryStat + upgradesRemaining} points to invest in a stat.`;
+      embed.setDescription(description);
     }
 
     interaction.reply({ embeds: [embed] });
