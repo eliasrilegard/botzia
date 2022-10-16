@@ -113,7 +113,7 @@ export default class Res extends SlashCommand {
       let description: string;
       if (primaryStat) {
         const potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
-        description = `The piece will end up at **${potentialTotal}** in the primary stat, or **${Math.ceil(1.4 * potentialTotal)}** with set bonus.`;
+        description = `The piece will end up at **${potentialTotal}** in the main stat, or **${Math.ceil(1.4 * potentialTotal)}** with set bonus.`;
         if (secondaryStat) description += `\nThis results in a stat total of **${Math.ceil(1.4 * potentialTotal) + Math.ceil(1.4 * secondaryStat)}**.`;
         description += `\nThe final upgrade will be on lvl **${armorLevel}**.`;
       }

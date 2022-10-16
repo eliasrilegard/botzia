@@ -46,7 +46,7 @@ export default class LTRange extends SlashCommand {
     const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle('Closest breakpoints')
-      .setDescription(`Here are the closest breakpoints to your current range of **${currentRange}**\n\`Range - Targets\``)
+      .setDescription(`Here are the closest breakpoints to your current range of **${currentRange}**.\n\`Range - Targets\``)
       .addFields([
         { name: 'Normal', value: valueNormal, inline: true },
         { name: 'Upgraded', value: valueUpped, inline: true }
