@@ -52,8 +52,7 @@ export default class Quote extends SlashCommand {
 
   private async loadQuotes(): Promise<void> {
     delete require.cache[require.resolve('../../database/dungeon_defenders/quotes/quotemap.json')];
-    const rawImport = await import('../../database/dungeon_defenders/quotes/quotemap.json');
-    const quoteData = rawImport.slice(0, -1); // Last element has weird shit in it
+    const { default: quoteData } = await import('../../database/dungeon_defenders/quotes/quotemap.json');
     for (const [, v] of Object.entries(quoteData)) {
       this.quoteMap.set(v.name, v.filepath);
     }
