@@ -108,18 +108,17 @@ export default class Res extends SlashCommand {
       .setTitle(`It takes ${levelsSpent} levels to max the resistances`)
       .setFooter({ text: `Resistances: ${resists.join(' ')}${upgrades ? '  |  Avalible upgrades: ' + upgrades : ''}${primaryStat ? '  |  Main stat: ' + primaryStat : ''}${secondaryStat ? '  | Secondary stat: ' + secondaryStat : ''}` });
     
+    let description = '';
     if (upgrades) {
       const upgradesRemaining = upgrades - armorLevel - 1;
-      let description: string;
       if (primaryStat) {
         const potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
         description = `The piece will end up at **${potentialTotal}** in the main stat, or **${Math.ceil(1.4 * potentialTotal)}** with set bonus.`;
         if (secondaryStat) description += `\nThis results in a stat total of **${Math.ceil(1.4 * potentialTotal) + Math.ceil(1.4 * secondaryStat)}**.`;
-        description += `\nThe final upgrade will be on lvl **${armorLevel}**.`;
       }
       else description = `This leaves you with a total of **${intoPrimaryStat + upgradesRemaining}** points to invest in a stat.`;
-      embed.setDescription(description);
     }
+    embed.setDescription(`${description}\nThe final resistance upgrade will be on lvl **${armorLevel}**.`);
 
     interaction.reply({ embeds: [embed] });
   }
