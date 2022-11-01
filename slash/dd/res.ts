@@ -75,7 +75,7 @@ export default class Res extends SlashCommand {
       }
     }
     
-    const loneRes = fixSlot != null ? resists[fixSlot - 1] : -1;
+    const loneRes = fixSlot != null ? resists[fixSlot - 1] : NaN;
     const data = [...resists].sort((a, b) => b - a);
     const loneIndex = data.indexOf(loneRes);
 
