@@ -106,7 +106,7 @@ export default class Res extends SlashCommand {
     const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle(`It takes ${levelsSpent} levels to max the resistances`)
-      .setFooter({ text: `Resistances: ${resists.join(' ')}${upgrades ? '  |  Avalible upgrades: ' + upgrades : ''}${primaryStat ? '  |  Main stat: ' + primaryStat : ''}${secondaryStat ? '  | Secondary stat: ' + secondaryStat : ''}` });
+      .setFooter({ text: `Resistances: ${resists.join(' ')}${upgrades ? '  |  Available upgrades: ' + upgrades : ''}${primaryStat ? '  |  Main stat: ' + primaryStat : ''}${secondaryStat ? '  | Secondary stat: ' + secondaryStat : ''}` });
     
     let description = '';
     if (upgrades) {

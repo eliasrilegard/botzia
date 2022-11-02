@@ -198,7 +198,7 @@ export default class UnitConvert extends TextCommand {
       });
       embed
         .setColor(this.client.config.colors.BLUE)
-        .setTitle('Avalible units')
+        .setTitle('Available units')
         .setDescription('Here\'s a list of all supported units.')
         .addFields(fields)
         .setFooter({ text: 'I should have most abbreviations covered too. Let me know if there\'s one missing.' });

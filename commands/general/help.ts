@@ -32,7 +32,7 @@ export default class Help extends TextCommand {
           .setColor(this.client.config.colors.BLUE)
           .setTitle(categoryCommand.description)
           .setDescription(categoryCommand.howTo(prefix))
-          .addFields({ name: 'Avalible subcommands', value: subCommands.join('\n\n') });
+          .addFields({ name: 'Available subcommands', value: subCommands.join('\n\n') });
         return embed;
       });
       
@@ -44,7 +44,7 @@ export default class Help extends TextCommand {
         .sort((a, b) => a.localeCompare(b))
         .join('\n');
       
-      const mainPage = new EmbedBuilder().setColor(this.client.config.colors.BLUE).setTitle('Avalible commands');
+      const mainPage = new EmbedBuilder().setColor(this.client.config.colors.BLUE).setTitle('Available commands');
       if (categoriesOverview.length) mainPage.addFields({ name: 'Category commands', value: categoriesOverview });
       if (standaloneCommands.length) mainPage.addFields({ name: 'General commands', value: standaloneCommands });
       mainPage.addFields({ name: 'Additional help', value: `You can send ${this.howTo(prefix, true)} to get additional info on a specific command.` });

@@ -22,7 +22,7 @@ export default class Quote extends TextCommand {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.BLUE)
         .setTitle('Quote list')
-        .addFields({ name: 'Here\'s a list of all avalible quotes', value: [...this.quoteMap.keys()].sort((a, b) => a.localeCompare(b)).join('\n') });
+        .addFields({ name: 'Here\'s a list of all available quotes', value: [...this.quoteMap.keys()].sort((a, b) => a.localeCompare(b)).join('\n') });
       message.channel.send({ embeds: [embed] });
       return;
     }

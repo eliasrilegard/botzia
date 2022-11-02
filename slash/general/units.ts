@@ -207,7 +207,7 @@ export default class Units extends SlashCommand {
       });
       embed
         .setColor(this.client.config.colors.BLUE)
-        .setTitle('Avalible units')
+        .setTitle('Available units')
         .setDescription('Here\'s a list of all supported units.')
         .addFields(fields);
       interaction.reply({ embeds: [embed] });

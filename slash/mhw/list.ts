@@ -14,7 +14,7 @@ export default class List extends SlashCommand {
     if (this.client.mhw.monsters == null) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
-        .setTitle('Monster data unavalible')
+        .setTitle('Monster data unavailable')
         .setDescription('Could not access monster data at this time.')
         .setFooter({ text: `If this issue persists please contact ${this.client.config.users.chrono_tag}` });
       interaction.reply({ embeds: [embed] });

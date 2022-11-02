@@ -40,7 +40,7 @@ export default class TextCommand {
    * @param name The command name
    * @param description A short description of the command
    * @param usages One or several usage examples (generalized)
-   * @param customOptions Any optional settings. Avalible tags:
+   * @param customOptions Any optional settings. Available tags:
    * - aliases
    * - args
    * - belongsTo

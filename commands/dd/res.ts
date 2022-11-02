@@ -25,7 +25,7 @@ export default class Res extends TextCommand {
       return;
     }
 
-    const [avalibleUpgrades, primaryStat] = resists.splice(4); // Extract upgrades and primary stat
+    const [availableUpgrades, primaryStat] = resists.splice(4); // Extract upgrades and primary stat
     let armorLevel = 1, levelsSpent = 0, intoPrimaryStat = 0;
 
     const canUp = (res: number, level: number) => (res < 22 || (level + 1) % 10 === 0) && res < 29;
@@ -50,8 +50,8 @@ export default class Res extends TextCommand {
     const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle(`It takes ${levelsSpent} levels to max the resistances`);
-    if (avalibleUpgrades) {
-      const upgradesRemaining = avalibleUpgrades - armorLevel - 1, potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
+    if (availableUpgrades) {
+      const upgradesRemaining = availableUpgrades - armorLevel - 1, potentialTotal = primaryStat + intoPrimaryStat + upgradesRemaining;
       if (primaryStat) embed.setDescription(`The piece will end up with ${potentialTotal} in the stat, or ${Math.ceil(1.4 * potentialTotal)} with boost.`);
       else embed.setDescription(`This leaves you with to invest a total of ${intoPrimaryStat + upgradesRemaining} points into a stat.`);
     }
