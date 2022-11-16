@@ -1,0 +1,1759 @@
+[
+  {
+    "name": "Adelaide",
+    "x": 2463,
+    "y": 1572,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Aden",
+    "x": 1764,
+    "y": 1188,
+    "class": 1,
+    "population": 1
+  },
+  {
+    "name": "Ahmedabad",
+    "x": 1966,
+    "y": 1118,
+    "class": 2,
+    "population": 6.352
+  },
+  {
+    "name": "Al Fashir",
+    "x": 1601,
+    "y": 1174,
+    "class": 1,
+    "population": 0.265
+  },
+  {
+    "name": "Algiers",
+    "x": 1442,
+    "y": 998,
+    "class": 2,
+    "population": 5
+  },
+  {
+    "name": "Alice Springs",
+    "x": 2431,
+    "y": 1482,
+    "class": 1,
+    "population": 0.027
+  },
+  {
+    "name": "Amsterdam",
+    "x": 1461,
+    "y": 830,
+    "class": 1,
+    "population": 2.872
+  },
+  {
+    "name": "Anadyr",
+    "x": 2749,
+    "y": 648,
+    "class": 1,
+    "population": 0.013
+  },
+  {
+    "name": "Anchorage",
+    "x": 295,
+    "y": 707,
+    "class": 1,
+    "population": 0.375
+  },
+  {
+    "name": "Araguaina",
+    "x": 1057,
+    "y": 1338,
+    "class": 1,
+    "population": 0.153
+  },
+  {
+    "name": "Asuncion",
+    "x": 993,
+    "y": 1497,
+    "class": 1,
+    "population": 2.329
+  },
+  {
+    "name": "Athens",
+    "x": 1599,
+    "y": 982,
+    "class": 1,
+    "population": 3.737
+  },
+  {
+    "name": "Atlanta",
+    "x": 791,
+    "y": 1028,
+    "class": 2,
+    "population": 5.269
+  },
+  {
+    "name": "Auckland",
+    "x": 2727,
+    "y": 1588,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Baghdad",
+    "x": 1746,
+    "y": 1020,
+    "class": 2,
+    "population": 7.216
+  },
+  {
+    "name": "Bamako",
+    "x": 1369,
+    "y": 1192,
+    "class": 1,
+    "population": 2.757
+  },
+  {
+    "name": "Bangalore",
+    "x": 2001,
+    "y": 1195,
+    "class": 3,
+    "population": 8.499
+  },
+  {
+    "name": "Bangkok",
+    "x": 2170,
+    "y": 1188,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Barcelona",
+    "x": 1435,
+    "y": 952,
+    "class": 2,
+    "population": 5.083
+  },
+  {
+    "name": "Bariloche",
+    "x": 887,
+    "y": 1642,
+    "class": 1,
+    "population": 0.108
+  },
+  {
+    "name": "Barrow",
+    "x": 252,
+    "y": 521,
+    "class": 1,
+    "population": 0.004
+  },
+  {
+    "name": "Beijing",
+    "x": 2295,
+    "y": 966,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Beira",
+    "x": 1674,
+    "y": 1444,
+    "class": 1,
+    "population": 0.436
+  },
+  {
+    "name": "Beirut",
+    "x": 1693,
+    "y": 1020,
+    "class": 1,
+    "population": 2.25
+  },
+  {
+    "name": "Belem",
+    "x": 1054,
+    "y": 1299,
+    "class": 1,
+    "population": 2.249
+  },
+  {
+    "name": "Belfast",
+    "x": 1368,
+    "y": 805,
+    "class": 1,
+    "population": 0.642
+  },
+  {
+    "name": "Belgrade",
+    "x": 1578,
+    "y": 912,
+    "class": 1,
+    "population": 1.639
+  },
+  {
+    "name": "Benghazi",
+    "x": 1572,
+    "y": 1042,
+    "class": 1,
+    "population": 0.671
+  },
+  {
+    "name": "Bergen",
+    "x": 1458,
+    "y": 723,
+    "class": 1,
+    "population": 0.389
+  },
+  {
+    "name": "Berlin",
+    "x": 1528,
+    "y": 831,
+    "class": 2,
+    "population": 4.43
+  },
+  {
+    "name": "Bern",
+    "x": 1480,
+    "y": 886,
+    "class": 1,
+    "population": 0.66
+  },
+  {
+    "name": "Bismarck",
+    "x": 643,
+    "y": 898,
+    "class": 1,
+    "population": 0.109
+  },
+  {
+    "name": "Bogota",
+    "x": 860,
+    "y": 1245,
+    "class": 2,
+    "population": 7.881
+  },
+  {
+    "name": "Bordeaux",
+    "x": 1417,
+    "y": 910,
+    "class": 1,
+    "population": 1.105
+  },
+  {
+    "name": "Boston",
+    "x": 885,
+    "y": 940,
+    "class": 2,
+    "population": 4.523
+  },
+  {
+    "name": "Brasilia",
+    "x": 1044,
+    "y": 1419,
+    "class": 1,
+    "population": 2.563
+  },
+  {
+    "name": "Brisbane",
+    "x": 2565,
+    "y": 1514,
+    "class": 1,
+    "population": 3
+  },
+  {
+    "name": "Broken Hill",
+    "x": 2486,
+    "y": 1550,
+    "class": 1,
+    "population": 0.027
+  },
+  {
+    "name": "Broome",
+    "x": 2344,
+    "y": 1418,
+    "class": 1,
+    "population": 0.05
+  },
+  {
+    "name": "Brussels",
+    "x": 1454,
+    "y": 853,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Bucharest",
+    "x": 1651,
+    "y": 912,
+    "class": 1,
+    "population": 1.93
+  },
+  {
+    "name": "Buenos Aires",
+    "x": 988,
+    "y": 1575,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Butwal",
+    "x": 2044,
+    "y": 1078,
+    "class": 1,
+    "population": 0.124
+  },
+  {
+    "name": "Cairns",
+    "x": 2507,
+    "y": 1424,
+    "class": 1,
+    "population": 0.152
+  },
+  {
+    "name": "Cairo",
+    "x": 1646,
+    "y": 1063,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Calgary",
+    "x": 577,
+    "y": 832,
+    "class": 1,
+    "population": 1.079
+  },
+  {
+    "name": "Campo Grande",
+    "x": 1002,
+    "y": 1452,
+    "class": 1,
+    "population": 1
+  },
+  {
+    "name": "Cancun",
+    "x": 767,
+    "y": 1133,
+    "class": 1,
+    "population": 0.628
+  },
+  {
+    "name": "Cape Town",
+    "x": 1557,
+    "y": 1555,
+    "class": 1,
+    "population": 3.497
+  },
+  {
+    "name": "Caracas",
+    "x": 910,
+    "y": 1209,
+    "class": 2,
+    "population": 6.474
+  },
+  {
+    "name": "Casablanca",
+    "x": 1364,
+    "y": 1031,
+    "class": 1,
+    "population": 2.95
+  },
+  {
+    "name": "Cebu",
+    "x": 2354,
+    "y": 1214,
+    "class": 1,
+    "population": 0.823
+  },
+  {
+    "name": "Charleston",
+    "x": 823,
+    "y": 1035,
+    "class": 1,
+    "population": 0.659
+  },
+  {
+    "name": "Chengdu",
+    "x": 2164,
+    "y": 1051,
+    "class": 2,
+    "population": 6.731
+  },
+  {
+    "name": "Chicago",
+    "x": 757,
+    "y": 931,
+    "class": 3,
+    "population": 9.461
+  },
+  {
+    "name": "Chihuahua",
+    "x": 631,
+    "y": 1070,
+    "class": 1,
+    "population": 0.841
+  },
+  {
+    "name": "Christchurch",
+    "x": 2712,
+    "y": 1650,
+    "class": 1,
+    "population": 0.381
+  },
+  {
+    "name": "Cincinnati",
+    "x": 791,
+    "y": 975,
+    "class": 1,
+    "population": 2.13
+  },
+  {
+    "name": "Copenhagen",
+    "x": 1516,
+    "y": 783,
+    "class": 1,
+    "population": 1.931
+  },
+  {
+    "name": "Cordoba",
+    "x": 949,
+    "y": 1541,
+    "class": 1,
+    "population": 1.53
+  },
+  {
+    "name": "Seville",
+    "x": 1376,
+    "y": 987,
+    "class": 1,
+    "population": 0.703
+  },
+  {
+    "name": "Cuiaba",
+    "x": 988,
+    "y": 1409,
+    "class": 1,
+    "population": 0.543
+  },
+  {
+    "name": "Cuzco",
+    "x": 884,
+    "y": 1390,
+    "class": 1,
+    "population": 0.359
+  },
+  {
+    "name": "Dakar",
+    "x": 1296,
+    "y": 1179,
+    "class": 1,
+    "population": 2.453
+  },
+  {
+    "name": "Dallas",
+    "x": 692,
+    "y": 1036,
+    "class": 2,
+    "population": 6.372
+  },
+  {
+    "name": "Darwin",
+    "x": 2407,
+    "y": 1385,
+    "class": 1,
+    "population": 0.128
+  },
+  {
+    "name": "Delhi",
+    "x": 1993,
+    "y": 1068,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Denver",
+    "x": 625,
+    "y": 965,
+    "class": 1,
+    "population": 2.552
+  },
+  {
+    "name": "Detroit",
+    "x": 797,
+    "y": 945,
+    "class": 2,
+    "population": 4.296
+  },
+  {
+    "name": "Dhaka",
+    "x": 2094,
+    "y": 1109,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Djibouti",
+    "x": 1752,
+    "y": 1200,
+    "class": 1,
+    "population": 0.598
+  },
+  {
+    "name": "Durban",
+    "x": 1649,
+    "y": 1526,
+    "class": 1,
+    "population": 3.5
+  },
+  {
+    "name": "Easter Island",
+    "x": 599,
+    "y": 1495,
+    "class": 1,
+    "population": 0.005
+  },
+  {
+    "name": "Edmonton",
+    "x": 584,
+    "y": 798,
+    "class": 1,
+    "population": 1.035
+  },
+  {
+    "name": "Fairbanks",
+    "x": 310,
+    "y": 653,
+    "class": 1,
+    "population": 0.052
+  },
+  {
+    "name": "Fortaleza",
+    "x": 1121,
+    "y": 1316,
+    "class": 1,
+    "population": 3.602
+  },
+  {
+    "name": "Georgetown",
+    "x": 985,
+    "y": 1242,
+    "class": 1,
+    "population": 0.355
+  },
+  {
+    "name": "Geraldton",
+    "x": 2283,
+    "y": 1507,
+    "class": 1,
+    "population": 0.037
+  },
+  {
+    "name": "Glasgow",
+    "x": 1392,
+    "y": 781,
+    "class": 1,
+    "population": 2.55
+  },
+  {
+    "name": "Goose Bay",
+    "x": 952,
+    "y": 789,
+    "class": 1,
+    "population": 0.008
+  },
+  {
+    "name": "Guangzhou",
+    "x": 2265,
+    "y": 1105,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Guatemala",
+    "x": 740,
+    "y": 1178,
+    "class": 2,
+    "population": 4.1
+  },
+  {
+    "name": "Hammerfest",
+    "x": 1602,
+    "y": 538,
+    "class": 1,
+    "population": 0.009
+  },
+  {
+    "name": "Hanoi",
+    "x": 2210,
+    "y": 1132,
+    "class": 2,
+    "population": 6.5
+  },
+  {
+    "name": "Harare",
+    "x": 1680,
+    "y": 1399,
+    "class": 1,
+    "population": 3
+  },
+  {
+    "name": "Harbin",
+    "x": 2369,
+    "y": 900,
+    "class": 2,
+    "population": 5.282
+  },
+  {
+    "name": "Havana",
+    "x": 795,
+    "y": 1120,
+    "class": 1,
+    "population": 3
+  },
+  {
+    "name": "Helsinki",
+    "x": 1606,
+    "y": 718,
+    "class": 1,
+    "population": 1.342
+  },
+  {
+    "name": "Hilo",
+    "x": 268,
+    "y": 1144,
+    "class": 1,
+    "population": 0.1
+  },
+  {
+    "name": "Hobart",
+    "x": 2523,
+    "y": 1644,
+    "class": 1,
+    "population": 0.212
+  },
+  {
+    "name": "Hong Kong",
+    "x": 2279,
+    "y": 1117,
+    "class": 2,
+    "population": 7.061
+  },
+  {
+    "name": "Honolulu",
+    "x": 229,
+    "y": 1119,
+    "class": 2,
+    "population": 4
+  },
+  {
+    "name": "Houston",
+    "x": 703,
+    "y": 1068,
+    "class": 2,
+    "population": 5.947
+  },
+  {
+    "name": "Hyderabad",
+    "x": 2010,
+    "y": 1163,
+    "class": 2,
+    "population": 7.749
+  },
+  {
+    "name": "In Salah",
+    "x": 1424,
+    "y": 1086,
+    "class": 1,
+    "population": 0.0437
+  },
+  {
+    "name": "Inuvik",
+    "x": 417,
+    "y": 579,
+    "class": 1,
+    "population": 0.003
+  },
+  {
+    "name": "Iqaluit",
+    "x": 909,
+    "y": 664,
+    "class": 1,
+    "population": 0.007
+  },
+  {
+    "name": "Iquitos",
+    "x": 880,
+    "y": 1320,
+    "class": 1,
+    "population": 0.406
+  },
+  {
+    "name": "Istanbul",
+    "x": 1642,
+    "y": 958,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Jakarta",
+    "x": 2223,
+    "y": 1339,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Jerusalem",
+    "x": 1685,
+    "y": 1042,
+    "class": 1,
+    "population": 1.029
+  },
+  {
+    "name": "Johannesburg",
+    "x": 1621,
+    "y": 1492,
+    "class": 2,
+    "population": 4
+  },
+  {
+    "name": "Juba",
+    "x": 1662,
+    "y": 1248,
+    "class": 1,
+    "population": 0.372
+  },
+  {
+    "name": "Juneau",
+    "x": 419,
+    "y": 771,
+    "class": 1,
+    "population": 0.017
+  },
+  {
+    "name": "Kabul",
+    "x": 1944,
+    "y": 1012,
+    "class": 1,
+    "population": 3.071
+  },
+  {
+    "name": "Kaduna",
+    "x": 1476,
+    "y": 1207,
+    "class": 1,
+    "population": 0.76
+  },
+  {
+    "name": "Kalgoorlie",
+    "x": 2346,
+    "y": 1531,
+    "class": 1,
+    "population": 0.033
+  },
+  {
+    "name": "Kampala",
+    "x": 1667,
+    "y": 1281,
+    "class": 1,
+    "population": 1.66
+  },
+  {
+    "name": "Kananga",
+    "x": 1597,
+    "y": 1343,
+    "class": 1,
+    "population": 1.13
+  },
+  {
+    "name": "Kandahar",
+    "x": 1911,
+    "y": 1037,
+    "class": 1,
+    "population": 0.512
+  },
+  {
+    "name": "Kansas City",
+    "x": 699,
+    "y": 974,
+    "class": 1,
+    "population": 2.2
+  },
+  {
+    "name": "Karachi",
+    "x": 1921,
+    "y": 1096,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Katherine",
+    "x": 2419,
+    "y": 1408,
+    "class": 1,
+    "population": 0.006
+  },
+  {
+    "name": "Ketchikan",
+    "x": 451,
+    "y": 803,
+    "class": 1,
+    "population": 0.008
+  },
+  {
+    "name": "Khartoum",
+    "x": 1667,
+    "y": 1179,
+    "class": 2,
+    "population": 5.274
+  },
+  {
+    "name": "Kyiv",
+    "x": 1670,
+    "y": 855,
+    "class": 1,
+    "population": 3.648
+  },
+  {
+    "name": "Kinshasa",
+    "x": 1526,
+    "y": 1312,
+    "class": 3,
+    "population": 9.463
+  },
+  {
+    "name": "Kisangani",
+    "x": 1607,
+    "y": 1271,
+    "class": 1,
+    "population": 0.683
+  },
+  {
+    "name": "Kolkata",
+    "x": 2074,
+    "y": 1122,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Kuching",
+    "x": 2246,
+    "y": 1285,
+    "class": 1,
+    "population": 0.618
+  },
+  {
+    "name": "Kuwait City",
+    "x": 1775,
+    "y": 1062,
+    "class": 1,
+    "population": 2.38
+  },
+  {
+    "name": "La Paz",
+    "x": 911,
+    "y": 1428,
+    "class": 1,
+    "population": 2.364
+  },
+  {
+    "name": "Lagos",
+    "x": 1452,
+    "y": 1241,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Las Vegas",
+    "x": 566,
+    "y": 1002,
+    "class": 1,
+    "population": 1.951
+  },
+  {
+    "name": "Lhasa",
+    "x": 2100,
+    "y": 1054,
+    "class": 1,
+    "population": 0.5
+  },
+  {
+    "name": "Lilongwe",
+    "x": 1694,
+    "y": 1379,
+    "class": 1,
+    "population": 0.782
+  },
+  {
+    "name": "Lima",
+    "x": 837,
+    "y": 1357,
+    "class": 3,
+    "population": 8.473
+  },
+  {
+    "name": "Lisbon",
+    "x": 1355,
+    "y": 971,
+    "class": 1,
+    "population": 2.816
+  },
+  {
+    "name": "Livingstone",
+    "x": 1611,
+    "y": 1419,
+    "class": 1,
+    "population": 0.097
+  },
+  {
+    "name": "Lobito",
+    "x": 1529,
+    "y": 1382,
+    "class": 1,
+    "population": 0.208
+  },
+  {
+    "name": "London",
+    "x": 1410,
+    "y": 845,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Los Angeles",
+    "x": 526,
+    "y": 1023,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Lulea",
+    "x": 1583,
+    "y": 640,
+    "class": 1,
+    "population": 0.047
+  },
+  {
+    "name": "Lyon",
+    "x": 1455,
+    "y": 905,
+    "class": 1,
+    "population": 2.118
+  },
+  {
+    "name": "Madrid",
+    "x": 1395,
+    "y": 955,
+    "class": 2,
+    "population": 6.459
+  },
+  {
+    "name": "Magadan",
+    "x": 2561,
+    "y": 734,
+    "class": 1,
+    "population": 0.096
+  },
+  {
+    "name": "Mahajanga",
+    "x": 1769,
+    "y": 1416,
+    "class": 1,
+    "population": 0.136
+  },
+  {
+    "name": "Manaus",
+    "x": 972,
+    "y": 1306,
+    "class": 1,
+    "population": 2.042
+  },
+  {
+    "name": "Manchester",
+    "x": 1397,
+    "y": 817,
+    "class": 1,
+    "population": 0.5
+  },
+  {
+    "name": "Manila",
+    "x": 2326,
+    "y": 1182,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Melbourne",
+    "x": 2506,
+    "y": 1591,
+    "class": 2,
+    "population": 4.2
+  },
+  {
+    "name": "Mexico City",
+    "x": 683,
+    "y": 1145,
+    "class": 3,
+    "population": 8.851
+  },
+  {
+    "name": "Miami",
+    "x": 819,
+    "y": 1096,
+    "class": 2,
+    "population": 5.547
+  },
+  {
+    "name": "Minneapolis",
+    "x": 719,
+    "y": 908,
+    "class": 1,
+    "population": 3.317
+  },
+  {
+    "name": "Minsk",
+    "x": 1644,
+    "y": 807,
+    "class": 1,
+    "population": 2.1
+  },
+  {
+    "name": "Mogadishu",
+    "x": 1768,
+    "y": 1273,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Mombasa",
+    "x": 1713,
+    "y": 1320,
+    "class": 1,
+    "population": 0.939
+  },
+  {
+    "name": "Monrovia",
+    "x": 1339,
+    "y": 1243,
+    "class": 1,
+    "population": 1.011
+  },
+  {
+    "name": "Monterrey",
+    "x": 671,
+    "y": 1086,
+    "class": 2,
+    "population": 5.347
+  },
+  {
+    "name": "Montreal",
+    "x": 866,
+    "y": 912,
+    "class": 1,
+    "population": 3.636
+  },
+  {
+    "name": "Moscow",
+    "x": 1719,
+    "y": 780,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Mount Isa",
+    "x": 2468,
+    "y": 1455,
+    "class": 1,
+    "population": 0.02
+  },
+  {
+    "name": "Mumbai",
+    "x": 1970,
+    "y": 1147,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Munich",
+    "x": 1507,
+    "y": 878,
+    "class": 1,
+    "population": 3
+  },
+  {
+    "name": "Murmansk",
+    "x": 1665,
+    "y": 562,
+    "class": 1,
+    "population": 0.308
+  },
+  {
+    "name": "Muscat",
+    "x": 1858,
+    "y": 1111,
+    "class": 1,
+    "population": 0.735
+  },
+  {
+    "name": "Nagasaki",
+    "x": 2395,
+    "y": 1032,
+    "class": 1,
+    "population": 0.446
+  },
+  {
+    "name": "Nairobi",
+    "x": 1693,
+    "y": 1300,
+    "class": 2,
+    "population": 4
+  },
+  {
+    "name": "Nanping",
+    "x": 2296,
+    "y": 1082,
+    "class": 1,
+    "population": 2.9
+  },
+  {
+    "name": "Naples",
+    "x": 1532,
+    "y": 960,
+    "class": 1,
+    "population": 0.963
+  },
+  {
+    "name": "New Orleans",
+    "x": 744,
+    "y": 1059,
+    "class": 1,
+    "population": 1.236
+  },
+  {
+    "name": "New York",
+    "x": 864,
+    "y": 956,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Newman",
+    "x": 2335,
+    "y": 1480,
+    "class": 1,
+    "population": 0.008
+  },
+  {
+    "name": "Nome",
+    "x": 177,
+    "y": 657,
+    "class": 1,
+    "population": 0.004
+  },
+  {
+    "name": "Norilsk",
+    "x": 2073,
+    "y": 576,
+    "class": 1,
+    "population": 0.175
+  },
+  {
+    "name": "Novosibirsk",
+    "x": 2063,
+    "y": 798,
+    "class": 1,
+    "population": 1.474
+  },
+  {
+    "name": "Nuuk",
+    "x": 1048,
+    "y": 679,
+    "class": 1,
+    "population": 0.018
+  },
+  {
+    "name": "Oaxaca",
+    "x": 699,
+    "y": 1161,
+    "class": 1,
+    "population": 0.265
+  },
+  {
+    "name": "Orlando",
+    "x": 806,
+    "y": 1072,
+    "class": 1,
+    "population": 2.134
+  },
+  {
+    "name": "Osaka",
+    "x": 2433,
+    "y": 1017,
+    "class": 2,
+    "population": 4
+  },
+  {
+    "name": "Oslo",
+    "x": 1495,
+    "y": 736,
+    "class": 1,
+    "population": 1.442
+  },
+  {
+    "name": "Ottawa",
+    "x": 838,
+    "y": 912,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Oulu",
+    "x": 1619,
+    "y": 648,
+    "class": 1,
+    "population": 0.144
+  },
+  {
+    "name": "Padang",
+    "x": 2179,
+    "y": 1303,
+    "class": 1,
+    "population": 0.834
+  },
+  {
+    "name": "Palu",
+    "x": 2320,
+    "y": 1299,
+    "class": 1,
+    "population": 0.335
+  },
+  {
+    "name": "Panama City",
+    "x": 828,
+    "y": 1221,
+    "class": 1,
+    "population": 1.273
+  },
+  {
+    "name": "Paris",
+    "x": 1436,
+    "y": 871,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Perm",
+    "x": 1851,
+    "y": 755,
+    "class": 1,
+    "population": 0.992
+  },
+  {
+    "name": "Perth",
+    "x": 2292,
+    "y": 1544,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Pevek",
+    "x": 2709,
+    "y": 558,
+    "class": 1,
+    "population": 0.004
+  },
+  {
+    "name": "Philadelphia",
+    "x": 848,
+    "y": 972,
+    "class": 2,
+    "population": 5.965
+  },
+  {
+    "name": "Phoenix",
+    "x": 605,
+    "y": 1031,
+    "class": 2,
+    "population": 4.193
+  },
+  {
+    "name": "Port Elizabeth",
+    "x": 1616,
+    "y": 1555,
+    "class": 1,
+    "population": 1.051
+  },
+  {
+    "name": "Port Hedland",
+    "x": 2326,
+    "y": 1449,
+    "class": 1,
+    "population": 0.012
+  },
+  {
+    "name": "Port Moresby",
+    "x": 2533,
+    "y": 1368,
+    "class": 1,
+    "population": 0.308
+  },
+  {
+    "name": "Port Sudan",
+    "x": 1693,
+    "y": 1149,
+    "class": 1,
+    "population": 0.517
+  },
+  {
+    "name": "Portland",
+    "x": 491,
+    "y": 915,
+    "class": 1,
+    "population": 2.26
+  },
+  {
+    "name": "Porto Velho",
+    "x": 941,
+    "y": 1349,
+    "class": 1,
+    "population": 0.436
+  },
+  {
+    "name": "Prague",
+    "x": 1537,
+    "y": 859,
+    "class": 1,
+    "population": 1.965
+  },
+  {
+    "name": "Punta Arenas",
+    "x": 898,
+    "y": 1777,
+    "class": 1,
+    "population": 0.119
+  },
+  {
+    "name": "Quebec City",
+    "x": 880,
+    "y": 890,
+    "class": 1,
+    "population": 0.716
+  },
+  {
+    "name": "Quito",
+    "x": 827,
+    "y": 1295,
+    "class": 1,
+    "population": 3.342
+  },
+  {
+    "name": "Rangoon",
+    "x": 2137,
+    "y": 1167,
+    "class": 2,
+    "population": 4.348
+  },
+  {
+    "name": "Recife",
+    "x": 1154,
+    "y": 1352,
+    "class": 2,
+    "population": 4.137
+  },
+  {
+    "name": "Reykjavik",
+    "x": 1250,
+    "y": 656,
+    "class": 1,
+    "population": 0.202
+  },
+  {
+    "name": "Riga",
+    "x": 1604,
+    "y": 772,
+    "class": 1,
+    "population": 1.027
+  },
+  {
+    "name": "Rio De Janeiro",
+    "x": 1094,
+    "y": 1466,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Riyadh",
+    "x": 1760,
+    "y": 1102,
+    "class": 2,
+    "population": 6.8
+  },
+  {
+    "name": "Rockhampton",
+    "x": 2553,
+    "y": 1481,
+    "class": 1,
+    "population": 0.075
+  },
+  {
+    "name": "Rome",
+    "x": 1508,
+    "y": 942,
+    "class": 1,
+    "population": 2.761
+  },
+  {
+    "name": "Salt Lake City",
+    "x": 573,
+    "y": 955,
+    "class": 1,
+    "population": 1.124
+  },
+  {
+    "name": "Salvador",
+    "x": 1126,
+    "y": 1385,
+    "class": 2,
+    "population": 4.866
+  },
+  {
+    "name": "San Diego",
+    "x": 544,
+    "y": 1041,
+    "class": 1,
+    "population": 3.095
+  },
+  {
+    "name": "San Francisco",
+    "x": 504,
+    "y": 981,
+    "class": 2,
+    "population": 4.335
+  },
+  {
+    "name": "San Jose",
+    "x": 789,
+    "y": 1212,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Santiago",
+    "x": 882,
+    "y": 1550,
+    "class": 2,
+    "population": 7.2
+  },
+  {
+    "name": "Santo Domingo",
+    "x": 888,
+    "y": 1150,
+    "class": 1,
+    "population": 3.712
+  },
+  {
+    "name": "Sao Paulo",
+    "x": 1062,
+    "y": 1480,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Sapporo",
+    "x": 2479,
+    "y": 936,
+    "class": 1,
+    "population": 3
+  },
+  {
+    "name": "Saskatoon",
+    "x": 635,
+    "y": 820,
+    "class": 1,
+    "population": 0.261
+  },
+  {
+    "name": "Seattle",
+    "x": 491,
+    "y": 886,
+    "class": 2,
+    "population": 4
+  },
+  {
+    "name": "Sendai",
+    "x": 2477,
+    "y": 981,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Seoul",
+    "x": 2372,
+    "y": 989,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Shanghai",
+    "x": 2323,
+    "y": 1052,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Shenyang",
+    "x": 2345,
+    "y": 948,
+    "class": 3,
+    "population": 8.1
+  },
+  {
+    "name": "Singapore",
+    "x": 2189,
+    "y": 1272,
+    "class": 2,
+    "population": 5.182
+  },
+  {
+    "name": "Spokane",
+    "x": 550,
+    "y": 892,
+    "class": 1,
+    "population": 0.61
+  },
+  {
+    "name": "St. Louis",
+    "x": 737,
+    "y": 981,
+    "class": 1,
+    "population": 2.813
+  },
+  {
+    "name": "St. Petersburg",
+    "x": 1645,
+    "y": 725,
+    "class": 2,
+    "population": 4.88
+  },
+  {
+    "name": "Stockholm",
+    "x": 1551,
+    "y": 736,
+    "class": 1,
+    "population": 2.091
+  },
+  {
+    "name": "Sydney",
+    "x": 2547,
+    "y": 1565,
+    "class": 2,
+    "population": 5
+  },
+  {
+    "name": "Taipei",
+    "x": 2329,
+    "y": 1102,
+    "class": 2,
+    "population": 6.9
+  },
+  {
+    "name": "Tbilisi",
+    "x": 1746,
+    "y": 936,
+    "class": 1,
+    "population": 1.485
+  },
+  {
+    "name": "Tehran",
+    "x": 1797,
+    "y": 997,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Teresina",
+    "x": 1090,
+    "y": 1328,
+    "class": 1,
+    "population": 2
+  },
+  {
+    "name": "Thunder Bay",
+    "x": 749,
+    "y": 872,
+    "class": 1,
+    "population": 0.122
+  },
+  {
+    "name": "Tiksi",
+    "x": 2384,
+    "y": 514,
+    "class": 1,
+    "population": 0.005
+  },
+  {
+    "name": "Timbuktu",
+    "x": 1399,
+    "y": 1162,
+    "class": 1,
+    "population": 0.0545
+  },
+  {
+    "name": "Tokyo",
+    "x": 2467,
+    "y": 1014,
+    "class": 3,
+    "population": 10
+  },
+  {
+    "name": "Toronto",
+    "x": 817,
+    "y": 925,
+    "class": 2,
+    "population": 5.113
+  },
+  {
+    "name": "Tripoli",
+    "x": 1506,
+    "y": 1038,
+    "class": 1,
+    "population": 1.8
+  },
+  {
+    "name": "Trondheim",
+    "x": 1490,
+    "y": 675,
+    "class": 1,
+    "population": 0.176
+  },
+  {
+    "name": "Ulan Bator",
+    "x": 2221,
+    "y": 886,
+    "class": 1,
+    "population": 1.19
+  },
+  {
+    "name": "Urumqi",
+    "x": 2087,
+    "y": 924,
+    "class": 1,
+    "population": 2.744
+  },
+  {
+    "name": "Vancouver",
+    "x": 488,
+    "y": 856,
+    "class": 1,
+    "population": 2.117
+  },
+  {
+    "name": "Venice",
+    "x": 1508,
+    "y": 909,
+    "class": 1,
+    "population": 0.271
+  },
+  {
+    "name": "Vienna",
+    "x": 1553,
+    "y": 878,
+    "class": 1,
+    "population": 2.419
+  },
+  {
+    "name": "Vladivostok",
+    "x": 2402,
+    "y": 933,
+    "class": 1,
+    "population": 0.592
+  },
+  {
+    "name": "Volgograd",
+    "x": 1746,
+    "y": 872,
+    "class": 1,
+    "population": 1.021
+  },
+  {
+    "name": "Warsaw",
+    "x": 1578,
+    "y": 831,
+    "class": 1,
+    "population": 2.632
+  },
+  {
+    "name": "Washington DC",
+    "x": 839,
+    "y": 988,
+    "class": 2,
+    "population": 5.58
+  },
+  {
+    "name": "Wellington",
+    "x": 2735,
+    "y": 1627,
+    "class": 1,
+    "population": 0.393
+  },
+  {
+    "name": "Whitehorse",
+    "x": 403,
+    "y": 723,
+    "class": 1,
+    "population": 0.023
+  },
+  {
+    "name": "Windhoek",
+    "x": 1552,
+    "y": 1468,
+    "class": 1,
+    "population": 0.32
+  },
+  {
+    "name": "Winnipeg",
+    "x": 689,
+    "y": 862,
+    "class": 1,
+    "population": 0.695
+  },
+  {
+    "name": "Xi'an",
+    "x": 2250,
+    "y": 1021,
+    "class": 3,
+    "population": 8.468
+  },
+  {
+    "name": "Xining",
+    "x": 2158,
+    "y": 995,
+    "class": 1,
+    "population": 1.2
+  },
+  {
+    "name": "Yakutsk",
+    "x": 2394,
+    "y": 701,
+    "class": 1,
+    "population": 0.269
+  },
+  {
+    "name": "Yellowknife",
+    "x": 566,
+    "y": 691,
+    "class": 1,
+    "population": 0.02
+  },
+  {
+    "name": "Yinchuan",
+    "x": 2219,
+    "y": 974,
+    "class": 1,
+    "population": 1.3
+  },
+  {
+    "name": "Zanzibar",
+    "x": 1714,
+    "y": 1348,
+    "class": 1,
+    "population": 2
+  }
+]

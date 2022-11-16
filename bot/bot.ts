@@ -5,6 +5,7 @@ import MhwClient from './mhw';
 import UtilityFunctions from '../utils/utilities';
 import SlashCommand from './slashcommand';
 import TextCommand from './textcommand';
+import { PocketPlanesClient } from '../slash/categories/pp';
 
 export interface ClientConfig {
   readonly bot: {
@@ -28,6 +29,7 @@ export default class Bot extends Client {
 
   readonly database: NedbClient;
   readonly mhw: MhwClient;
+  readonly pocketPlanes: PocketPlanesClient;
 
   constructor(dirname: string, config: ClientConfig) {
     super({
@@ -56,6 +58,7 @@ export default class Bot extends Client {
 
     this.database = new NedbClient(this.root.slice(0, -5).concat('database'));
     this.mhw = new MhwClient();
+    this.pocketPlanes = new PocketPlanesClient();
 
     this.loadEvents();
     this.loadCommands();

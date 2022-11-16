@@ -33,7 +33,7 @@ export default class Res extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const resists = interaction.options.getString('resistances')!.split(/\s+/).map(res => parseInt(res));
+    const resists = interaction.options.getString('resistances')!.split(/\s+/).map(res => parseInt(res)).filter(res => res !== 0); // Might want to split this up
     
     const upgrades = interaction.options.getInteger('upgrades');
     const primaryStat = interaction.options.getInteger('primary-stat');
