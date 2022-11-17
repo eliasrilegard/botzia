@@ -84,18 +84,18 @@ export default class Flight extends SlashCommand {
     
     const range = Math.round(plane.range * (1 + upgradeRange / 20));
 
-    const badDistances = distances.reduce((acc: Array<number>, d, i) => {
+    const badDistanceIndices = distances.reduce((acc: Array<number>, d, i) => {
       if (d > range) acc.push(i);
       return acc;
     }, []);
 
-    if (badDistances.length > 0) {
+    if (badDistanceIndices.length > 0) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Problems detected')
         .addFields({
           name: 'The following problems were detected',
-          value: badDistances.map((d, i) => `**${cities[i]!}** to **${cities[i + 1]!}** (${d} mi.) is not possible with the given range (${plane!.range} mi.).`).join('\n')
+          value: badDistanceIndices.map((badIndex, i) => `**${cities[i]!.name}** to **${cities[i + 1]!.name}** (${distances[badIndex]} mi.) is not possible with the given range (${plane!.range} mi.).`).join('\n')
         });
       interaction.reply({ embeds: [embed], ephemeral: true });
       return;
