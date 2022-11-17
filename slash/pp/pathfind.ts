@@ -76,7 +76,7 @@ export default class Pathfind extends SlashCommand {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Origin city not found')
-        .setDescription(`**${startCity}** is not a valid city. Check your spelling and try again.`);
+        .setDescription(`**${originName}** is not a valid city. Check your spelling and try again.`);
       interaction.reply({ embeds: [embed] });
       return;
     }
@@ -86,7 +86,7 @@ export default class Pathfind extends SlashCommand {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Origin city not found')
-        .setDescription(`**${endCity}** is not a valid city. Check your spelling and try again.`);
+        .setDescription(`**${destName}** is not a valid city. Check your spelling and try again.`);
       interaction.reply({ embeds: [embed] });
       return;
     }
@@ -125,14 +125,15 @@ export default class Pathfind extends SlashCommand {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('No path found')
-        .setDescription('Check your arguments.\nThis shouldn\'t ever happen, please contact Chronozia#1815 for support.');
+        .setDescription('Could not find a valid path.')
+        .setFooter({ text: 'This usually means you\'re trying to cross the Atlantic with a plane that\'s incapable of it.' });
       interaction.reply({ embeds: [embed] });
       return;
     }
 
     const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
-      .setTitle('Shortest Path Found')
+      .setTitle('Shortest path calculated')
       .setDescription(`Using the **${plane.name}** with a range upgrade of **${rangeUpgrade}** (**${range}** mi.), the best path is:`)
       .addFields(
         { name: `${startCity.name} to ${endCity.name}`, value: foundPath.join(' → ') }
