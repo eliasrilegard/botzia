@@ -137,7 +137,8 @@ export default class Pathfind extends SlashCommand {
       .setDescription(`Using the **${plane.name}** with a range upgrade of **${rangeUpgrade}** (**${range}** mi.), the best path is:`)
       .addFields(
         { name: `${startCity.name} to ${endCity.name}`, value: foundPath.join(' → ') }
-      );
+      )
+      .setFooter({ text: 'Tip: You can use the city path generated as the argument for the flight command.' });
     interaction.reply({ embeds: [embed] });
   }
 

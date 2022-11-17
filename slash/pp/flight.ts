@@ -45,7 +45,7 @@ export default class Flight extends SlashCommand {
     const upgradeWeight = interaction.options.getInteger('upgrade-weight') ?? 0;
 
     // Check path
-    const cityNames = pathName.split(/\s*,\s*/);
+    const cityNames = pathName.split(/\s*[,→]\s*/); // → comes from pathfind, allows for a straight copy
     const cities = cityNames.map(cityName => this.client.pocketPlanes.cities.get(cleanup(cityName)));
 
     const plane = this.client.pocketPlanes.planes.get(cleanup(planeName));
