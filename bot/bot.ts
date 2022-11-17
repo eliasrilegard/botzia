@@ -1,10 +1,10 @@
 import { Client, Collection, ColorResolvable, GatewayIntentBits, Message, Partials } from 'discord.js';
 import NedbClient from './database';
 import ClientEvent from './event';
-import MhwClient from './mhw';
 import UtilityFunctions from '../utils/utilities';
 import SlashCommand from './slashcommand';
 import TextCommand from './textcommand';
+import { MhwClient } from '../slash/categories/mhw';
 import { PocketPlanesClient } from '../slash/categories/pp';
 
 export interface ClientConfig {
