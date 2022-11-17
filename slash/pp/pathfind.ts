@@ -81,11 +81,11 @@ export default class Pathfind extends SlashCommand {
       return;
     }
     
-    const endCity = this.client.pocketPlanes.cities.get(destName);
+    const endCity = this.client.pocketPlanes.cities.get(cleanup(destName));
     if (!endCity) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
-        .setTitle('Origin city not found')
+        .setTitle('Destination city not found')
         .setDescription(`**${destName}** is not a valid city. Check your spelling and try again.`);
       interaction.reply({ embeds: [embed], ephemeral: true });
       return;
