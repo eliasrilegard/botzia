@@ -58,7 +58,7 @@ export default class Pathfind extends SlashCommand {
         .setColor(this.client.config.colors.RED)
         .setTitle('Plane not found')
         .setDescription(`**${planeName}** is not a valid plane. Check your spelling and try again.`);
-      interaction.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
 
@@ -67,7 +67,7 @@ export default class Pathfind extends SlashCommand {
         .setColor(this.client.config.colors.RED)
         .setTitle('Invalid range upgrade')
         .setDescription('Specify a number between **0** and **4**.');
-      interaction.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
 
@@ -77,7 +77,7 @@ export default class Pathfind extends SlashCommand {
         .setColor(this.client.config.colors.RED)
         .setTitle('Origin city not found')
         .setDescription(`**${originName}** is not a valid city. Check your spelling and try again.`);
-      interaction.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
     
@@ -87,7 +87,7 @@ export default class Pathfind extends SlashCommand {
         .setColor(this.client.config.colors.RED)
         .setTitle('Origin city not found')
         .setDescription(`**${destName}** is not a valid city. Check your spelling and try again.`);
-      interaction.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
     
