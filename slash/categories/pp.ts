@@ -18,7 +18,7 @@ interface Plane {
   readonly fullCost?: number;
 }
 
-interface City {
+export interface City {
   readonly name: string;
   readonly x: number;
   readonly y: number;
@@ -33,12 +33,12 @@ export class PocketPlanesClient {
   constructor() {
     for (const [, plane] of Object.entries(planeData)) {
       const name = plane.name.replace(/[\s\.'-]+/g, '').toLowerCase();
-      if (plane.name) this.planes.set(name, plane);
+      this.planes.set(name, plane);
     }
 
     for (const [, city] of Object.entries(cityData)) {
       const name = city.name.replace(/[\s\.'-]+/g, '').toLowerCase();
-      if (city.name) this.cities.set(name, city);
+      this.cities.set(name, city);
     }
   }
 }
