@@ -36,17 +36,23 @@ export default class Distance extends SlashCommand {
     const limit = Math.min(start.class, end.class);
 
     const viablePlanes = [...this.client.pocketPlanes.planes.values()]
-      .filter(plane => plane.range >= distance && plane.class <= limit)
-      .map(plane => plane.name)
-      .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+      .filter(plane => plane.range * 1.2 >= distance && plane.class <= limit) // Test for max range
+      .sort((p1, p2) => p1.name.toLowerCase().localeCompare(p2.name.toLowerCase()));
+
+    // rangeUpgrade solution for: distance = Math.round(plane.range * (1 + rangeUpgrade / 20))
+    // Then mapped to an upgrade level by ceiling (plain round?) it and making it non-negative.
+    const rangeUpgradeRequired = viablePlanes
+      .map(plane => Math.max(0, Math.ceil(20 * (distance / plane.range - 1))))
+      .map(upgLvl => upgLvl > 0 ? ` (Lvl ${upgLvl} Range Upgrade)${upgLvl === 4 ? ' [VIP]' : ''}` : '');
 
     const embed = new EmbedBuilder()
       .setColor(this.client.config.colors.BLUE)
       .setTitle('Distance')
-      .setDescription(`The distance between ${start.name} and ${end.name} is **${distance}** miles.\nThis route is limited to **Class ${limit}**${limit > 1 ? ' and below' : '' }.`)
-      .addFields(
-        { name: 'Viable planes for this route', value: viablePlanes.length > 0 ? viablePlanes.join('\n') : 'None' }
-      );
+      .setDescription(`The distance between **${start.name}** and **${end.name}** is **${distance}** miles.\nThis route is limited to **Class ${limit}**${limit > 1 ? ' and below' : '' }.`)
+      .addFields({
+        name: 'Viable planes for this route',
+        value: viablePlanes.length > 0 ? viablePlanes.map((plane, i) => `${plane.name}${rangeUpgradeRequired[i]}`).join('\n') : 'None'
+      });
     interaction.reply({ embeds: [embed] });
   }
 
