@@ -37,7 +37,7 @@ export default class Distance extends SlashCommand {
 
     const viablePlanes = [...this.client.pocketPlanes.planes.values()]
       .filter(plane => plane.range * 1.2 >= distance && plane.class <= limit) // Test for max range
-      .sort((p1, p2) => p1.name.toLowerCase().localeCompare(p2.name.toLowerCase()));
+      .sort((p1, p2) => p2.range - p1.range);
 
     // rangeUpgrade solution for: distance = Math.round(plane.range * (1 + rangeUpgrade / 20))
     // Then mapped to an upgrade level by ceiling (plain round?) it and making it non-negative.
