@@ -61,7 +61,7 @@ export default class Bot extends Client {
     this.pocketPlanes = new PocketPlanesClient();
 
     this.loadEvents();
-    this.loadCommands();
+    this.loadTextCommands();
     this.loadSlashes();
   }
 
@@ -74,8 +74,8 @@ export default class Bot extends Client {
     }
   }
 
-  private async loadCommands(): Promise<void> {
-    for await (const file of UtilityFunctions.getFiles(this.root.concat('commands'))) {
+  private async loadTextCommands(): Promise<void> {
+    for await (const file of UtilityFunctions.getFiles(this.root.concat('textcommands'))) {
       const { default: CommandClass } = await import(file);
       const command: TextCommand = new CommandClass(this);
       if (command.category) this.textCommandCategories.set(command.name, new Collection());

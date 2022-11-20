@@ -24,6 +24,9 @@ const defaultOptions: CommandOptions = {
   permissions: ''
 };
 
+/**
+ * @deprecated Text commands are deprecated and will be removed in the next update.
+ */
 export default class TextCommand {
   readonly aliases: Array<string>;
   readonly args: boolean;
