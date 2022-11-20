@@ -1,10 +1,10 @@
-import { EmbedBuilder, Message } from 'discord.js';
+import { EmbedBuilder, Events, Message } from 'discord.js';
 import Bot from '../bot/bot';
 import ClientEvent from '../bot/event';
 
 export default class MessageCreate extends ClientEvent {
   constructor() {
-    super('messageCreate', false);
+    super(Events.MessageCreate, false);
   }
 
   async execute(client: Bot, message: Message): Promise<void> {

@@ -1,10 +1,10 @@
-import { BaseInteraction } from 'discord.js';
+import { BaseInteraction, Events } from 'discord.js';
 import Bot from '../bot/bot';
 import ClientEvent from '../bot/event';
 
 export default class InteractionCreate extends ClientEvent {
   constructor() {
-    super('interactionCreate', false);
+    super(Events.InteractionCreate, false);
   }
 
   async execute(client: Bot, interaction: BaseInteraction): Promise<void> {

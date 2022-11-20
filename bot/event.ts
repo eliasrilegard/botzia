@@ -1,3 +1,4 @@
+import { ClientEvents } from 'discord.js';
 import Bot from './bot';
 
 export default class ClientEvent {
@@ -6,7 +7,7 @@ export default class ClientEvent {
    * @param isOnce If the event is `.once` (set `true`) or `.on` (set `false`)
    */
   // eslint-disable-next-line no-empty-function
-  protected constructor(readonly name: string, readonly isOnce: boolean) {}
+  protected constructor(readonly name: keyof ClientEvents, readonly isOnce: boolean) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   execute(client: Bot, ...args: unknown[]): void {

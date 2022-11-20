@@ -1,9 +1,10 @@
+import { Events } from 'discord.js';
 import Bot from '../bot/bot';
 import ClientEvent from '../bot/event';
 
 export default class Ready extends ClientEvent {
   constructor() {
-    super('ready', true);
+    super(Events.ClientReady, true);
   }
 
   execute(client: Bot) {
