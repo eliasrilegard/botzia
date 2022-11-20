@@ -7,7 +7,7 @@ export default class Ready extends ClientEvent {
     super(Events.ClientReady, true);
   }
 
-  execute(client: Bot) {
+  execute(client: Bot): void {
     console.log(`Ready! Logged in as ${client.user!.tag}`);
   }
 }
