@@ -81,7 +81,7 @@ export default class Ban extends SlashCommand {
       await this.client.users.send(member, { embeds: [embed] });
     }
 
-    interaction.guild!.members.ban(member, { reason: reason ?? undefined });
+    interaction.guild!.members.ban(member, { reason: `${reason ? `${reason} ` : ''}[Issued by ${interaction.user.tag}]` });
 
     const successEmbed = new EmbedBuilder()
       .setColor(this.client.config.colors.GREEN)

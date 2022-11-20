@@ -80,7 +80,7 @@ export default class Kick extends SlashCommand {
       await this.client.users.send(member, { embeds: [embed] });
     }
 
-    member.kick(reason ?? undefined);
+    member.kick(`${reason ? `${reason} ` : ''}[Issued by ${interaction.user.tag}]`);
 
     const successEmbed = new EmbedBuilder()
       .setColor(this.client.config.colors.GREEN)
