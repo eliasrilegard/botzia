@@ -28,16 +28,11 @@ export default class NedbClient {
 
   // Server prefixes
   setCustomPrefix(serverId: string, newPrefix: string): void {
-    this.serverPrefixes.insert({ id: serverId, prefix: newPrefix }, (error => {
+    this.serverPrefixes.insert({ id: serverId, prefix: newPrefix }, error => {
       if (error && (error as DocsError).errorType === 'uniqueViolated') {
         this.serverPrefixes.update({ id: serverId }, { $set: { prefix: newPrefix } });
       }
-    }));
-    // this.serverPrefixes.insert({ id: serverId, prefix: newPrefix }, (error: DocsError) => {
-    //   if (error && error.errorType === 'uniqueViolated') {
-    //     this.serverPrefixes.update({ id: serverId }, { $set: { prefix: newPrefix } });
-    //   }
-    // });
+    });
   }
 
   async getCustomPrefix(serverId: string): Promise<string | undefined> {
