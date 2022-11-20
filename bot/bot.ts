@@ -4,8 +4,8 @@ import ClientEvent from './event';
 import UtilityFunctions from '../utils/utilities';
 import SlashCommand from './slashcommand';
 import TextCommand from './textcommand';
-import { MhwClient } from '../slash/categories/mhw';
-import { PocketPlanesClient } from '../slash/categories/pp';
+import { MhwClient } from '../commands/categories/mhw';
+import { PocketPlanesClient } from '../commands/categories/pp';
 
 export interface ClientConfig {
   readonly bot: {

@@ -28,7 +28,7 @@ export default class Build extends SlashCommand {
       embed
         .setColor(this.client.config.colors.GREEN)
         .setTitle('Command added')
-        .setDescription(`Successfully built the command \`slash/${path}.js\`.`);
+        .setDescription(`Successfully built the command \`commands/${path}.js\`.`);
     }
     catch (error) {
       embed

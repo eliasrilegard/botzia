@@ -17,7 +17,7 @@ export default class Reload extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const commandsDir = this.client.root.concat('slash');
+    const commandsDir = this.client.root.concat('commands');
 
     const commandNames = interaction.options.getString('command')!.toLowerCase().split(/\s+/);
     const commandName = commandNames[0];
