@@ -61,8 +61,8 @@ export default class Bot extends Client {
     this.pocketPlanes = new PocketPlanesClient();
 
     this.loadEvents();
+    this.loadCommands();
     this.loadTextCommands();
-    this.loadSlashes();
   }
 
   private async loadEvents(): Promise<void> {
@@ -73,6 +73,14 @@ export default class Bot extends Client {
       else this.on(event.name, (...args) => event.execute(this, ...args));
     }
   }
+  
+  private async loadCommands(): Promise<void> {
+    for await (const file of UtilityFunctions.getFiles(this.root.concat('commands'))) {
+      const { default: CommandClass } = await import(file);
+      const command: SlashCommand = new CommandClass(this);
+      this.slashCommands.set(command.data.name, command);
+    }
+  }
 
   private async loadTextCommands(): Promise<void> {
     for await (const file of UtilityFunctions.getFiles(this.root.concat('textcommands'))) {
@@ -81,14 +89,6 @@ export default class Bot extends Client {
       if (command.category) this.textCommandCategories.set(command.name, new Collection());
       if (command.belongsTo) this.textCommandCategories.get(command.belongsTo)!.set(command.name, command);
       else this.textCommands.set(command.name, command);
-    }
-  }
-
-  private async loadSlashes(): Promise<void> {
-    for await (const file of UtilityFunctions.getFiles(this.root.concat('slash'))) {
-      const { default: CommandClass } = await import(file);
-      const command: SlashCommand = new CommandClass(this);
-      this.slashCommands.set(command.data.name, command);
     }
   }
 
