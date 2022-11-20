@@ -15,7 +15,7 @@ export default class Reload extends TextCommand {
   }
 
   async execute(message: Message, args: Array<string>): Promise<void> {
-    const commandsDir = this.client.root.concat('commands');
+    const commandsDir = this.client.root.concat('textcommands');
 
     if (['-b', '--build'].includes(args[0])) {
       if (args.length !== 2) return;
@@ -30,14 +30,14 @@ export default class Reload extends TextCommand {
         embed
           .setColor(this.client.config.colors.GREEN)
           .setTitle('Command added')
-          .setDescription(`Successfully built the command \`commands/${pathToFile}.js\`.`);
+          .setDescription(`Successfully built the command \`textcommands/${pathToFile}.js\`.`);
       }
       catch (error) {
         const isNormal = error instanceof Error;
         embed
           .setColor(this.client.config.colors.RED)
           .setTitle('No such file')
-          .setDescription(`The file \`commands/${pathToFile}.js\` couldn't be located.`)
+          .setDescription(`The file \`textcommands/${pathToFile}.js\` couldn't be located.`)
           .addFields({ name: 'Error message', value: isNormal ? error.message : 'Critical error' });
         if (!isNormal) console.error(error);
       }
