@@ -34,7 +34,11 @@ export default class MessageCreate extends ClientEvent {
     if (!(await command.preRunCheck(message, args))) return;
 
     try {
-      command.execute(message, args);
+      await command.execute(message, args);
+      const embed = new EmbedBuilder()
+        .setColor(client.config.colors.RED)
+        .setFooter({ text: 'Warning: Text commands are deprecated\nand will be removed in the next update.\nConsider using slash commands instead.' });
+      message.channel.send({ embeds: [embed] });
     }
     catch (error) {
       console.log(`The following error was caused by ${message.author.tag}:`);
