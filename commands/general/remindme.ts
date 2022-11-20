@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder, TextChannel } from 'discord.js';
 import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
 
@@ -18,9 +18,11 @@ export default class RemindMe extends SlashCommand {
       );
     super(data as SlashCommandBuilder, client);
 
-    // The text version of this handles this part
-    // this.updateJobs(); // Load jobs on object creation, then refresh jobs every two weeks
-    // setInterval(() => this.updateJobs(), 1_209_600_000);
+    if (client) { // Client is undefined on command registration
+      setTimeout(() => this.updateJobs(), 1_000); // Hack to let the database fully load before we query
+      // Load jobs on object creation, then refresh jobs every two weeks
+      setInterval(() => this.updateJobs(), 1_209_600_000);
+    }
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
@@ -144,33 +146,33 @@ export default class RemindMe extends SlashCommand {
     message.reply({ embeds: [embed], content: pingList.length > 0 ? pingList.join(' ') : undefined });
   }
 
-  // private async updateJobs(): Promise<void> {
-  //   const allJobs = this.client.database.getAllReminderJobs();
-  //   for (const job of allJobs) {
-  //     const remainingTime = parseInt(job.dueTime) - Date.now(); // ms
-  //     if (remainingTime < 1_209_600_000) {
-  //       if (remainingTime < 0) {
-  //         this.client.database.removeReminderJob(job.dueTime);
-  //         continue;
-  //       }
+  private async updateJobs(): Promise<void> {
+    const allJobs = this.client.database.getAllReminderJobs();
+    for (const job of allJobs) {
+      const remainingTime = parseInt(job.dueTime) - Date.now(); // ms
+      if (remainingTime < 1_209_600_000) {
+        if (remainingTime < 0) {
+          this.client.database.removeReminderJob(job.dueTime);
+          continue;
+        }
         
-  //       const channel = await this.client.channels.fetch(job.channelId) as TextChannel;
-  //       const replyToMessage = await channel.messages.fetch(job.messageId);
+        const channel = await this.client.channels.fetch(job.channelId) as TextChannel;
+        const replyToMessage = await channel.messages.fetch(job.messageId);
 
-  //       const embed = new EmbedBuilder()
-  //         .setColor(this.client.config.colors.GREEN)
-  //         .setTitle('Ding, here\'s your reminder!')
-  //         .setTimestamp(replyToMessage.createdTimestamp);
-  //       if (job.message) embed.setDescription(job.message);
+        const embed = new EmbedBuilder()
+          .setColor(this.client.config.colors.GREEN)
+          .setTitle('Ding, here\'s your reminder!')
+          .setTimestamp(replyToMessage.createdTimestamp);
+        if (job.message) embed.setDescription(job.message);
 
-  //       const pingList: Array<string> = [];
-  //       if (replyToMessage.mentions.members.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
+        const pingList: Array<string> = [];
+        if (replyToMessage.mentions.members?.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
 
-  //       setTimeout(() => {
-  //         this.sendReply(replyToMessage, embed, pingList);
-  //         this.client.database.removeReminderJob(job.dueTime);
-  //       }, remainingTime);
-  //     }
-  //   }
-  // }
+        setTimeout(() => {
+          this.sendReply(replyToMessage, embed, pingList);
+          this.client.database.removeReminderJob(job.dueTime);
+        }, remainingTime);
+      }
+    }
+  }
 }

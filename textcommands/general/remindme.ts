@@ -1,4 +1,4 @@
-import { EmbedBuilder, Message, TextChannel } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import Bot from '../../bot/bot';
 import TextCommand from '../../bot/textcommand';
 
@@ -11,8 +11,8 @@ export default class Remindme extends TextCommand {
       ['[time until reminder] (message)']
     );
 
-    this.updateJobs(); // Load jobs on object creation, then refresh jobs every two weeks
-    setInterval(() => this.updateJobs(), 1_209_600_000);
+    // this.updateJobs(); // Load jobs on object creation, then refresh jobs every two weeks
+    // setInterval(() => this.updateJobs(), 1_209_600_000);
   }
 
   async execute(message: Message, args: Array<string>): Promise<void> {
@@ -109,35 +109,35 @@ export default class Remindme extends TextCommand {
     message.reply({ embeds: [embed], content: pingList.length > 0 ? pingList.join(' ') : undefined });
   }
 
-  private async updateJobs(): Promise<void> {
-    const allJobs = this.client.database.getAllReminderJobs();
-    for (const job of allJobs) {
-      const remainingTime = parseInt(job.dueTime) - Date.now(); // ms
-      if (remainingTime < 1_209_600_000) {
-        if (remainingTime < 0) {
-          this.client.database.removeReminderJob(job.dueTime);
-          continue;
-        }
+  // private async updateJobs(): Promise<void> {
+  //   const allJobs = this.client.database.getAllReminderJobs();
+  //   for (const job of allJobs) {
+  //     const remainingTime = parseInt(job.dueTime) - Date.now(); // ms
+  //     if (remainingTime < 1_209_600_000) {
+  //       if (remainingTime < 0) {
+  //         this.client.database.removeReminderJob(job.dueTime);
+  //         continue;
+  //       }
         
-        const channel = await this.client.channels.fetch(job.channelId) as TextChannel;
-        const replyToMessage = await channel.messages.fetch(job.messageId);
+  //       const channel = await this.client.channels.fetch(job.channelId) as TextChannel;
+  //       const replyToMessage = await channel.messages.fetch(job.messageId);
 
-        const embed = new EmbedBuilder()
-          .setColor(this.client.config.colors.GREEN)
-          .setTitle('Ding, here\'s your reminder!')
-          .setTimestamp(replyToMessage.createdTimestamp);
-        if (job.message) embed.setDescription(job.message);
+  //       const embed = new EmbedBuilder()
+  //         .setColor(this.client.config.colors.GREEN)
+  //         .setTitle('Ding, here\'s your reminder!')
+  //         .setTimestamp(replyToMessage.createdTimestamp);
+  //       if (job.message) embed.setDescription(job.message);
 
-        const pingList: Array<string> = [];
-        if (replyToMessage.mentions.members?.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
+  //       const pingList: Array<string> = [];
+  //       if (replyToMessage.mentions.members?.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
 
-        setTimeout(() => {
-          this.sendReply(replyToMessage, embed, pingList);
-          this.client.database.removeReminderJob(job.dueTime);
-        }, remainingTime);
-      }
-    }
-  }
+  //       setTimeout(() => {
+  //         this.sendReply(replyToMessage, embed, pingList);
+  //         this.client.database.removeReminderJob(job.dueTime);
+  //       }, remainingTime);
+  //     }
+  //   }
+  // }
 
   private helpMessage(prefix: string): EmbedBuilder {
     return new EmbedBuilder()
