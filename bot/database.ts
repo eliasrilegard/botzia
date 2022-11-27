@@ -7,7 +7,7 @@ interface DocsError extends Error {
 export default class NedbClient {
   private readonly serverPrefixes: Datastore<{ id: string, prefix: string }>;
   private readonly userTimezones: Datastore<{ id: string, offset: string}>;
-  private readonly reminderJobs: Datastore<{ dueTime: string, channelId: string, messageId: string, message?: string }>;
+  private readonly reminderJobs: Datastore<{ dueTime: string, channelId: string, messageId: string, userIds: Array<string>, message?: string }>;
 
   constructor(dir: string) {
     this.serverPrefixes = new Datastore({ filename: `${dir}/discord/server_prefixes.db`, autoload: true });
@@ -71,16 +71,16 @@ export default class NedbClient {
   }
 
   // Remindme
-  async setReminderJob(dueTime: string, channelId: string, messageId: string, message?: string): Promise<void> {
-    this.reminderJobs.insert({ dueTime, channelId, messageId, message }, error => {
+  async setReminderJob(dueTime: string, channelId: string, messageId: string, userIds: Array<string>, message?: string): Promise<void> {
+    this.reminderJobs.insert({ dueTime, channelId, messageId, userIds, message }, error => {
       // Afaik this should never happen with the way we're saving/loading
       if (error && (error as DocsError).errorType === 'uniqueViolated') {
-        this.reminderJobs.update({ messageId }, { $set: { dueTime, channelId, message } });
+        this.reminderJobs.update({ messageId }, { $set: { dueTime, channelId, userIds, message } });
       }
     });
   }
 
-  getAllReminderJobs(): Array<{ dueTime: string, channelId: string, messageId: string, message?: string }> {
+  getAllReminderJobs(): Array<{ dueTime: string, channelId: string, messageId: string, userIds: Array<string>, message?: string }> {
     return this.reminderJobs.getAllData();
   }
 

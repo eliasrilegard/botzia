@@ -83,8 +83,11 @@ export default class Remindme extends TextCommand {
     if (msg) embed.addFields({ name: 'Message:', value: msg });
     message.channel.send({ embeds: [embed] });
 
+    const pingList: Array<string> = [message.author.id];
+    if (message.mentions.members?.size && msg) message.mentions.members.forEach(member => pingList.push(member.id));
+
     const now = Date.now();
-    this.client.database.setReminderJob(`${now + duration}`, message.channelId, message.id, msg);
+    this.client.database.setReminderJob(`${now + duration}`, message.channelId, message.id, pingList, msg);
 
     delete embed.data.description;
     delete embed.data.fields;
@@ -93,9 +96,6 @@ export default class Remindme extends TextCommand {
       .setTitle('Ding, here\'s your reminder!')
       .setTimestamp(Date.now());
     if (msg) embed.setDescription(msg);
-    
-    const pingList: Array<string> = [];
-    if (message.mentions.members?.size && msg) message.mentions.members.forEach(member => pingList.push(`${member}`));
     
     if (duration < 1_209_600_000) { // If more than 14 days we just store in database
       setTimeout(() => {
@@ -106,7 +106,7 @@ export default class Remindme extends TextCommand {
   }
 
   private sendReply(message: Message, embed: EmbedBuilder, pingList: Array<string>): void {
-    message.reply({ embeds: [embed], content: pingList.length > 0 ? pingList.join(' ') : undefined });
+    message.reply({ embeds: [embed], content: `<@${pingList.join('> <@')}>` });
   }
 
   // private async updateJobs(): Promise<void> {

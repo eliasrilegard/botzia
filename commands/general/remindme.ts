@@ -106,8 +106,14 @@ export default class RemindMe extends SlashCommand {
     if (message) embed.addFields({ name: 'Message:', value: message });
     const okMessage = await interaction.reply({ embeds: [embed], fetchReply: true });
 
+    const pingList: Array<string> = [interaction.user.id];
+    if (message) {
+      // A ! means they have a nickname
+      message.match(/<@!?\d{18,19}>/g)?.forEach(ping => pingList.push(ping.match(/\d{18,19}/)![0]));
+    }
+
     const now = Date.now();
-    this.client.database.setReminderJob(`${now + duration}`, interaction.channelId, okMessage.id, message ?? undefined);
+    this.client.database.setReminderJob(`${now + duration}`, interaction.channelId, okMessage.id, pingList, message ?? undefined);
 
     delete embed.data.description;
     delete embed.data.fields;
@@ -116,12 +122,6 @@ export default class RemindMe extends SlashCommand {
       .setTitle('Ding, here\'s your reminder!')
       .setTimestamp(now);
     if (message) embed.setDescription(message);
-    
-    const pingList: Array<string> = [`${interaction.user}`];
-    if (message) {
-      const mentions = message.match(/<@!?\d{18,19}>/g); // A ! means they have a nickname
-      if (mentions) mentions.forEach(member => pingList.push(member.replace(/!/g, '')));
-    }
     
     if (duration < 1_209_600_000) { // If more than 14 days we just store in database
       setTimeout(() => {
@@ -143,7 +143,7 @@ export default class RemindMe extends SlashCommand {
   }
 
   private sendReply(message: Message, embed: EmbedBuilder, pingList: Array<string>): void {
-    message.reply({ embeds: [embed], content: pingList.length > 0 ? pingList.join(' ') : undefined });
+    message.reply({ embeds: [embed], content: `<@${pingList.join('> <@')}>` });
   }
 
   private async updateJobs(): Promise<void> {
@@ -165,11 +165,13 @@ export default class RemindMe extends SlashCommand {
           .setTimestamp(replyToMessage.createdTimestamp);
         if (job.message) embed.setDescription(job.message);
 
-        const pingList: Array<string> = [];
-        if (replyToMessage.mentions.members?.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
+        // const pingList: Array<string> = [`<@${replyToMessage.author.id}>`];
+
+        // Rework the following
+        // if (replyToMessage.mentions.members?.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
 
         setTimeout(() => {
-          this.sendReply(replyToMessage, embed, pingList);
+          this.sendReply(replyToMessage, embed, job.userIds);
           this.client.database.removeReminderJob(job.dueTime);
         }, remainingTime);
       }
