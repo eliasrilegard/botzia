@@ -26,7 +26,13 @@ export default class Help extends SlashCommand {
 
     const categoriesOverview = categories.map(categoryCmd => `**/${categoryCmd.data.name}** - ${categoryCmd.data.description}`).join('\n');
     const standaloneCommands = this.client.slashCommands
-      .filter(cmd => !cmd.isCategory && !cmd.belongsTo)
+      .filter(cmd => {
+        if (cmd.isCategory || cmd.belongsTo) return false;
+        // Filter out commands a user cannot perform
+        const data = cmd.data as SlashCommandBuilder;
+        const serverPerms = BigInt(data.default_member_permissions ?? '');
+        return interaction.memberPermissions?.has(serverPerms) ?? true; // .has() returns undefined in DMs
+      })
       .map(cmd => `**/${cmd.data.name}** - ${cmd.data.description}`)
       .sort((a, b) => a.localeCompare(b))
       .join('\n');
