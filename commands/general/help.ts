@@ -11,7 +11,7 @@ export default class Help extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const categories = this.client.slashCommands.filter(cmd => (cmd.isCategory ?? false) && cmd.data.name !== 'dev');
+    const categories = this.client.slashCommands.filter(cmd => cmd.isCategory && cmd.data.name !== 'dev');
 
     const categoryEmbeds = categories.map(categoryCmd => {
       const subCommands = this.client.slashCommands

@@ -14,7 +14,7 @@ const defaultOptions: SlashCommandOptions = {
 
 export default class SlashCommand {
   readonly belongsTo?: string;
-  readonly isCategory?: boolean;
+  readonly isCategory: boolean;
 
   protected constructor(
     readonly data: SlashCommandBuilder | SlashCommandSubcommandBuilder,
@@ -23,7 +23,7 @@ export default class SlashCommand {
   ) {
     const commandOptions: SlashCommandOptions = { ...defaultOptions, ...customOptions };
     this.belongsTo = commandOptions.belongsTo;
-    this.isCategory = commandOptions.isCategory;
+    this.isCategory = commandOptions.isCategory!;
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
