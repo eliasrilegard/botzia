@@ -39,10 +39,19 @@ export default class Kick extends SlashCommand {
       return;
     }
 
+    const guildMember = await interaction.guild!.members.fetch(member.id);
     if (
-      UtilityFunctions.permHierarchy(member, interaction.member as GuildMember) &&
-      member.permissions.has(PermissionFlagsBits.Administrator)
+      guildMember.permissions.has(PermissionFlagsBits.KickMembers) ||
+      guildMember.permissions.has(PermissionFlagsBits.Administrator)
     ) {
+      embed
+        .setTitle('Can\'t kick moderators')
+        .setDescription('Cannot kick moderators of the server.');
+      interaction.reply({ embeds: [embed] });
+      return;
+    }
+
+    if (UtilityFunctions.permHierarchy(guildMember, interaction.member as GuildMember)) {
       embed
         .setTitle('Can\'t kick member')
         .setDescription('You cannot kick someone equal to or above you.');

@@ -41,9 +41,17 @@ export default class Ban extends SlashCommand {
 
     const guildMember = await interaction.guild!.members.fetch(member.id);
     if (
-      UtilityFunctions.permHierarchy(guildMember, interaction.member as GuildMember) &&
+      guildMember.permissions.has(PermissionFlagsBits.BanMembers) ||
       guildMember.permissions.has(PermissionFlagsBits.Administrator)
     ) {
+      embed
+        .setTitle('Can\'t ban moderators')
+        .setDescription('Cannot ban moderators of the server.');
+      interaction.reply({ embeds: [embed] });
+      return;
+    }
+
+    if (UtilityFunctions.permHierarchy(guildMember, interaction.member as GuildMember)) {
       embed
         .setTitle('Can\'t ban member')
         .setDescription('You cannot ban someone equal to or above you.');
