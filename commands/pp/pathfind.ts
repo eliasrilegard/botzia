@@ -39,6 +39,8 @@ export default class Pathfind extends SlashCommand {
       .addIntegerOption(option => option
         .setName('range-upgrade')
         .setDescription('Range upgrade level to use (0-4)')
+        .setMinValue(0)
+        .setMaxValue(4)
       );
     super(data, client, { belongsTo: 'pp' });
   }

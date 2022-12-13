@@ -10,10 +10,12 @@ export default class Slot extends SlashCommand {
       .addIntegerOption(option => option
         .setName('slot-1')
         .setDescription('The slot to calculate the cost for')
+        .setMinValue(1)
         .setRequired(true)
       )
       .addIntegerOption(option => option
         .setName('slot-2')
+        .setMinValue(1)
         .setDescription('Optional second slot, which forms a range from the first slot to the second, inclusive.')
       );
     super(data, client, { belongsTo: 'pp' });

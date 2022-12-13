@@ -22,14 +22,20 @@ export default class Flight extends SlashCommand {
       .addIntegerOption(option => option
         .setName('upgrade-range')
         .setDescription('The range upgrade of the plane (0-4)')
+        .setMinValue(0)
+        .setMaxValue(4)
       )
       .addIntegerOption(option => option
         .setName('upgrade-speed')
         .setDescription('The range upgrade of the plane (0-4)')
+        .setMinValue(0)
+        .setMaxValue(4)
       )
       .addIntegerOption(option => option
         .setName('upgrade-weight')
         .setDescription('The range upgrade of the plane (0-4)')
+        .setMinValue(0)
+        .setMaxValue(4)
       );
     super(data, client, { belongsTo: 'pp' });
   }

@@ -15,18 +15,23 @@ export default class Res extends SlashCommand {
       .addIntegerOption(option => option
         .setName('upgrades')
         .setDescription('The number of upgrades on the piece')
+        .setMinValue(0)
       )
       .addIntegerOption(option => option
         .setName('primary-stat')
         .setDescription('The primary stat of the piece, which will be upgraded alongside the resistances')
+        .setMinValue(0)
       )
       .addIntegerOption(option => option
         .setName('secondary-stat')
         .setDescription('The secondary stat if you want to get the stat total of the piece. Doesn\'t get upgraded')
+        .setMinValue(0)
       )
       .addIntegerOption(option => option
         .setName('fix-slot')
         .setDescription('The slot to upgrade further to fix another 3 res piece. (Number between 1-4)')
+        .setMinValue(1)
+        .setMaxValue(4)
       );
 
     super(data, client, { belongsTo: 'dd' });

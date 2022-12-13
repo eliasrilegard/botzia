@@ -10,6 +10,7 @@ export default class Bank extends SlashCommand {
       .addIntegerOption(option => option
         .setName('bux')
         .setDescription('The amount of bux you\'d like to transfer')
+        .setMinValue(1)
         .setRequired(true)
       );
       // .addIntegerOption(option => option

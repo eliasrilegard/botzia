@@ -15,6 +15,8 @@ export default class LTRange extends SlashCommand {
       .addIntegerOption(option => option
         .setName('range')
         .setDescription('Your current range')
+        .setMinValue(0)
+        .setMaxValue(9999)
         .setRequired(true)
       );
     super(data, client, { belongsTo: 'dd' });

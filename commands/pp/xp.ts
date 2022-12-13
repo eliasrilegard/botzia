@@ -10,6 +10,7 @@ export default class XP extends SlashCommand {
       .addIntegerOption(option => option
         .setName('level')
         .setDescription('Current level')
+        .setMinValue(1)
         .setRequired(true)
       );
     super(data, client, { belongsTo: 'pp' });

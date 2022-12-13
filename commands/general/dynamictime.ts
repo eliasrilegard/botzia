@@ -32,7 +32,10 @@ export default class DynamicTime extends SlashCommand {
         })
         .addIntegerOption(option => option
           .setName('utc-offset')
-          .setDescription('Offset from UTC (mutually exlusive with timezone-name)'))
+          .setDescription('Offset from UTC (mutually exlusive with timezone-name)')
+          .setMinValue(-14)
+          .setMaxValue(14)
+        )
       )
       .addSubcommandGroup(group => group
         .setName('timezone')
