@@ -113,13 +113,10 @@ export default class Purge extends SlashCommand {
 
     // Custom purge
 
-    const deferred = count > 100 || purgeAllChannels;
-    if (deferred) {
-      const embed = new EmbedBuilder()
-        .setColor(this.client.config.colors.BLUE)
-        .setTitle('Working...');
-      interaction.reply({ embeds: [embed], ephemeral: true });
-    }
+    const embed = new EmbedBuilder()
+      .setColor(this.client.config.colors.BLUE)
+      .setTitle('Working...');
+    interaction.reply({ embeds: [embed], ephemeral: true });
 
     const guildChannels = await interaction.guild!.channels.fetch();
     const channels = (purgeAllChannels ?
@@ -149,7 +146,7 @@ export default class Purge extends SlashCommand {
         lastId = lastMsg.id;
 
         for (const [, msg] of fetched) {
-          if (afterMessageId && msg.id < afterMessageId || deletedMessageCount >= count) break;
+          if (afterMessageId && parseInt(msg.id) < parseInt(afterMessageId) || deletedMessageCount >= count) break;
 
           if ((botsOnly && !msg.author.bot) || (humansOnly && msg.author.bot)) continue;
 
@@ -182,7 +179,6 @@ export default class Purge extends SlashCommand {
       .setColor(this.client.config.colors.GREEN)
       .setTitle('Success')
       .setDescription(`Successfully deleted ${deletedMessageTotalCount} messages.`);
-    if (deferred) interaction.editReply({ embeds: [successEmbed] });
-    else interaction.reply({ embeds: [successEmbed], ephemeral: true });
+    interaction.editReply({ embeds: [successEmbed] });
   }
 }
