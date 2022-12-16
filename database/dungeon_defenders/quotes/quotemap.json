@@ -26,5 +26,9 @@
   {
     "name": "faking",
     "filepath": "./database/dungeon_defenders/quotes/img/thales_faking_traces.png"
+  },
+  {
+    "name": "whosesar",
+    "filepath": "./database/dungeon_defenders/quotes/img/escev_whosesar.png"
   }
 ]
