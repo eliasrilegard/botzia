@@ -23,9 +23,9 @@ export default class Quote extends SlashCommand {
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const key = interaction.options.getString('quote')!;
-    const filepath = this.quoteMap.get(key);
+    const filename = this.quoteMap.get(key);
 
-    if (!filepath) {
+    if (!filename) {
       const embed = new EmbedBuilder()
         .setColor(this.client.config.colors.RED)
         .setTitle('Quote not found')
@@ -35,8 +35,8 @@ export default class Quote extends SlashCommand {
     }
     
     const quoteImage = new AttachmentBuilder(
-      filepath,
-      { name: filepath.slice(filepath.lastIndexOf('/') + 1).replace(/[',\s-]/g, '') } // See mhw/hzv
+      `./database/dungeon_defenders/quotes/img/${filename}`,
+      { name: filename }
     );
     interaction.reply({ files: [quoteImage] });
   }
@@ -54,7 +54,7 @@ export default class Quote extends SlashCommand {
     delete require.cache[require.resolve('../../database/dungeon_defenders/quotes/quotemap.json')];
     const { default: quoteData } = await import('../../database/dungeon_defenders/quotes/quotemap.json');
     for (const [, v] of Object.entries(quoteData)) {
-      this.quoteMap.set(v.name, v.filepath);
+      this.quoteMap.set(v.name, v.filename);
     }
   }
 }

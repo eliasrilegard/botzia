@@ -1,34 +1,34 @@
 [
   {
     "name": "possible",
-    "filepath": "./database/dungeon_defenders/quotes/img/lolz_possible.png"
+    "filename": "lolz_possible.png"
   },
   {
     "name": "cheating",
-    "filepath": "./database/dungeon_defenders/quotes/img/plane_cheating.png"
+    "filename": "plane_cheating.png"
   },
   {
     "name": "post",
-    "filepath": "./database/dungeon_defenders/quotes/img/nyman_post.png"
+    "filename": "nyman_post.png"
   },
   {
     "name": "ups",
-    "filepath": "./database/dungeon_defenders/quotes/img/moose_ups.png"
+    "filename": "moose_ups.png"
   },
   {
     "name": "verylucky",
-    "filepath": "./database/dungeon_defenders/quotes/img/washboard_tol.png"
+    "filename": "washboard_tol.png"
   },
   {
     "name": "trash",
-    "filepath": "./database/dungeon_defenders/quotes/img/jeol_trash.png"
+    "filename": "jeol_trash.png"
   },
   {
     "name": "faking",
-    "filepath": "./database/dungeon_defenders/quotes/img/thales_faking_traces.png"
+    "filename": "thales_faking_traces.png"
   },
   {
     "name": "whosesar",
-    "filepath": "./database/dungeon_defenders/quotes/img/escev_whosesar.png"
+    "filename": "escev_whosesar.png"
   }
 ]
