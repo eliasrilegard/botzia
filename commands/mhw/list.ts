@@ -33,7 +33,7 @@ export default class List extends SlashCommand {
       }, [])
       .map(chunk => { // Map each chunk to an embed message
         return new EmbedBuilder()
-          .setColor('#8fde5d')
+          .setColor(this.client.config.colors.GREEN)
           .addFields({ name: 'Monsters list', value: chunk.join('\n') });
       });
       

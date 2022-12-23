@@ -79,7 +79,7 @@ export default class Hzv extends SlashCommand {
     const attachURL = (fileName: string) => `attachment://${fileName}`;
     
     const embed = new EmbedBuilder()
-      .setColor('#8fde5d')
+      .setColor(this.client.config.colors.GREEN)
       .setTitle(`__**${monster.title}**__${monster.threat_level ? `  ${monster.threat_level}` : ''}`)
       .setThumbnail(attachURL(thumbnail.name!))
       .setImage(attachURL(hzvImage.name!))

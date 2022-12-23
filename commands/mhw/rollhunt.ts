@@ -68,7 +68,7 @@ export default class RollHunt extends SlashCommand {
     );
 
     const embed = new EmbedBuilder()
-      .setColor('#8fde5d')
+      .setColor(this.client.config.colors.GREEN)
       .setTitle('Rolled Hunt')
       .addFields({ name: 'Monster', value: randomMonster.title })
       .setThumbnail(`attachment://${thumbnail.name!}`);
