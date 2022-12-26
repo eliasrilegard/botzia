@@ -32,6 +32,14 @@ export default class Kick extends SlashCommand {
     const notifMsg = interaction.options.getString('notification');
 
     const embed = new EmbedBuilder().setColor(this.client.config.colors.RED);
+    
+    if (!member) {
+      embed
+        .setTitle('Unknown member')
+        .setDescription('That user doesn\'t seem to be in this server.');
+      interaction.reply({ embeds: [embed] });
+      return;
+    }
 
     if (member.id === this.client.user!.id) {
       embed.setTitle('I can\'t kick myself');
