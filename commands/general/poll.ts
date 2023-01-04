@@ -54,12 +54,8 @@ export default class Poll extends SlashCommand {
     }
 
     const allEmotes = ['🍎', '🍓', '🍐', '🍒', '🍇', '🥕', '🍊', '🍉', '🍈', '🍋', '🍌', '🥥', '🥑', '🥦', '🌶️', '🌽', '🥝', '🧄', '🍍', '🥬'];
+    if (Math.random() < 0.05) allEmotes.push('<:kekw:743962015411732510>');
     const emotes = UtilityFunctions.shuffle(allEmotes).slice(0, options.length);
-
-    if (Math.random() < 0.05) {
-      emotes.pop();
-      emotes.push('<:kekw:743962015411732510>');
-    }
 
     let choicesString = '';
     options.forEach((option, index) => choicesString += `${emotes[index]} - ${option}\n`);
