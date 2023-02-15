@@ -147,7 +147,7 @@ export default class DynamicTime extends SlashCommand {
     }
 
     // If day isn't specified, default to today (bot time)
-    let dateString = `${isDaySpecified ? timestamp.slice(0, 10) : new Date().toISOString().slice(0, 10)} ${timestamp.slice(-5)}`;
+    let dateString = `${isDaySpecified ? timestamp.slice(0, 10) : new Date().toISOString().slice(0, 10)} ${timestamp.slice(-5)} `;
 
     // If timezone specified, else default to UTC
     const timezoneName = interaction.options.getString('timezone-name');
@@ -163,11 +163,11 @@ export default class DynamicTime extends SlashCommand {
         interaction.reply({ embeds: [embed] });
         return;
       }
-      dateString += ` UTC${offset}`;
+      dateString += offset;
     }
     else { // Check if user has a stored timezone, though only if it was omitted in original message
       const savedOffset = await this.client.database.getUserTimezone(interaction.user.id);
-      dateString += ` UTC${savedOffset}`;
+      dateString += savedOffset;
     }
 
     const unixTime = Math.floor(Date.parse(dateString) / 1000);
