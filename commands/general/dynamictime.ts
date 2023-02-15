@@ -11,7 +11,8 @@ export default class DynamicTime extends SlashCommand {
       ['CET', '+01:00'],
       ['CEST', '+02:00'],
       ['EET', '+02:00'],
-      ['ACDT', '+10:30']
+      ['ACDT', '+10:30'],
+      ['ADST', '+09:30']
     ]);
 
     const data = new SlashCommandBuilder()
