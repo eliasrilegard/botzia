@@ -48,7 +48,7 @@ export default class RemindMe extends SlashCommand {
         amount = arg;
         if (!/^(d|day|h|hour|m|min|minute)s?$/.test(unitKey)) { // Error, abort
           const embed = this.helpMessage();
-          interaction.reply({ embeds: [embed] });
+          interaction.reply({ embeds: [embed], ephemeral: true });
           return;
         }
         i++;
@@ -71,7 +71,7 @@ export default class RemindMe extends SlashCommand {
        */
       else {
         const embed = this.helpMessage();
-        interaction.reply({ embeds: [embed] });
+        interaction.reply({ embeds: [embed], ephemeral: true });
         return;
       }
       
@@ -85,7 +85,7 @@ export default class RemindMe extends SlashCommand {
     const duration = (time.days * 24 * 60 + time.hours * 60 + time.minutes) * 60000;
     if (duration <= 0) {
       const embed = this.helpMessage();
-      interaction.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed], ephemeral: true });
       return;
     }
 
@@ -117,10 +117,9 @@ export default class RemindMe extends SlashCommand {
 
     delete embed.data.description;
     delete embed.data.fields;
+    delete embed.data.timestamp;
     
-    embed
-      .setTitle('Ding, here\'s your reminder!')
-      .setTimestamp(now);
+    embed.setTitle('Ding, here\'s your reminder!');
     if (message) embed.setDescription(message);
     
     if (duration < 1_209_600_000) { // If more than 14 days we just store in database
