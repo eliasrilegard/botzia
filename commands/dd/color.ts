@@ -46,7 +46,8 @@ export default class Color extends SlashCommand {
       .setColor(`#${hex}`)
       .setTitle('Resulting color')
       .setDescription(`\`<color:${vals.join(',')}>\` is equivalent to \`<color:${vals[0]},${vals[1] ?? 255},${vals[2] ?? 255}>\``)
-      .setImage('attachment://color.png');
+      .setImage('attachment://color.png')
+      .setFooter({ text: `Hex: ${hex}` });
     interaction.reply({ embeds: [embed], files: [attachment] });
   }
 }
