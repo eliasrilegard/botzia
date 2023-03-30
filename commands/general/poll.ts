@@ -34,11 +34,18 @@ export default class Poll extends SlashCommand {
     const channel = interaction.options.getChannel('channel') as GuildTextBasedChannel ?? interaction.channel;
 
     if (interaction.guild) {
+      const embed = new EmbedBuilder()
+        .setColor(this.client.config.colors.RED)
+        .setTitle('Insufficient permissions');
+
       if (!channel.permissionsFor(interaction.guild.members.me!).has('SendMessages')) {
-        const embed = new EmbedBuilder()
-          .setColor(this.client.config.colors.RED)
-          .setTitle('Insufficient permissions')
-          .setDescription(`I cannot send messages in ${channel}.`);
+        embed.setDescription(`I cannot send messages in ${channel}.`);
+        interaction.reply({ embeds: [embed], ephemeral: true });
+        return;
+      }
+
+      if (!channel.permissionsFor(interaction.member as GuildMember).has('SendMessages')) {
+        embed.setDescription(`You cannot send messages in ${channel}`);
         interaction.reply({ embeds: [embed], ephemeral: true });
         return;
       }
