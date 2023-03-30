@@ -42,4 +42,17 @@ export default class UtilityFunctions {
     }
     return array;
   }
+
+  /**
+   * Chunks the passed array into smaller arrays of specified size.
+   */
+  static chunk<T>(array: Array<T>, chunkSize: number): Array<Array<T>> {
+    return [...this.chunks(array, chunkSize)];
+  }
+
+  private static* chunks<T>(array: Array<T>, chunkSize: number): Generator<Array<T>, void> {
+    for (let i = 0; i < array.length; i += chunkSize) {
+      yield array.slice(i, i + chunkSize);
+    }
+  }
 }

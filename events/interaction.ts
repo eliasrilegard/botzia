@@ -26,6 +26,14 @@ export default class InteractionCreate extends ClientEvent {
 
     try {
       await command.execute(interaction);
+
+      client.database.incrementCommandUsage(
+        interaction.user.id,
+        interaction.guildId ?? 'DM',
+        command.data.name,
+        interaction.options.getSubcommandGroup(false),
+        interaction.options.getSubcommand(false)
+      );
     }
     catch (error) {
       console.log(error);
