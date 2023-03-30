@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder } from 'discord.js';
 import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
+import UtilityFunctions from '../../utils/utilities';
 
 export default class List extends SlashCommand {
   constructor(client: Bot) {
@@ -24,18 +25,12 @@ export default class List extends SlashCommand {
     const monsterNames = [...this.client.mhw.monsters.values()].map(monster => monster.title).sort((a, b) => a.localeCompare(b));
     const monstersPerPage = 20;
 
-    const embeds = monsterNames
-      .reduce((result: Array<Array<string>>, name, index) => { // Split monsterNames into chunks
-        const chunkIndex = Math.floor(index / monstersPerPage);
-        if (!result[chunkIndex]) result[chunkIndex] = [];
-        result[chunkIndex].push(name);
-        return result;
-      }, [])
-      .map(chunk => { // Map each chunk to an embed message
-        return new EmbedBuilder()
-          .setColor(this.client.config.colors.GREEN)
-          .addFields({ name: 'Monsters list', value: chunk.join('\n') });
-      });
+    // Split monsterNames into chunks and map each to an embed message
+    const embeds = UtilityFunctions.chunk(monsterNames, monstersPerPage).map(chunk => {
+      return new EmbedBuilder()
+        .setColor(this.client.config.colors.GREEN)
+        .addFields({ name: 'Monsters list', value: chunk.join('\n') });
+    });
       
     this.sendMenu(interaction, embeds);
   }
