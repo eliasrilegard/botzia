@@ -1,4 +1,4 @@
-import { Client, Collection, ColorResolvable, GatewayIntentBits, Message, Partials } from 'discord.js';
+import { Client, Collection, ColorResolvable, GatewayIntentBits, Message, Partials, Snowflake } from 'discord.js';
 import NedbClient from './database';
 import ClientEvent from './event';
 import UtilityFunctions from '../utils/utilities';
@@ -99,7 +99,7 @@ export default class Bot extends Client {
     return customPrefix ? customPrefix : prefix;
   }
 
-  isDev(id: string): boolean {
+  isDev(id: Snowflake): boolean {
     const devs = [
       this.config.users.chrono_id
     ];

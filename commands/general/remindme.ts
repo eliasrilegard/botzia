@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, Message, SlashCommandBuilder, Snowflake, TextChannel } from 'discord.js';
 import Bot from '../../bot/bot';
 import SlashCommand from '../../bot/slashcommand';
 
@@ -106,7 +106,7 @@ export default class RemindMe extends SlashCommand {
     if (message) embed.addFields({ name: 'Message:', value: message });
     const okMessage = await interaction.reply({ embeds: [embed], fetchReply: true });
 
-    const pingList: Array<string> = [interaction.user.id];
+    const pingList: Array<Snowflake> = [interaction.user.id];
     if (message) {
       // A ! means they have a nickname
       message.match(/<@!?\d{18,19}>/g)?.forEach(ping => pingList.push(ping.match(/\d{18,19}/)![0]));
@@ -141,7 +141,7 @@ export default class RemindMe extends SlashCommand {
       ]);
   }
 
-  private sendReply(message: Message, embed: EmbedBuilder, pingList: Array<string>): void {
+  private sendReply(message: Message, embed: EmbedBuilder, pingList: Array<Snowflake>): void {
     message.reply({ embeds: [embed], content: `<@${pingList.join('> <@')}>` });
   }
 
@@ -163,11 +163,6 @@ export default class RemindMe extends SlashCommand {
           .setTitle('Ding, here\'s your reminder!')
           .setTimestamp(replyToMessage.createdTimestamp);
         if (job.message) embed.setDescription(job.message);
-
-        // const pingList: Array<string> = [`<@${replyToMessage.author.id}>`];
-
-        // Rework the following
-        // if (replyToMessage.mentions.members?.size && job.message) replyToMessage.mentions.members.forEach(member => pingList.push(`${member}`));
 
         setTimeout(() => {
           this.sendReply(replyToMessage, embed, job.userIds);
