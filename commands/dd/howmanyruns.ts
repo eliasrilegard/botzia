@@ -68,12 +68,12 @@ export default class HowManyRuns extends SlashCommand {
 
     if (itemsPerRun) {
       description += `\nRuns: The number of runs required, assuming **${itemsPerRun}** items per run`;
-      const runsRequired = itemsRequired.map(itemCount => formatWithSpace(Math.round(itemCount / (itemsPerRun ?? 1))));
+      const runsRequired = itemsRequired.map(itemCount => formatWithSpace(Math.round(itemCount / itemsPerRun)));
       data.push(padStrings(['Runs', ...runsRequired], 6));
     }
     if (timePerRun) {
       description += `\nHours: The number of hours spent farming, assuming one run takes **${timePerRun}** minutes`;
-      const hoursRequired = itemsRequired.map(itemCount => formatWithSpace((itemCount * (timePerRun ?? 1) / 60).toFixed(1)));
+      const hoursRequired = itemsRequired.map(itemCount => formatWithSpace((itemCount * timePerRun / (60 * (itemsPerRun ?? 1))).toFixed(1)));
       data.push(padStrings(['Hours', ...hoursRequired], 6));
     }
     
