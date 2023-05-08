@@ -17,18 +17,36 @@ const codeblock = (s: string) => `\`\`\`${s}\`\`\``;
 const longestString = <T extends Stringifiable>(arr: Array<T>) => Math.max(...arr.map(e => e.toString().length));
 const padStrings = <T extends Stringifiable>(arr: Array<T>, minLength?: number) => arr.map(s => s.toString().padEnd(Math.max(minLength ?? 0, longestString(arr) + 4)));
 
+export const verifyProbability = (input: string) => {
+  switch (true) {
+    case /^0\.\d*[1-9]$/.test(input): {
+      // Number is on form 0.123
+      return parseFloat(input);
+    }
+    case /^[1-9]\d*\/[1-9]\d*$/.test(input): {
+      // Number is on form x/y
+      const split = input.split('/');
+      const result = parseInt(split[0]) / parseInt(split[1]);
+      // Require: result ∈ (0,1)
+      return result > 0 && result < 1 ? result : -1;
+    }
+    default: {
+      return -1;
+    }
+  }
+};
+
 export default class HowManyRuns extends SlashCommand {
   constructor(client: Bot) {
     const data = new SlashCommandSubcommandBuilder()
       .setName('howmanyruns')
       .setDescription('Calculate number of runs required to obtain an item with a given drop chance')
-      .addIntegerOption(option => option
+      .addStringOption(option => option
         .setName('probability')
-        .setDescription('x in 1/x for the probability') // Rephrase
-        .setMinValue(1)
+        .setDescription('A decimal number or fraction between 0 and 1 (not inclusive)')
         .setRequired(true)
       )
-      .addIntegerOption(option => option
+      .addNumberOption(option => option
         .setName('items-per-run')
         .setDescription('The number of items you get in a single run')
         .setMinValue(1)
@@ -38,14 +56,24 @@ export default class HowManyRuns extends SlashCommand {
         .setDescription('The time (in minutes) to complete a single run')
         .setMinValue(0.01)
       );
-    super(data, client, { belongsTo: 'dd' });
+    super(data, client, { belongsTo: 'probability' });
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-    const probabilityInput = interaction.options.getInteger('probability')!;
-    const probability = 1 / probabilityInput;
-    const itemsPerRun = interaction.options.getInteger('items-per-run');
+    const probabilityInput = interaction.options.getString('probability')!;
+    const itemsPerRun = interaction.options.getNumber('items-per-run');
     const timePerRun = interaction.options.getNumber('time-per-run');
+
+    const probability = verifyProbability(probabilityInput);
+
+    if (probability === -1) {
+      const embed = new EmbedBuilder()
+        .setColor(this.client.config.colors.RED)
+        .setTitle('Invalid Format')
+        .setDescription('The argument \`probability\` must be a decimal number or a fraction, and be between 0 and 1.');
+      interaction.reply({ embeds: [embed], ephemeral: true });
+      return;
+    }
 
     const probabilities = [10, 25, 50, 75, 90, 95, 99] as const;
     
@@ -86,7 +114,7 @@ export default class HowManyRuns extends SlashCommand {
       .setTitle('Drop Chance Analysis')
       .setDescription(description)
       .addFields({
-        name: `For an item with drop chance **1/${probabilityInput}**, here are the relevant rates.`,
+        name: `For an item with drop chance **${probabilityInput}**, here are the relevant rates.`,
         value: content
       });
 
