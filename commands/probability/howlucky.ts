@@ -18,7 +18,7 @@ export default class HowLucky extends SlashCommand {
       .setDescription('Calculate how lucky a drop was')
       .addStringOption(option => option
         .setName('probability')
-        .setDescription('x in 1/x')
+        .setDescription('A decimal number or fraction between 0 and 1 (not inclusive)')
         .setRequired(true)
       )
       .addIntegerOption(option => option
