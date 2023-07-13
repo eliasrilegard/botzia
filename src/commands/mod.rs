@@ -11,6 +11,7 @@ use crate::Result;
 mod categories;
 mod general;
 mod moderation;
+mod probability;
 mod time;
 
 type NamedCommands = Vec<(&'static str, Box<dyn SlashCommand + Send + Sync>)>;
