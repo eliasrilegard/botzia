@@ -39,7 +39,8 @@ pub trait SlashSubCommand {
 
 impl Handler {
   pub fn load_commands(mut self) -> Self {
-    let commands = general::commands().into_iter();
+    let commands = categories::commands().into_iter()
+      .chain(general::commands());
 
     for (name, command) in commands {
       self.commands.insert(name.to_string(), command);
