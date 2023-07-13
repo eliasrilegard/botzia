@@ -8,7 +8,9 @@ use crate::database::Database;
 use crate::handler::Handler;
 use crate::Result;
 
+mod categories;
 mod general;
+mod time;
 
 type NamedCommands = Vec<(&'static str, Box<dyn SlashCommand + Send + Sync>)>;
 type NamedSubCommands = Vec<(&'static str, Box<dyn SlashSubCommand + Send + Sync>)>;

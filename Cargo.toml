@@ -8,6 +8,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.71"
+chrono = "0.4"
 rand = "0.8"
 regex = "1"
 serenity = { version = "0.11.6", default-features = false, features = ["cache", "client", "gateway", "model", "rustls_backend"] }
