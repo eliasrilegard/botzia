@@ -7,6 +7,11 @@ use serenity::prelude::Context;
 use crate::handler::Handler;
 use crate::Result;
 
+mod general;
+
+type NamedCommands = Vec<(&'static str, Box<dyn SlashCommand + Send + Sync>)>;
+type NamedSubCommands = Vec<(&'static str, Box<dyn SlashSubCommand + Send + Sync>)>;
+
 #[async_trait]
 pub trait SlashCommand {
   fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand;
@@ -27,10 +32,10 @@ pub trait SlashSubCommand {
 
 impl Handler {
   pub fn load_commands(mut self) -> Self {
-    let commands = vec![].into_iter();
+    let commands = general::commands().into_iter();
 
     for (name, command) in commands {
-      self.commands.insert(name, command);
+      self.commands.insert(name.to_string(), command);
     }
 
     self
