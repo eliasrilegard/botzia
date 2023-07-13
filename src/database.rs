@@ -8,11 +8,11 @@ pub struct Database {
 }
 
 impl Database {
-  pub(crate) fn new(pool: PgPool) -> Self {
+  pub fn new(pool: PgPool) -> Self {
     Self { pool }
   }
 
-  pub(crate) async fn get_user_timezone(&self, user_id: UserId) -> Result<String> {
+  pub async fn get_user_timezone(&self, user_id: UserId) -> Result<String> {
     let row = sqlx::query("SELECT utc_offset FROM user_timezones WHERE user_snowflake = $1")
       .bind(user_id.0 as i64)
       .fetch_one(&self.pool)
@@ -23,7 +23,7 @@ impl Database {
     Ok(offset)
   }
 
-  pub(crate) async fn set_user_timezone(&self, user_id: UserId, offset: String) -> Result<()> {
+  pub async fn set_user_timezone(&self, user_id: UserId, offset: String) -> Result<()> {
     sqlx::query("
       INSERT INTO user_timezones VALUES ($1, $2)
       ON CONFLICT (user_snowflake) DO
@@ -37,7 +37,7 @@ impl Database {
     Ok(())
   }
 
-  pub(crate) async fn remove_user_timezone(&self, user_id: UserId) -> Result<()> {
+  pub async fn remove_user_timezone(&self, user_id: UserId) -> Result<()> {
     sqlx::query("DELETE FROM user_timezones WHERE user_snowflake = $1")
       .bind(user_id.0 as i64)
       .execute(&self.pool)
