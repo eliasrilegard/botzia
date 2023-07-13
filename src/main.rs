@@ -1,44 +1,29 @@
-use anyhow::anyhow;
-use serenity::async_trait;
-use serenity::model::channel::Message;
-use serenity::model::gateway::Ready;
-use serenity::prelude::*;
-use shuttle_secrets::SecretStore;
-use tracing::{error, info};
+use anyhow::Context;
 
-struct Bot;
+use serenity::client::Client;
+use serenity::prelude::GatewayIntents;
 
-#[async_trait]
-impl EventHandler for Bot {
-  async fn message(&self, ctx: Context, msg: Message) {
-    if msg.content == "!hello" {
-      if let Err(e) = msg.channel_id.say(&ctx.http, "world!").await {
-        error!("Error sending message: {:?}", e);
-      }
-    }
-  }
+use shuttle_secrets::{Secrets, SecretStore};
+use shuttle_serenity::ShuttleSerenity;
 
-  async fn ready(&self, _: Context, ready: Ready) {
-    info!("{} is connected!", ready.user.name);
-  }
-}
+mod handler;
+
+use handler::Handler;
+
+pub type Result<T, E = Box<dyn std::error::Error>> = std::result::Result<T, E>;
 
 #[shuttle_runtime::main]
 async fn serenity(
-  #[shuttle_secrets::Secrets] secret_store: SecretStore,
+  #[Secrets] secret_store: SecretStore
 ) -> shuttle_serenity::ShuttleSerenity {
-  // Get the discord token set in `Secrets.toml`
-  let token = if let Some(token) = secret_store.get("DISCORD_TOKEN") {
-    token
-  } else {
-    return Err(anyhow!("'DISCORD_TOKEN' was not found").into());
-  };
+  let token = secret_store.get("DISCORD_TOKEN").context("DISCORD_TOKEN not found")?;
+  let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT | GatewayIntents::GUILD_MEMBERS;
 
-  // Set gateway intents, which decides what events the bot will be notified about
-  let intents = GatewayIntents::GUILD_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
+  let handler = Handler::default()
+    .load_commands();
 
-  let client = Client::builder(&token, intents)
-    .event_handler(Bot)
+  let client = Client::builder(token, intents)
+    .event_handler(handler)
     .await
     .expect("Err creating client");
 
