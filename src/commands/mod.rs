@@ -10,6 +10,7 @@ use crate::Result;
 
 mod categories;
 mod general;
+mod moderation;
 mod time;
 
 type NamedCommands = Vec<(&'static str, Box<dyn SlashCommand + Send + Sync>)>;
@@ -40,7 +41,8 @@ pub trait SlashSubCommand {
 impl Handler {
   pub fn load_commands(mut self) -> Self {
     let commands = categories::commands().into_iter()
-      .chain(general::commands());
+      .chain(general::commands())
+      .chain(moderation::commands());
 
     for (name, command) in commands {
       self.commands.insert(name.to_string(), command);
