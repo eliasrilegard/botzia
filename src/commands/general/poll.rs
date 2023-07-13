@@ -8,6 +8,7 @@ use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 use serenity::prelude::Context;
 
+use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::interaction::{InteractionCustomGet, BetterResponse};
 use crate::Result;
@@ -63,7 +64,7 @@ impl SlashCommand for Poll {
       if !permissions.contains(Permissions::SEND_MESSAGES) {
         let mut embed = CreateEmbed::default();
         embed
-          .color(0xcc0000)
+          .color(Colors::RED)
           .title("Insuficcient permissions")
           .description(format!("I cannot send messages in {}", guild_channel));
         
@@ -76,7 +77,7 @@ impl SlashCommand for Poll {
       if !permissions.contains(Permissions::SEND_MESSAGES) {
         let mut embed = CreateEmbed::default();
         embed
-          .color(0xcc0000)
+          .color(Colors::RED)
           .title("Insufficient permissions")
           .description(format!("You cannot send messages in {}", guild_channel));
 
@@ -89,7 +90,7 @@ impl SlashCommand for Poll {
     if options.len() < 2 || options.len() > 20 {
       let mut embed = CreateEmbed::default();
       embed
-        .color(0xcc0000)
+        .color(Colors::RED)
         .title("Check arguments")
         .description("A poll needs at least 2 and at most 20 options.");
 
@@ -114,7 +115,7 @@ impl SlashCommand for Poll {
 
     let mut response = CreateEmbed::default();
     response
-      .color(0x00cc00)
+      .color(Colors::GREEN)
       .title("Success")
       .description(format!("Posting the poll in {}", guild_channel));
 
@@ -131,7 +132,7 @@ impl SlashCommand for Poll {
     
     let mut embed = CreateEmbed::default();
     embed
-      .color(0x0066cc)
+      .color(Colors::BLUE)
       .set_author(author)
       .title(question)
       .field("Choices", choices.join("\n"), false)

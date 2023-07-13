@@ -6,6 +6,7 @@ use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 use serenity::prelude::Context;
 
+use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::interaction::{InteractionCustomGet, BetterResponse};
 use crate::Result;
@@ -38,7 +39,7 @@ impl SlashCommand for SpongeText {
     let output = randomize_case(input);
 
     let mut embed = CreateEmbed::default();
-    embed.color(0x0066cc)
+    embed.color(Colors::BLUE)
       .title("Here's your converted text")
       .description(output);
 

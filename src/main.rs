@@ -6,6 +6,7 @@ use serenity::prelude::GatewayIntents;
 use shuttle_secrets::{Secrets, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 
+mod color;
 mod commands;
 mod handler;
 mod interaction;
