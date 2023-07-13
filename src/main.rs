@@ -8,6 +8,7 @@ use shuttle_serenity::ShuttleSerenity;
 
 mod commands;
 mod handler;
+mod interaction;
 
 use handler::Handler;
 
