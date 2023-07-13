@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Cursed",
+    "levels": {
+      "armor": 0,
+      "pets": 0,
+      "weapons": 0
+    }
+  },
+  {
+    "name": "Torn",
+    "levels": {
+      "armor": 0,
+      "pets": 0,
+      "weapons": 0
+    }
+  },
+  {
+    "name": "Worn",
+    "levels": {
+      "armor": 2,
+      "pets": 3,
+      "weapons": 3
+    }
+  },
+  {
+    "name": "Stocky",
+    "levels": {
+      "armor": 4,
+      "pets": 6,
+      "weapons": 6
+    }
+  },
+  {
+    "name": "Solid",
+    "levels": {
+      "armor": 8,
+      "pets": 8,
+      "weapons": 8
+    }
+  },
+  {
+    "name": "Sturdy",
+    "levels": {
+      "armor": 10,
+      "pets": 10,
+      "weapons": 10
+    }
+  },
+  {
+    "name": "Polished",
+    "levels": {
+      "armor": 12,
+      "pets": 12,
+      "weapons": 12
+    }
+  },
+  {
+    "name": "Shining",
+    "levels": {
+      "armor": 16,
+      "pets": 14,
+      "weapons": 14
+    }
+  },
+  {
+    "name": "Powerful",
+    "levels": {
+      "armor": 20,
+      "pets": 17,
+      "weapons": 20
+    }
+  },
+  {
+    "name": "Amazing",
+    "levels": {
+      "armor": 27,
+      "pets": 22,
+      "weapons": 27
+    }
+  },
+  {
+    "name": "Epic",
+    "levels": {
+      "armor": 34,
+      "pets": 30,
+      "weapons": 34
+    }
+  },
+  {
+    "name": "Legendary",
+    "levels": {
+      "armor": 45,
+      "pets": 50,
+      "weapons": 45
+    }
+  },
+  {
+    "name": "Godly",
+    "levels": {
+      "armor": 60,
+      "pets": 70,
+      "weapons": 60
+    }
+  },
+  {
+    "name": "Mythical",
+    "levels": {
+      "armor": 74,
+      "pets": 74,
+      "weapons": 74
+    }
+  },
+  {
+    "name": "Transcendent",
+    "levels": {
+      "armor": 78,
+      "pets": 78,
+      "weapons": 78
+    }
+  },
+  {
+    "name": "Supreme",
+    "levels": {
+      "armor": 83,
+      "pets": 83,
+      "weapons": 83
+    }
+  },
+  {
+    "name": "Ultimate",
+    "levels": {
+      "armor": 90,
+      "pets": 90,
+      "weapons": 90
+    }
+  },
+  {
+    "name": "Ultimate93",
+    "levels": {
+      "armor": 93,
+      "pets": 93,
+      "weapons": 93
+    }
+  },
+  {
+    "name": "Ultimate+",
+    "levels": {
+      "armor": 100,
+      "pets": 100,
+      "weapons": 100
+    }
+  },
+  {
+    "name": "Ultimate++",
+    "levels": {
+      "armor": 100,
+      "pets": 100,
+      "weapons": 100
+    }
+  }
+]
