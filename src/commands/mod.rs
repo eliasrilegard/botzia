@@ -9,6 +9,7 @@ use crate::handler::Handler;
 use crate::Result;
 
 mod categories;
+mod dd;
 mod general;
 mod moderation;
 mod probability;
