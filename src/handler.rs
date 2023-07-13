@@ -9,15 +9,18 @@ use serenity::prelude::{Context, EventHandler};
 use tracing::{error, info};
 
 use crate::commands::SlashCommand;
+use crate::database::Database;
 
 pub struct Handler {
-  pub commands: HashMap<String, Box<dyn SlashCommand + Send + Sync>>
+  pub commands: HashMap<String, Box<dyn SlashCommand + Send + Sync>>,
+  pub database: Database
 }
 
 impl Handler {
-  pub fn new() -> Self {
+  pub fn new(database: Database) -> Self {
     Self {
-      commands: HashMap::new()
+      commands: HashMap::new(),
+      database
     }
   }
 }
