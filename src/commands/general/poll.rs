@@ -10,6 +10,7 @@ use serenity::prelude::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
+use crate::database::Database;
 use crate::interaction::{InteractionCustomGet, BetterResponse};
 use crate::Result;
 
@@ -48,7 +49,7 @@ impl SlashCommand for Poll {
       .dm_permission(false)
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction) -> Result<()> {
+  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
     let question = interaction.get_string("title").unwrap();
     let options_raw = interaction.get_string("options").unwrap();
         

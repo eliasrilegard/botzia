@@ -31,7 +31,7 @@ impl EventHandler for Handler {
     match base_interaction {
       Interaction::ApplicationCommand(interaction) => {
         if let Some(command) = self.commands.get(&interaction.data.name) {
-          if let Err(why) = command.execute(&ctx, &interaction).await {
+          if let Err(why) = command.execute(&ctx, &interaction, &self.database).await {
             error!("Encountered an error while executing a command:\n{:?}", why);
           }
         }
@@ -39,7 +39,7 @@ impl EventHandler for Handler {
 
       Interaction::Autocomplete(interaction) => {
         if let Some(command) = self.commands.get(&interaction.data.name) {
-          if let Err(why) = command.handle_autocomplete(&ctx, &interaction).await {
+          if let Err(why) = command.handle_autocomplete(&ctx, &interaction, &self.database).await {
             error!("Encountered an error while responding to autocomplete:\n{}", why);
           }
         }

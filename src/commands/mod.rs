@@ -4,6 +4,7 @@ use serenity::model::prelude::interaction::application_command::ApplicationComma
 use serenity::model::prelude::interaction::autocomplete::AutocompleteInteraction;
 use serenity::prelude::Context;
 
+use crate::database::Database;
 use crate::handler::Handler;
 use crate::Result;
 
@@ -16,9 +17,9 @@ type NamedSubCommands = Vec<(&'static str, Box<dyn SlashSubCommand + Send + Sync
 pub trait SlashCommand {
   fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand;
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction) -> Result<()>;
+  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()>;
 
-  async fn handle_autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction) -> Result<()> {
+  async fn handle_autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
     Err("This command doesn't have any parameters with autocomplete enabled.".into())
   }
 }
@@ -26,8 +27,12 @@ pub trait SlashCommand {
 #[async_trait]
 pub trait SlashSubCommand {
   fn register<'a>(&self, subcommand: &'a mut CreateApplicationCommandOption) -> &'a mut CreateApplicationCommandOption;
+  
+  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()>;
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction) -> Result<()>;
+  async fn handle_autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
+    Err("This command doesn't have any parameters with autocomplete enabled.".into())
+  }
 }
 
 impl Handler {
