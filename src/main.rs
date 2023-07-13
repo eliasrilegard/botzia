@@ -6,6 +6,7 @@ use serenity::prelude::GatewayIntents;
 use shuttle_secrets::{Secrets, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 
+mod commands;
 mod handler;
 
 use handler::Handler;
@@ -15,11 +16,11 @@ pub type Result<T, E = Box<dyn std::error::Error>> = std::result::Result<T, E>;
 #[shuttle_runtime::main]
 async fn serenity(
   #[Secrets] secret_store: SecretStore
-) -> shuttle_serenity::ShuttleSerenity {
+) -> ShuttleSerenity {
   let token = secret_store.get("DISCORD_TOKEN").context("DISCORD_TOKEN not found")?;
   let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT | GatewayIntents::GUILD_MEMBERS;
 
-  let handler = Handler::default()
+  let handler = Handler::new()
     .load_commands();
 
   let client = Client::builder(token, intents)
