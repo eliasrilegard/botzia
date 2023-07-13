@@ -82,14 +82,7 @@ impl SlashSubCommand for Timezone {
       },
 
       "get" => {
-        // let user_timezone = db.get_user_timezone(interaction.user.id).await.unwrap_or("".to_string());
-        let result = db.get_user_timezone(interaction.user.id).await;
-
-        println!("\n\n\n\n\n\n\n\n\n\n");
-        println!("{:#?}", &result);
-        println!("\n\n\n\n\n\n\n\n\n\n");
-
-        let user_timezone = result.unwrap_or("".to_string());
+        let user_timezone = db.get_user_timezone(interaction.user.id).await.unwrap_or("".to_string());
 
         embed
           .color(Colors::BLUE)
