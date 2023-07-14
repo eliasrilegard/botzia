@@ -24,7 +24,7 @@ pub trait SlashCommand {
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()>;
 
-  async fn handle_autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
+  async fn autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
     Err("This command doesn't have any parameters with autocomplete enabled.".into())
   }
 }
@@ -35,7 +35,7 @@ pub trait SlashSubCommand {
   
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()>;
 
-  async fn handle_autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
+  async fn autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
     Err("This command doesn't have any parameters with autocomplete enabled.".into())
   }
 }

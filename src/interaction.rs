@@ -3,6 +3,8 @@ use std::sync::Arc;
 use serenity::async_trait;
 use serenity::builder::CreateInteractionResponseData;
 use serenity::http::Http;
+use serenity::model::application::interaction::autocomplete::AutocompleteInteraction;
+use serenity::model::prelude::application_command::CommandData;
 use serenity::model::prelude::{Attachment, PartialChannel, Role, PartialMember};
 use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::{ApplicationCommandInteraction, CommandDataOptionValue, CommandDataOption};
@@ -46,15 +48,19 @@ pub trait InteractionCustomGet {
   fn get_attachment(&self, name: &str) -> Option<Attachment>;
 }
 
-fn get_value<'a>(interaction: &'a ApplicationCommandInteraction, name: &'a str, kind: CommandOptionType) -> Option<&'a CommandDataOptionValue> {
-  // Hoist options
-  let options = if let Some(option) = interaction.data.options.get(0) {
+fn hoisted_options(data: &CommandData) -> &Vec<CommandDataOption> {
+  if let Some(option) = data.options.get(0) {
     match option.kind {
       CommandOptionType::SubCommand => &option.options,
       CommandOptionType::SubCommandGroup => &option.options.get(0).unwrap().options,
-      _ => &interaction.data.options
+      _ => &data.options
     }
-  } else { &interaction.data.options };
+  } else { &data.options }
+}
+
+fn get_value<'a>(interaction: &'a ApplicationCommandInteraction, name: &'a str, kind: CommandOptionType) -> Option<&'a CommandDataOptionValue> {
+  // Hoist options to make filtering easier
+  let options = hoisted_options(&interaction.data);
 
   if let Some(found_option) = options.iter().find(|option| option.kind == kind && option.name == name) {
     let value = found_option.resolved.as_ref().expect("No resolved value exists");
@@ -129,6 +135,49 @@ impl InteractionCustomGet for ApplicationCommandInteraction {
   fn get_attachment(&self, name: &str) -> Option<Attachment> {
     if let Some(CommandDataOptionValue::Attachment(attachment)) = get_value(&self, name, CommandOptionType::Attachment) {
       Some(attachment.to_owned())
+    } else { None }
+  }
+}
+
+pub trait AutocompleteCustomGet {
+  fn get_focused_value(&self) -> Option<&str>;
+  fn get_focused_option(&self) -> &CommandDataOption;
+  fn get_subcommand(&self) -> Option<CommandDataOption>;
+  fn get_subcommand_group(&self) -> Option<CommandDataOption>;
+
+}
+
+impl AutocompleteCustomGet for AutocompleteInteraction {
+  fn get_focused_value(&self) -> Option<&str> {
+    let focused = self.get_focused_option();
+    if let Some(value) = &focused.value {
+      value.as_str()
+    } else { None }
+  }
+
+  fn get_focused_option(&self) -> &CommandDataOption {
+    let options = hoisted_options(&self.data);
+    options.iter().find(|option| option.focused).unwrap()
+  }
+
+  fn get_subcommand(&self) -> Option<CommandDataOption> {
+    // Hoist potential subcommand group options
+    let options = if let Some(group) = self.data.options.iter().find(|option| option.kind == CommandOptionType::SubCommandGroup) {
+      let mut options = self.data.options.clone();
+      options.extend(group.options.clone());
+      options
+    } else { self.data.options.clone() };
+
+    let option = options.iter().find(|option| option.kind == CommandOptionType::SubCommand);
+    if let Some(subcommand) = option {
+      Some(subcommand.to_owned())
+    } else { None }
+  }
+
+  fn get_subcommand_group(&self) -> Option<CommandDataOption> {
+    let option = self.data.options.iter().find(|option| option.kind == CommandOptionType::SubCommandGroup);
+    if let Some(subcommand_group) = option {
+      Some(subcommand_group.to_owned())
     } else { None }
   }
 }

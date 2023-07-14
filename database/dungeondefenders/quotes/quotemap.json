@@ -1,0 +1,34 @@
+[
+  {
+    "name": "possible",
+    "file": "lolz_possible.png"
+  },
+  {
+    "name": "cheating",
+    "file": "plane_cheating.png"
+  },
+  {
+    "name": "post",
+    "file": "nyman_post.png"
+  },
+  {
+    "name": "ups",
+    "file": "moose_ups.png"
+  },
+  {
+    "name": "verylucky",
+    "file": "washboard_tol.png"
+  },
+  {
+    "name": "trash",
+    "file": "jeol_trash.png"
+  },
+  {
+    "name": "faking",
+    "file": "thales_faking_traces.png"
+  },
+  {
+    "name": "whosesar",
+    "file": "escev_whosesar.png"
+  }
+]
