@@ -10,6 +10,7 @@ use tracing::{error, info};
 
 use crate::commands::SlashCommand;
 use crate::database::Database;
+use crate::interaction::InteractionCustomGet;
 
 pub struct Handler {
   pub commands: HashMap<String, Box<dyn SlashCommand + Send + Sync>>,
@@ -34,6 +35,16 @@ impl EventHandler for Handler {
           if let Err(why) = command.execute(&ctx, &interaction, &self.database).await {
             error!("Encountered an error while executing a command:\n{:?}", why);
           }
+
+          let mut full_name = vec![interaction.data.name.clone()];
+          if let Some(subcommand_group) = interaction.get_subcommand_group() {
+            full_name.push(subcommand_group.name);
+          }
+          if let Some(subcommand) = interaction.get_subcommand() {
+            full_name.push(subcommand.name)
+          }
+
+          let _ = self.database.increment_command_usage(full_name.join(" "), interaction.guild_id, interaction.user.id).await;
         }
       }
 
