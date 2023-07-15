@@ -79,9 +79,8 @@ impl SlashSubCommand for Quote {
   }
 
   async fn autocomplete(&self, ctx: &Context, interaction: &AutocompleteInteraction, _: &Database) -> Result<()> {
-    // This could use a rework down the line
-    let focused_value = if let Some(value) = interaction.get_focused_value() {
-      value.to_ascii_lowercase().replace(" ", "")
+    let focused_value = if let Some(value) = interaction.get_focused_option().value {
+      value.as_str().unwrap_or("").to_ascii_lowercase().replace(" ", "")
     } else { "".to_string() };
 
     interaction.create_autocomplete_response(&ctx.http, |response| {

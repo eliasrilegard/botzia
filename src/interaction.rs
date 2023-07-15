@@ -140,24 +140,15 @@ impl InteractionCustomGet for ApplicationCommandInteraction {
 }
 
 pub trait AutocompleteCustomGet {
-  fn get_focused_value(&self) -> Option<&str>;
-  fn get_focused_option(&self) -> &CommandDataOption;
+  fn get_focused_option(&self) -> CommandDataOption;
   fn get_subcommand(&self) -> Option<CommandDataOption>;
   fn get_subcommand_group(&self) -> Option<CommandDataOption>;
-
 }
 
 impl AutocompleteCustomGet for AutocompleteInteraction {
-  fn get_focused_value(&self) -> Option<&str> {
-    let focused = self.get_focused_option();
-    if let Some(value) = &focused.value {
-      value.as_str()
-    } else { None }
-  }
-
-  fn get_focused_option(&self) -> &CommandDataOption {
+  fn get_focused_option(&self) -> CommandDataOption {
     let options = hoisted_options(&self.data);
-    options.iter().find(|option| option.focused).unwrap()
+    options.iter().find(|option| option.focused).unwrap().clone()
   }
 
   fn get_subcommand(&self) -> Option<CommandDataOption> {
