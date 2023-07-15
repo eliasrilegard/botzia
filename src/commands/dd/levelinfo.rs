@@ -46,15 +46,14 @@ impl SlashSubCommand for LevelInfo {
     let file = include_str!("../../../database/dungeondefenders/leveldata.json");
     let qualities: Vec<Quality> = serde_json::from_str(file).expect("JSON was not well formatted.");
 
-    let mut desc = vec![padder("Name/Level", "Weapons", "Armor", "Pets")];
-    for quality in qualities {
-      desc.push(padder(quality.name, quality.levels.weapons, quality.levels.armor, quality.levels.pets));
-    }
+    let desc = [padder("Name", "Weapons", "Armor", "Pets"), "".into()].into_iter()
+      .chain(qualities.iter().map(|q| padder(&q.name, q.levels.weapons, q.levels.armor, q.levels.pets)))
+      .collect::<Vec<_>>();
 
     let mut embed = CreateEmbed::default();
     embed
       .color(Colors::BLUE)
-      .title("Level Info")
+      .title("Level Requirements")
       .description(format!("```{}```", desc.join("\n")));
 
     interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
@@ -63,9 +62,7 @@ impl SlashSubCommand for LevelInfo {
 }
 
 fn padder<N, T>(name: N, weapon: T, armor: T, pet: T) -> String
-  where
-    N: ToString,
-    T: ToString
+  where N: ToString, T: ToString
 {
   format!("{: <14}{: <9}{: <9}{: <5}", name.to_string(), weapon.to_string(), armor.to_string(), pet.to_string())
 }
