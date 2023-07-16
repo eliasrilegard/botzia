@@ -8,6 +8,7 @@ use serenity::prelude::Context;
 use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::database::Database;
+use crate::interaction::pager::InteractiveMenu;
 use crate::interaction::{InteractionCustomGet, BetterResponse};
 use crate::Result;
 
@@ -65,7 +66,7 @@ impl SlashCommand for CommandStats {
       embed
         .color(Colors::BLUE)
         .title("Top usage")
-        .description(format!("Command: `{}`", &command_name))
+        .description(format!("Command: `/{}`", &command_name))
         .fields([
           ("Name", names.join("\n"), true),
           ("Usage", usage.join("\n"), true)
@@ -74,7 +75,11 @@ impl SlashCommand for CommandStats {
       embed
     }).collect::<Vec<_>>();
 
-    interaction.reply(&ctx.http, |msg| msg.set_embeds(embeds)).await?;
+    if embeds.len() > 1 {
+      interaction.send_menu(&ctx, embeds).await?;
+    } else {
+      interaction.reply(&ctx.http, |msg| msg.set_embed(embeds[0].clone())).await?;
+    }
     Ok(())
   }
 }
