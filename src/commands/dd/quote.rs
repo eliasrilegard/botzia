@@ -29,7 +29,7 @@ pub struct Quote {
 
 impl Default for Quote {
   fn default() -> Self {
-    let quotes_json = include_str!("../../../database/dungeondefenders/quotes/quotemap.json");
+    let quotes_json = include_str!("../../../assets/dungeon_defenders/quotes/quotemap.json");
     let quotes: Vec<QuoteData> = serde_json::from_str(quotes_json).expect("JSON was not well formatted");
     let quote_map = quotes.iter().map(|quote| (quote.name.clone(), quote.file.clone())).collect::<HashMap<_, _>>();
     
@@ -68,7 +68,7 @@ impl SlashSubCommand for Quote {
     }
 
     let quote_name = self.quote_map.get(&key).unwrap();
-    let quote = File::open(format!("database/dungeondefenders/quotes/img/{}", quote_name)).await?;
+    let quote = File::open(format!("assets/dungeondefenders/quotes/img/{}", quote_name)).await?;
     let image = AttachmentType::File {
       file: &quote,
       filename: quote_name.into()

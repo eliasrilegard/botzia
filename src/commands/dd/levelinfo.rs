@@ -43,7 +43,7 @@ impl SlashSubCommand for LevelInfo {
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
-    let file = include_str!("../../../database/dungeondefenders/leveldata.json");
+    let file = include_str!("../../../assets/dungeon_defenders/leveldata.json");
     let qualities: Vec<Quality> = serde_json::from_str(file).expect("JSON was not well formatted.");
 
     let desc = [padder("Name", "Weapons", "Armor", "Pets"), "".into()].into_iter()
