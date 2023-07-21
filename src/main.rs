@@ -33,6 +33,7 @@ async fn serenity(
     .context("Failed to run migrations")?;
 
   let db = Database::new(pool);
+  let _ = db.watch_reminders(&token); // Can this be tweaked to accept `?` ?
 
   let handler = Handler::new(db)
     .load_commands();

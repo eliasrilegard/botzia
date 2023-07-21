@@ -1,10 +1,11 @@
-use serenity::model::prelude::{UserId, GuildId};
+use chrono::{DateTime, Utc};
+use serenity::model::prelude::{UserId, GuildId, ChannelId, MessageId};
 use sqlx::{PgPool, Row};
 
 use crate::Result;
 
 pub struct Database {
-  pool: PgPool
+  pub pool: PgPool
 }
 
 impl Database {
@@ -13,13 +14,13 @@ impl Database {
   }
 
   pub async fn get_user_timezone(&self, user_id: UserId) -> Result<String> {
-    let row = sqlx::query("SELECT utc_offset FROM user_timezones WHERE user_snowflake = $1")
+    let offset = sqlx::query("SELECT utc_offset FROM user_timezones WHERE user_snowflake = $1")
       .bind(user_id.0 as i64)
       .fetch_one(&self.pool)
-      .await?;
+      .await?
+      .get::<String, _>("utc_offset");
     // When the queried row doesn't exist, ? returns Err(RowNotFound)
 
-    let offset = row.get::<String, _>(0);
     Ok(offset)
   }
 
@@ -47,17 +48,20 @@ impl Database {
   }
 
   pub async fn get_command_usage(&self, command_name: String, guild_id: Option<GuildId>) -> Result<Vec<(UserId, i32)>> {
-    let rows = sqlx::query("SELECT (user_snowflake, usage_count) FROM command_stats WHERE command_name = $1 AND guild_snowflake = $2")
+    let pairs = sqlx::query("SELECT user_snowflake, usage_count FROM command_stats WHERE command_name = $1 AND guild_snowflake = $2")
       .bind(command_name)
       .bind(guild_id.unwrap_or_default().0 as i64)
       .fetch_all(&self.pool)
-      .await?;
+      .await?
+      .iter()
+      .map(|row| {
+        let id = row.get::<i64, _>("user_snowflake");
+        let count = row.get::<i32, _>("usage_count");
+        (UserId(id as u64), count)
+      })
+      .collect::<Vec<_>>();
 
-    let result = rows.iter().map(|row| {
-      let (id, count) = row.get::<(i64, i32), _>(0);
-      (UserId(id as u64), count)
-    }).collect::<Vec<_>>();
-    Ok(result)
+    Ok(pairs)
   }
 
   pub async fn increment_command_usage(&self, command_name: String, guild_id: Option<GuildId>, user_id: UserId) -> Result<()> {
@@ -71,6 +75,32 @@ impl Database {
       .bind(user_id.0 as i64)
       .execute(&self.pool)
       .await?;
+
+    Ok(())
+  }
+
+  pub async fn create_reminder(&self, due_dt: DateTime<Utc>, channel_id: ChannelId, message_id: MessageId, mentions: Vec<UserId>, message: Option<String>) -> Result<()> {
+    let reminder_id = sqlx::query("
+      INSERT INTO reminders (due_at, created_at, channel_snowflake, message_snowflake, reminder_message)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING reminder_id
+    ")
+      .bind(due_dt)
+      .bind(Utc::now())
+      .bind(channel_id.0 as i64)
+      .bind(message_id.0 as i64)
+      .bind(message)
+      .fetch_one(&self.pool)
+      .await?
+      .get::<i32, _>("reminder_id");
+
+    for mention in mentions {
+      sqlx::query("INSERT INTO reminders_mentions VALUES ($1, $2)")
+        .bind(&reminder_id)
+        .bind(mention.0 as i64)
+        .execute(&self.pool)
+        .await?;
+    }
 
     Ok(())
   }
