@@ -3,10 +3,12 @@ use serde::Deserialize;
 use super::NamedSubCommands;
 
 mod hzv;
+mod list;
 
 pub fn commands() -> NamedSubCommands {
   vec![
-    ("hzv", Box::new(hzv::Hzv::default()))
+    ("hzv", Box::new(hzv::Hzv::default())),
+    ("list", Box::new(list::List::default()))
   ]
 }
 
