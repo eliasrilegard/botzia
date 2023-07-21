@@ -102,6 +102,7 @@ impl Database {
     let pool = self.pool.clone();
 
     tokio::spawn(async move {
+      thread::sleep(Duration::from_secs(10));
       loop {
         let mut remainder_sleep = Duration::from_secs(60);
 
