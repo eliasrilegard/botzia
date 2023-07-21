@@ -11,6 +11,7 @@ use crate::Result;
 mod categories;
 mod dd;
 mod general;
+mod mhw;
 mod moderation;
 mod probability;
 mod time;
