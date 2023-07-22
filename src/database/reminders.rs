@@ -75,7 +75,7 @@ impl Reminder {
   fn construct_response<'a,'b>(&self, msg: &'a mut CreateMessage<'b>, reference: Option<Message>) -> &'a mut CreateMessage<'b> {
     let mut embed = CreateEmbed::default();
     embed
-      .color(Colors::GREEN)
+      .color(Colors::Green)
       .title("Ding, here's your reminder!")
       .timestamp(self.created_dt_utc);
     
@@ -97,7 +97,7 @@ impl Reminder {
 
 
 impl Database {
-  pub fn watch_reminders(&self, token: &String) -> Result<()> {
+  pub fn watch_reminders(&self, token: &str) -> Result<()> {
     let http = Http::new(token);
     let pool = self.pool.clone();
 
@@ -127,6 +127,32 @@ impl Database {
         thread::sleep(remainder_sleep);
       }
     });
+
+    Ok(())
+  }
+
+  pub async fn create_reminder(&self, due_dt: DateTime<Utc>, channel_id: ChannelId, message_id: MessageId, mentions: Vec<UserId>, message: Option<String>) -> Result<()> {
+    let reminder_id = sqlx::query("
+      INSERT INTO reminders (due_at, created_at, channel_snowflake, message_snowflake, reminder_message)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING reminder_id
+    ")
+      .bind(due_dt)
+      .bind(Utc::now())
+      .bind(channel_id.0 as i64)
+      .bind(message_id.0 as i64)
+      .bind(message)
+      .fetch_one(&self.pool)
+      .await?
+      .get::<i32, _>("reminder_id");
+
+    for mention in mentions {
+      sqlx::query("INSERT INTO reminders_mentions VALUES ($1, $2)")
+        .bind(reminder_id)
+        .bind(mention.0 as i64)
+        .execute(&self.pool)
+        .await?;
+    }
 
     Ok(())
   }

@@ -45,7 +45,7 @@ impl SlashSubCommand for Color {
     if !re.is_match(&color_string) {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Invalid format")
         .description("Take your character name, remove `<color:` and `>` so you're only entering the numbers and commas.");
       

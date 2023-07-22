@@ -6,8 +6,8 @@ mod kick;
 
 pub fn commands() -> NamedCommands {
   vec![
-    ("ban", Box::new(ban::Ban::default())),
-    ("massmove", Box::new(massmove::MassMove::default())),
-    ("kick", Box::new(kick::Kick::default()))
+    ("ban", Box::<ban::Ban>::default()),
+    ("massmove", Box::<massmove::MassMove>::default()),
+    ("kick", Box::<kick::Kick>::default())
   ]
 }

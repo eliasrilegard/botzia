@@ -9,11 +9,11 @@ mod spongetext;
 
 pub fn commands() -> NamedCommands {
   vec![
-    ("avatar", Box::new(avatar::Avatar::default())),
-    ("commandstats", Box::new(commandstats::CommandStats::default())),
-    ("poll", Box::new(poll::Poll::default())),
-    ("remindme", Box::new(remindme::RemindMe::default())),
-    ("snowflake", Box::new(snowflake::Snowflake::default())),
-    ("spongetext", Box::new(spongetext::SpongeText::default()))
+    ("avatar", Box::<avatar::Avatar>::default()),
+    ("commandstats", Box::<commandstats::CommandStats>::default()),
+    ("poll", Box::<poll::Poll>::default()),
+    ("remindme", Box::<remindme::RemindMe>::default()),
+    ("snowflake", Box::<snowflake::Snowflake>::default()),
+    ("spongetext", Box::<spongetext::SpongeText>::default())
   ]
 }

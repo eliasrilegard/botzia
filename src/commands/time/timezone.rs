@@ -73,11 +73,11 @@ impl SlashSubCommand for Timezone {
       "list" => {
         // TODO: Sort by offset
         embed
-          .color(Colors::BLUE)
+          .color(Colors::Blue)
           .title("Supported timezones")
           .fields([
-            ("Name", self.timezones.keys().map(|&key| key).collect::<Vec<_>>().join("\n"), true),
-            ("UTC Offset", self.timezones.values().map(|&val| val).collect::<Vec<_>>().join("\n"), true)
+            ("Name", self.timezones.keys().copied().collect::<Vec<_>>().join("\n"), true),
+            ("UTC Offset", self.timezones.values().copied().collect::<Vec<_>>().join("\n"), true)
           ]);
       },
 
@@ -85,7 +85,7 @@ impl SlashSubCommand for Timezone {
         let user_timezone = db.get_user_timezone(interaction.user.id).await.unwrap_or("".to_string());
 
         embed
-          .color(Colors::BLUE)
+          .color(Colors::Blue)
           .title("Current timezone")
           .description(format!("Your current set timezone is UTC{}.", user_timezone));
       },
@@ -97,7 +97,7 @@ impl SlashSubCommand for Timezone {
         db.set_user_timezone(interaction.user.id, utc_offset.to_string()).await?;
 
         embed
-          .color(Colors::GREEN)
+          .color(Colors::Green)
           .title("Timezone set")
           .description(format!("Your offset is now UTC{}.", utc_offset));
       },
@@ -106,7 +106,7 @@ impl SlashSubCommand for Timezone {
         db.remove_user_timezone(interaction.user.id).await?;
 
         embed
-          .color(Colors::GREEN)
+          .color(Colors::Green)
           .title("Timezone reset")
           .description("Your default timezone has been reset to UTC.");
       },

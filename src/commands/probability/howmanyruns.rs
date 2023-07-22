@@ -57,7 +57,7 @@ impl SlashSubCommand for HowManyRuns {
     let verified = verify_probability(probability_input.as_str());
     if verified.is_none() {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::RED)
+      embed.color(Colors::Red)
         .title("Invalid format")
         .description("The argument `probability` must be a decimal number or a fraction, and be between 0 and 1.");
 
@@ -123,7 +123,7 @@ impl SlashSubCommand for HowManyRuns {
     let content = format!("```{}```", prepared.join("\n"));
 
     let mut embed = CreateEmbed::default();
-    embed.color(Colors::BLUE)
+    embed.color(Colors::Blue)
       .title("Drop Chance Analysis")
       .description(description.join("\n"))
       .field(
@@ -156,14 +156,14 @@ pub fn verify_probability(input: &str) -> Option<f32> {
   } else { None }
 }
 
-fn pad_strings<T: ToString>(array: &Vec<T>, min_length: usize) -> Vec<String> {
-  let length = min_length.max(longest_string(&array) + 4);
+fn pad_strings<T: ToString>(array: &[T], min_length: usize) -> Vec<String> {
+  let length = min_length.max(longest_string(array) + 4);
   array.iter()
     .map(|e| format!("{: <1$}", e.to_string(), length))
     .collect::<Vec<String>>()
 }
 
-fn longest_string<T: ToString>(array: &Vec<T>) -> usize {
+fn longest_string<T: ToString>(array: &[T]) -> usize {
   array.iter().map(|e| e.to_string().len()).min().unwrap()
 }
 

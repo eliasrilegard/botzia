@@ -7,8 +7,8 @@ mod list;
 
 pub fn commands() -> NamedSubCommands {
   vec![
-    ("hzv", Box::new(hzv::Hzv::default())),
-    ("list", Box::new(list::List::default()))
+    ("hzv", Box::<hzv::Hzv>::default()),
+    ("list", Box::<list::List>::default())
   ]
 }
 

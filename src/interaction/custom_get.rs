@@ -56,62 +56,58 @@ impl InteractionCustomGet for ApplicationCommandInteraction {
     } else { self.data.options.clone() };
 
     let option = options.iter().find(|option| option.kind == CommandOptionType::SubCommand);
-    if let Some(subcommand) = option {
-      Some(subcommand.to_owned())
-    } else { None }
+    option.map(|subcommand| subcommand.to_owned())
   }
 
   fn get_subcommand_group(&self) -> Option<CommandDataOption> {
     let option = self.data.options.iter().find(|option| option.kind == CommandOptionType::SubCommandGroup);
-    if let Some(subcommand_group) = option {
-      Some(subcommand_group.to_owned())
-    } else { None }
+    option.map(|subcommand_group| subcommand_group.to_owned())
   }
 
   fn get_string(&self, name: &str) -> Option<String> {
-    if let Some(CommandDataOptionValue::String(value)) = get_value(&self, name, CommandOptionType::String) {
+    if let Some(CommandDataOptionValue::String(value)) = get_value(self, name, CommandOptionType::String) {
       Some(value.to_owned())
     } else { None }
   }
   
   fn get_integer(&self, name: &str) -> Option<i64> {  
-    if let Some(CommandDataOptionValue::Integer(value)) = get_value(&self, name, CommandOptionType::Integer) {
+    if let Some(CommandDataOptionValue::Integer(value)) = get_value(self, name, CommandOptionType::Integer) {
       Some(value.to_owned())
     } else { None }
   }
   
   fn get_bool(&self, name: &str) -> Option<bool> {
-    if let Some(CommandDataOptionValue::Boolean(value)) = get_value(&self, name, CommandOptionType::Boolean) {
+    if let Some(CommandDataOptionValue::Boolean(value)) = get_value(self, name, CommandOptionType::Boolean) {
       Some(value.to_owned())
     } else { None }
   }
   
   fn get_user(&self, name: &str) -> Option<(User, Option<PartialMember>)> {
-    if let Some(CommandDataOptionValue::User(user, partial_member)) = get_value(&self, name, CommandOptionType::User) {
+    if let Some(CommandDataOptionValue::User(user, partial_member)) = get_value(self, name, CommandOptionType::User) {
       Some((user.to_owned(), partial_member.to_owned()))
     } else { None }
   }
 
   fn get_channel(&self, name: &str) -> Option<PartialChannel> {
-    if let Some(CommandDataOptionValue::Channel(channel)) = get_value(&self, name, CommandOptionType::Channel) {
+    if let Some(CommandDataOptionValue::Channel(channel)) = get_value(self, name, CommandOptionType::Channel) {
       Some(channel.to_owned())
     } else { None }
   }
   
   fn get_role(&self, name: &str) -> Option<Role> {
-    if let Some(CommandDataOptionValue::Role(role)) = get_value(&self, name, CommandOptionType::Role) {
+    if let Some(CommandDataOptionValue::Role(role)) = get_value(self, name, CommandOptionType::Role) {
       Some(role.to_owned())
     } else { None }
   }
   
   fn get_number(&self, name: &str) -> Option<f64> {
-    if let Some(CommandDataOptionValue::Number(value)) = get_value(&self, name, CommandOptionType::Number) {
+    if let Some(CommandDataOptionValue::Number(value)) = get_value(self, name, CommandOptionType::Number) {
       Some(value.to_owned())
     } else { None }
   }
 
   fn get_attachment(&self, name: &str) -> Option<Attachment> {
-    if let Some(CommandDataOptionValue::Attachment(attachment)) = get_value(&self, name, CommandOptionType::Attachment) {
+    if let Some(CommandDataOptionValue::Attachment(attachment)) = get_value(self, name, CommandOptionType::Attachment) {
       Some(attachment.to_owned())
     } else { None }
   }
@@ -133,15 +129,11 @@ impl AutocompleteCustomGet for AutocompleteInteraction {
     } else { self.data.options.clone() };
 
     let option = options.iter().find(|option| option.kind == CommandOptionType::SubCommand);
-    if let Some(subcommand) = option {
-      Some(subcommand.to_owned())
-    } else { None }
+    option.map(|subcommand| subcommand.to_owned())
   }
 
   fn get_subcommand_group(&self) -> Option<CommandDataOption> {
     let option = self.data.options.iter().find(|option| option.kind == CommandOptionType::SubCommandGroup);
-    if let Some(subcommand_group) = option {
-      Some(subcommand_group.to_owned())
-    } else { None }
+    option.map(|subcommand_group| subcommand_group.to_owned())
   }
 }

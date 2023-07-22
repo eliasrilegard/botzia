@@ -40,7 +40,7 @@ impl SlashCommand for Snowflake {
     if !re.is_match(snowflake.as_str()) {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Invalid snowflake");
 
       interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
@@ -54,7 +54,7 @@ impl SlashCommand for Snowflake {
 
     let mut embed = CreateEmbed::default();
     embed
-      .color(Colors::BLUE)
+      .color(Colors::Blue)
       .title(formatted)
       .footer(|footer| footer.text(format!("Snowflake: {}", snowflake)));
 

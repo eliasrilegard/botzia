@@ -7,8 +7,8 @@ mod timezone;
 
 pub fn commands() -> NamedSubCommands {
   vec![
-    ("convert", Box::new(convert::Convert::default())),
-    ("timezone", Box::new(timezone::Timezone::default()))
+    ("convert", Box::<convert::Convert>::default()),
+    ("timezone", Box::<timezone::Timezone>::default())
   ]
 }
 

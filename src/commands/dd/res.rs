@@ -76,7 +76,7 @@ impl SlashSubCommand for Res {
 
     if resists.iter().any(|e| e.abs() > 35) {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::RED)
+      embed.color(Colors::Red)
         .title("Reasonable numbers expected");
 
       interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
@@ -85,7 +85,7 @@ impl SlashSubCommand for Res {
 
     if resists.len() < 3 || resists.len() > 4 {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::RED)
+      embed.color(Colors::Red)
         .title("3 or 4 resistances expected")
         .description("Separate resistances by spaces.");
 
@@ -95,7 +95,7 @@ impl SlashSubCommand for Res {
 
     if let Some(slot) = fix_slot {
       let mut embed = CreateEmbed::default();
-        embed.color(Colors::RED);
+        embed.color(Colors::Red);
 
       if resists.len() == 3 {
         embed.title("<a:HUHH:1019679010466304061>  What are you trying to calculate?");
@@ -103,7 +103,7 @@ impl SlashSubCommand for Res {
         interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
         return Ok(());
       }
-      else if slot < 1 || slot > 4 {
+      else if !(1..=4).contains(&slot) {
         embed
           .title("Invalid slot")
           .description("Specify a number between 1 and 4.");
@@ -139,7 +139,7 @@ impl SlashSubCommand for Res {
     ));
 
     let mut embed = CreateEmbed::default();
-    embed.color(Colors::BLUE)
+    embed.color(Colors::Blue)
       .title(format!("It takes {} levels to max the resistances", armor.levels_spent))
       .set_footer(embed_footer);
 
@@ -182,7 +182,7 @@ struct ArmorPiece {
 impl ArmorPiece {
   fn new(data: Vec<i32>, lone_index: Option<usize>) -> Self {
     let target_level = if data.len() == 3 { 35 }
-      else if let Some(_) = lone_index { 23 }
+      else if lone_index.is_some() { 23 }
       else { 29 };
 
     ArmorPiece { data, lone_index, target_level, level: 1, levels_spent: 0, into_primary: 0 }
@@ -191,7 +191,7 @@ impl ArmorPiece {
   fn res_upgrade_needed(&self) -> bool {
     let is_last_available = self.data[self.data.len() - 1] < self.target_level;
     let is_lone_available = if let Some(index) = self.lone_index {
-      self.data[index as usize] < 58
+      self.data[index] < 58
     } else { false };
 
     is_last_available || is_lone_available

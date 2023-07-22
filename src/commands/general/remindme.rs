@@ -46,10 +46,10 @@ impl SlashCommand for RemindMe {
     let time_args = interaction.get_string("timer").unwrap().to_ascii_lowercase();
 
     let full_test = Regex::new(r"^(\d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?)[\s,]+)*(\d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?))$").unwrap(); // Help, pattern is \d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?)
-    if !full_test.is_match(&time_args.trim()) {
+    if !full_test.is_match(time_args.trim()) {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Invalid time")
         .description("Check your arguments and make sure everything is well formatted.")
         .fields([
@@ -66,7 +66,7 @@ impl SlashCommand for RemindMe {
 
     let mut embed = CreateEmbed::default();
     embed
-      .color(Colors::GREEN)
+      .color(Colors::Green)
       .title("Reminder created")
       .description(format!("Got it, I will remind you in {}.", time))
       .timestamp(due_dt);

@@ -50,7 +50,7 @@ impl SlashSubCommand for LTRange {
     let index_upped = closest_breakpoint(&current_range, &upped, displayed_values / 2);
 
     let mut embed = CreateEmbed::default();
-    embed.color(Colors::BLUE)
+    embed.color(Colors::Blue)
       .title("Closest breakpoints")
       .description(format!("Here are the closest breakpoints to your current range of **{}**.\n`Range - Targets`", current_range))
       .fields([
@@ -72,7 +72,7 @@ fn closest_breakpoint(range: &i32, breakpoints: &Vec<i32>, margin: i32) -> i32 {
   constrain(index, margin, breakpoints.len() as i32 - 1 - margin)
 }
 
-fn formatter(breakpoints: &Vec<i32>, index: i32, displayed_values: &i32, shift: i32) -> String {
+fn formatter(breakpoints: &[i32], index: i32, displayed_values: &i32, shift: i32) -> String {
   let mut result: Vec<String> = vec![];
   let range = -((displayed_values - 1) / 2)..=(displayed_values / 2);
   for i in range {

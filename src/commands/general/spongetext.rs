@@ -40,7 +40,7 @@ impl SlashCommand for SpongeText {
     let output = randomize_case(input);
 
     let mut embed = CreateEmbed::default();
-    embed.color(Colors::BLUE)
+    embed.color(Colors::Blue)
       .title("Here's your converted text")
       .description(output);
 

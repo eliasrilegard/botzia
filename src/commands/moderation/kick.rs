@@ -60,9 +60,9 @@ impl SlashCommand for Kick {
       if !permissions.contains(Permissions::KICK_MEMBERS) {
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::RED)
+          .color(Colors::Red)
           .title("Insuficcient permissions")
-          .description(format!("I don't have permission to kick members in this server"));
+          .description("I don't have permission to kick members in this server");
         
         interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
         return Ok(());
@@ -75,7 +75,7 @@ impl SlashCommand for Kick {
       // Member not in the guild
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Member not found")
         .description(format!("{} wasn't found in the server", user)); // I assume this will do the ping thing?
 
@@ -87,7 +87,7 @@ impl SlashCommand for Kick {
       // I can't kick myself
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("I can't kick myself");
 
       interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
@@ -99,7 +99,7 @@ impl SlashCommand for Kick {
         // Member is a moderator, don't kick
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::RED)
+          .color(Colors::Red)
           .title("Can't kick moderators")
           .description("Cannot kick moderators of the server");
 
@@ -112,7 +112,7 @@ impl SlashCommand for Kick {
     if let Some(message) = notification {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .author(|author| {
           if let Some(url) = guild.icon_url() {
             author.icon_url(url);
@@ -136,7 +136,7 @@ impl SlashCommand for Kick {
       Ok(_) => {
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::ORANGE)
+          .color(Colors::Orange)
           .author(|author| author
             .name(format!("{} kicked", member.user.tag()))
             .icon_url(member.face())
@@ -151,7 +151,7 @@ impl SlashCommand for Kick {
         
         let mut response = CreateEmbed::default();
         response
-          .color(Colors::GREEN)
+          .color(Colors::Green)
           .title("Kick successful");
         
         interaction.reply(&ctx.http, |msg| msg.set_embed(response).ephemeral(true)).await?;
@@ -160,7 +160,7 @@ impl SlashCommand for Kick {
       Err(why) => {
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::RED)
+          .color(Colors::Red)
           .title("Could not perform kick")
           .field("Error", why, false);
 

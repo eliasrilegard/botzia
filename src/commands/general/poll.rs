@@ -65,7 +65,7 @@ impl SlashCommand for Poll {
       if !permissions.contains(Permissions::SEND_MESSAGES) {
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::RED)
+          .color(Colors::Red)
           .title("Insuficcient permissions")
           .description(format!("I cannot send messages in {}", guild_channel));
         
@@ -78,7 +78,7 @@ impl SlashCommand for Poll {
       if !permissions.contains(Permissions::SEND_MESSAGES) {
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::RED)
+          .color(Colors::Red)
           .title("Insufficient permissions")
           .description(format!("You cannot send messages in {}", guild_channel));
 
@@ -91,7 +91,7 @@ impl SlashCommand for Poll {
     if options.len() < 2 || options.len() > 20 {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Check arguments")
         .description("A poll needs at least 2 and at most 20 options.");
 
@@ -116,7 +116,7 @@ impl SlashCommand for Poll {
 
     let mut response = CreateEmbed::default();
     response
-      .color(Colors::GREEN)
+      .color(Colors::Green)
       .title("Success")
       .description(format!("Posting the poll in {}", guild_channel));
 
@@ -133,7 +133,7 @@ impl SlashCommand for Poll {
     
     let mut embed = CreateEmbed::default();
     embed
-      .color(Colors::BLUE)
+      .color(Colors::Blue)
       .set_author(author)
       .title(question)
       .field("Choices", choices.join("\n"), false)
@@ -141,8 +141,8 @@ impl SlashCommand for Poll {
       .timestamp(Timestamp::now());
     
     if let Ok(poll_msg) = guild_channel.send_message(&ctx.http, |msg| msg.set_embed(embed)).await {
-      for i in 0..options.len() {
-        let _ = poll_msg.react(&ctx.http, emotes[i].clone()).await;
+      for emote in emotes.iter().take(options.len()) {
+        let _ = poll_msg.react(&ctx.http, emote.clone()).await;
       }
     }
     

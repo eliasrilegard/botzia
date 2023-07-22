@@ -59,7 +59,7 @@ impl SlashSubCommand for Quote {
     if !self.quote_map.contains_key(&key) {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Quote not found")
         .description("Could not identify the quote");
 
@@ -80,7 +80,7 @@ impl SlashSubCommand for Quote {
 
   async fn autocomplete(&self, ctx: &Context, interaction: &AutocompleteInteraction, _: &Database) -> Result<()> {
     let focused_value = if let Some(value) = interaction.get_focused_option().value {
-      value.as_str().unwrap_or("").to_ascii_lowercase().replace(" ", "")
+      value.as_str().unwrap_or("").to_ascii_lowercase().replace(' ', "")
     } else { "".to_string() };
 
     interaction.create_autocomplete_response(&ctx.http, |response| {

@@ -52,7 +52,7 @@ impl SlashSubCommand for LevelInfo {
 
     let mut embed = CreateEmbed::default();
     embed
-      .color(Colors::BLUE)
+      .color(Colors::Blue)
       .title("Level Requirements")
       .description(format!("```{}```", desc.join("\n")));
 

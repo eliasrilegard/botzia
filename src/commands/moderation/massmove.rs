@@ -62,9 +62,9 @@ impl SlashCommand for MassMove {
       if !permissions.contains(Permissions::MOVE_MEMBERS) {
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::RED)
+          .color(Colors::Red)
           .title("Insuficcient permissions")
-          .description(format!("I don't have permission to move members in this server"));
+          .description("I don't have permission to move members in this server");
         
         interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
         return Ok(());
@@ -73,7 +73,7 @@ impl SlashCommand for MassMove {
 
     if origin_id.is_none() {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::RED)
+      embed.color(Colors::Red)
         .title("Unknown base channel")
         .description("Unless you're in a voice channel, you need to specify both the base and target channels.");
 
@@ -85,7 +85,7 @@ impl SlashCommand for MassMove {
 
     if origin_id == destination.id {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::RED)
+      embed.color(Colors::Red)
         .title("Nothing to move")
         .description("I can't move members from and to the same channel.");
 
@@ -97,9 +97,9 @@ impl SlashCommand for MassMove {
     let guild_channel = origin_channel.guild().unwrap();
     let members = guild_channel.members(&ctx.cache).await.unwrap();
 
-    if members.len() == 0 {
+    if members.is_empty() {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::RED)
+      embed.color(Colors::Red)
         .title("Nobody to move")
         .description("There is nobody in the channel to move from.");
 
@@ -113,7 +113,7 @@ impl SlashCommand for MassMove {
     }
 
     let mut embed = CreateEmbed::default();
-    embed.color(Colors::GREEN)
+    embed.color(Colors::Green)
       .title("Success")
       .description(format!("Successfully moved everybody to {}", destination.name.unwrap()));
 

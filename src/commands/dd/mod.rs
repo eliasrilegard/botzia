@@ -8,10 +8,10 @@ mod res;
 
 pub fn commands() -> NamedSubCommands {
   vec![
-    ("color", Box::new(color::Color::default())),
-    ("levelinfo", Box::new(levelinfo::LevelInfo::default())),
-    ("ltrange", Box::new(ltrange::LTRange::default())),
-    ("quote", Box::new(quote::Quote::default())),
-    ("res", Box::new(res::Res::default()))
+    ("color", Box::<color::Color>::default()),
+    ("levelinfo", Box::<levelinfo::LevelInfo>::default()),
+    ("ltrange", Box::<ltrange::LTRange>::default()),
+    ("quote", Box::<quote::Quote>::default()),
+    ("res", Box::<res::Res>::default())
   ]
 }

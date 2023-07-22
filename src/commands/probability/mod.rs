@@ -5,7 +5,7 @@ mod howmanyruns;
 
 pub fn commands() -> NamedSubCommands {
   vec![
-    ("howlucky", Box::new(howlucky::HowLucky::default())),
-    ("howmanyruns", Box::new(howmanyruns::HowManyRuns::default()))
+    ("howlucky", Box::<howlucky::HowLucky>::default()),
+    ("howmanyruns", Box::<howmanyruns::HowManyRuns>::default())
   ]
 }

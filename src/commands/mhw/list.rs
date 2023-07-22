@@ -34,12 +34,12 @@ impl SlashSubCommand for List {
     let monsters: Vec<MonsterInfo> = serde_json::from_str(monsters_json).expect("JSON was not well formatted");
 
     let mut monster_names = monsters.iter().map(|monster| monster.details.title.clone()).collect::<Vec<_>>();
-    monster_names.sort_by(|a, b| a.cmp(b));
+    monster_names.sort();
 
     let embeds = monster_names.chunks(20).map(|chunk| {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::BLUE)
+        .color(Colors::Blue)
         .title("All Monsters")
         .description(chunk.join("\n"));
 

@@ -1,4 +1,15 @@
-mod database;
-pub mod reminders;
+use sqlx::PgPool;
 
-pub use database::*;
+pub mod command_usage;
+pub mod reminders;
+pub mod timezones;
+
+pub struct Database {
+  pub pool: PgPool
+}
+
+impl Database {
+  pub fn new(pool: PgPool) -> Self {
+    Self { pool }
+  }
+}

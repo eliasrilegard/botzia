@@ -23,8 +23,8 @@ pub(crate) trait InteractiveMenu {
 impl InteractiveMenu for ApplicationCommandInteraction {
   async fn send_menu(&self, ctx: &Context, mut embeds: Vec<CreateEmbed>) -> Result<()> {
     let embeds_count = embeds.len();
-    for i in 0..embeds_count {
-      embeds[i].footer(|footer| footer.text(format!("Page {} / {}", i + 1, embeds_count)));
+    for (i, embed) in embeds.iter_mut().enumerate() {
+      embed.footer(|footer| footer.text(format!("Page {} / {}", i + 1, embeds_count)));
     }
 
     if let Some(id) = self.guild_id {
@@ -33,7 +33,7 @@ impl InteractiveMenu for ApplicationCommandInteraction {
         if !permissions.contains(Permissions::ADD_REACTIONS | Permissions::MANAGE_MESSAGES) {
           let mut embed = CreateEmbed::default();
           embed
-            .color(Colors::RED)
+            .color(Colors::Red)
             .title("Insufficient permissions")
             .description("I don't have permissions to **MANAGE MESSAGES** and/or **ADD REACTIONS**!");
 
@@ -51,7 +51,7 @@ impl InteractiveMenu for ApplicationCommandInteraction {
       message.react(&ctx.http, reaction).await?;
     }
 
-    let mut collector = message.await_reactions(&ctx)
+    let mut collector = message.await_reactions(ctx)
       .author_id(self.user.id)
       .timeout(Duration::from_secs(120))
       .build();

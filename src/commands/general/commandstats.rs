@@ -38,14 +38,14 @@ impl SlashCommand for CommandStats {
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
     let re = Regex::new(r"\s+").unwrap();
     let input = interaction.get_string("command-name").unwrap();
-    let command_name = re.split(input.as_str()).filter(|m| m.len() > 0).collect::<Vec<_>>().join(" "); // Sanitize
+    let command_name = re.split(input.as_str()).filter(|m| !m.is_empty()).collect::<Vec<_>>().join(" "); // Sanitize
 
     let result = db.get_command_usage(command_name.clone(), interaction.guild_id).await;
 
-    if let Err(_) = result {
+    if result.is_err() {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Command stats not found")
         .description("No stats for that command found in this server.\nDid you spell & format everything correctly?");
 
@@ -64,7 +64,7 @@ impl SlashCommand for CommandStats {
 
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::BLUE)
+        .color(Colors::Blue)
         .title("Top usage")
         .description(format!("Command: `/{}`", &command_name))
         .fields([
@@ -76,7 +76,7 @@ impl SlashCommand for CommandStats {
     }).collect::<Vec<_>>();
 
     if embeds.len() > 1 {
-      interaction.send_menu(&ctx, embeds).await?;
+      interaction.send_menu(ctx, embeds).await?;
     } else {
       interaction.reply(&ctx.http, |msg| msg.set_embed(embeds[0].clone())).await?;
     }

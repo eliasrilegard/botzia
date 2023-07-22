@@ -70,7 +70,7 @@ impl SlashSubCommand for Convert {
     if !re.is_match(timestamp.as_str()) {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Invalid format")
         .description("Make sure the format is `YYYY-MM-DD HH:MM` or just `HH:MM`.");
 
@@ -84,7 +84,7 @@ impl SlashSubCommand for Convert {
       if !Regex::new(r"[+-]\d{2}:\d{2}").unwrap().is_match(utc_offset.as_str()) {
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::RED)
+          .color(Colors::Red)
           .title("Invalid format")
           .description("Specify the offset either using `timezone-name` or with `utc-offset` matching the pattern `±HH:MM`.");
 
@@ -96,7 +96,7 @@ impl SlashSubCommand for Convert {
       if (-12..=14).contains(&hour_offset) {
         let mut embed = CreateEmbed::default();
         embed
-          .color(Colors::RED)
+          .color(Colors::Red)
           .title("Invalid offet")
           .description("Offsets must lie within the range -12 to +14 (inclusive).");
 
@@ -131,14 +131,14 @@ impl SlashSubCommand for Convert {
       let formatted = format!("<t:{}:{}>", timestamp, suffix);
 
       embed
-        .color(Colors::BLUE)
+        .color(Colors::Blue)
         .fields([
           ("Display", &formatted, false),
           ("Raw", &format!("`{}`", &formatted), false)
         ]);
     } else {
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Something went wrong")
         .description("Couldn't convert the passed arguments. Did you format everything correctly?");      
     }

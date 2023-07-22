@@ -64,7 +64,7 @@ impl EventHandler for Handler {
     info!("Registering commands...");
     
     if let Err(why) = Command::set_global_application_commands(&ctx.http, |commands| {
-      for (_, command) in &self.commands {
+      for command in self.commands.values() {
         commands.create_application_command(|builder| command.register(builder));
       }
       commands

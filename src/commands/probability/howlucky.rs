@@ -56,7 +56,7 @@ impl SlashSubCommand for HowLucky {
     let verified = verify_probability(probability_input.as_str());
     if verified.is_none() {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::RED)
+      embed.color(Colors::Red)
         .title("Invalid format")
         .description("The argument `probability` must be a decimal number or a fraction, and be between 0 and 1.");
 
@@ -81,7 +81,7 @@ impl SlashSubCommand for HowLucky {
     let inner_description = if success_count > 1 { format!("**{}** drops", success_count) } else { "a drop".to_string() };
 
     let mut embed = CreateEmbed::default();
-    embed.color(Colors::BLUE)
+    embed.color(Colors::Blue)
       .title("How lucky were you?")
       .description(format!("With a drop chance of **{}**, getting {} within **{}** tries\nhas a **{}%** chance of happening.", probability_input, inner_description, try_count, display_probability));
 

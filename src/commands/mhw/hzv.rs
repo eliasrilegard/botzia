@@ -46,7 +46,7 @@ impl SlashSubCommand for Hzv {
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
-    let monster_name = interaction.get_string("monster").unwrap().replace(" ", "").to_ascii_lowercase();
+    let monster_name = interaction.get_string("monster").unwrap().replace(' ', "").to_ascii_lowercase();
     let is_hr = interaction.get_bool("hr").unwrap_or(false);
 
     let monsters_json = include_str!("../../../assets/monster_hunter_world/monster_data.json");
@@ -57,7 +57,7 @@ impl SlashSubCommand for Hzv {
     } else {
       let mut embed = CreateEmbed::default();
       embed
-        .color(Colors::RED)
+        .color(Colors::Red)
         .title("Monster not found")
         .description("That monster doesn't seem to exist!\nCheck out `/mhw list` for a list of all monsters.");
 
@@ -96,7 +96,7 @@ impl SlashSubCommand for Hzv {
 
     let mut embed = CreateEmbed::default();
     embed
-      .color(Colors::GREEN)
+      .color(Colors::Green)
       .title(format!("__**{}**__{}", monster.details.title, threat_level))
       .thumbnail(format!("attachment://{}", thumbnail_filename))
       .image(format!("attachment://{}", hzv_image_filename))
@@ -116,7 +116,7 @@ impl SlashSubCommand for Hzv {
 
   async fn autocomplete(&self, ctx: &Context, interaction: &AutocompleteInteraction, _: &Database) -> Result<()> {
     let focused_value = if let Some(value) = interaction.get_focused_option().value {
-      value.as_str().unwrap_or("").to_ascii_lowercase().replace(" ", "")
+      value.as_str().unwrap_or("").to_ascii_lowercase().replace(' ', "")
     } else { "".to_string() };
     
     let monsters_json = include_str!("../../../assets/monster_hunter_world/monster_data.json");
@@ -132,8 +132,8 @@ impl SlashSubCommand for Hzv {
     options.sort_by(|(a, _), (b, _)| a.cmp(b));
 
     interaction.create_autocomplete_response(&ctx.http, |response| {
-      for i in 0..options.len().min(25) {
-        response.add_string_choice(options[i].0, options[i].1);
+      for (title, key) in options.iter().take(options.len().min(25)) {
+        response.add_string_choice(title, key);
       }
       response
     }).await?;
@@ -142,7 +142,7 @@ impl SlashSubCommand for Hzv {
   }
 }
 
-fn find_monster(monsters: &Vec<MonsterInfo>, monster_name: String) -> Option<&MonsterInfo> {
+fn find_monster(monsters: &[MonsterInfo], monster_name: String) -> Option<&MonsterInfo> {
   if let Some(by_name) = monsters.iter().find(|monster| monster.name.contains(&monster_name)) {
     Some(by_name)
   } else if let Some(by_alias) = monsters.iter().find(|monster| monster.details.aliases.iter().any(|alias| alias.contains(&monster_name))) {
