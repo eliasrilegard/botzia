@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use serenity::async_trait;
+use serenity::builder::CreateEmbed;
 use serenity::model::prelude::command::Command;
 use serenity::model::prelude::interaction::Interaction;
 use serenity::model::prelude::Ready;
@@ -8,9 +9,10 @@ use serenity::prelude::{Context, EventHandler};
 
 use tracing::{error, info};
 
+use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::database::Database;
-use crate::interaction::InteractionCustomGet;
+use crate::interaction::{InteractionCustomGet, BetterResponse};
 
 pub struct Handler {
   pub commands: HashMap<String, Box<dyn SlashCommand + Send + Sync>>,
@@ -33,6 +35,13 @@ impl EventHandler for Handler {
       Interaction::ApplicationCommand(interaction) => {
         if let Some(command) = self.commands.get(&interaction.data.name) {
           if let Err(why) = command.execute(&ctx, &interaction, &self.database).await {
+            let mut embed = CreateEmbed::default();
+            embed
+              .color(Colors::Red)
+              .title("Encountered an error while running command")
+              .field("Error message", why.to_string(), false);
+            let _ = interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await;
+
             error!("Encountered an error while executing a command:\n{:?}", why);
           }
 
