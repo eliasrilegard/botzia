@@ -25,6 +25,17 @@ CREATE TABLE IF NOT EXISTS reminders (
 CREATE TABLE IF NOT EXISTS reminders_mentions (
   reminder_id INT NOT NULL,
   user_snowflake BIGINT NOT NULL,
-  CONSTRAINT pk_reminders_mentions PRIMARY KEY (reminder_id, user_snowflake), -- Safety
+  CONSTRAINT pk_reminders_mentions PRIMARY KEY (reminder_id, user_snowflake),
   FOREIGN KEY (reminder_id) REFERENCES reminders(reminder_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS trivia_tokens (
+  guild_snowflake BIGINT PRIMARY KEY,
+  token TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS trivia_categories (
+  category_id INT PRIMARY KEY,
+  category_name TEXT NOT NULL
 );

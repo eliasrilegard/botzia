@@ -6,6 +6,7 @@ mod poll;
 mod remindme;
 mod snowflake;
 mod spongetext;
+mod trivia;
 
 pub fn commands() -> NamedCommands {
   vec![
@@ -14,6 +15,7 @@ pub fn commands() -> NamedCommands {
     ("poll", Box::<poll::Poll>::default()),
     ("remindme", Box::<remindme::RemindMe>::default()),
     ("snowflake", Box::<snowflake::Snowflake>::default()),
-    ("spongetext", Box::<spongetext::SpongeText>::default())
+    ("spongetext", Box::<spongetext::SpongeText>::default()),
+    ("trivia", Box::<trivia::Trivia>::default())
   ]
 }
