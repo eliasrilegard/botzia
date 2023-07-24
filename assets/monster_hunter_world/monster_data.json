@@ -62,9 +62,9 @@
         "Blast (⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Anjanath_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Anjanath_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Anjanath_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Anjanath_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Anjanath_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Anjanath_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -129,9 +129,9 @@
         "Sleep (⭐⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Barroth_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Barroth_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Barroth_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Barroth_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Barroth_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Barroth_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -201,8 +201,8 @@
         "Blast (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Bazelgeuse_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Bazelgeuse_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Bazelgeuse_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Bazelgeuse_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -259,8 +259,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Behemoth_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Behemoth_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Behemoth_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Behemoth_HZV.png"
     }
   },
   {
@@ -334,8 +334,8 @@
         "Paralysis (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Deviljho_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Deviljho_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Deviljho_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Deviljho_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -399,9 +399,9 @@
         "Blast (⭐⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Diablos_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Diablos_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Diablos_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Diablos_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Diablos_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Diablos_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -465,9 +465,9 @@
         "Sleep (⭐⭐)",
         "Blast (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Black_Diablos_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Black_Diablos_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Black_Diablos_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Black_Diablos_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Black_Diablos_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Black_Diablos_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -530,9 +530,9 @@
         "Stun (⭐⭐)",
         "Blast (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Dodogama_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Dodogama_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Dodogama_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Dodogama_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Dodogama_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Dodogama_HZV.png"
     }
   },
   {
@@ -595,9 +595,9 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Great_Girros_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Great_Girros_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Great_Girros_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Great_Girros_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Great_Girros_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Great_Girros_HZV.png"
     }
   },
   {
@@ -659,9 +659,9 @@
         "Blast (⭐⭐⭐)",
         "Stun (⭐⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Great_Jagras_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Great_Jagras_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Great_Jagras_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Great_Jagras_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Great_Jagras_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Great_Jagras_HZV.png"
     }
   },
   {
@@ -727,9 +727,9 @@
         "Sleep (⭐)",
         "Blast (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Jyuratodus_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Jyuratodus_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Jyuratodus_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Jyuratodus_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Jyuratodus_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Jyuratodus_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -791,9 +791,9 @@
         "Poison (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Kirin_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Kirin_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Kirin_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Kirin_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Kirin_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Kirin_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -857,9 +857,9 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Kulu-Ya-Ku_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Kulu-Ya-Ku_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Kulu-Ya-Ku_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Kulu-Ya-Ku_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Kulu-Ya-Ku_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Kulu-Ya-Ku_HZV.png"
     }
   },
   {
@@ -928,9 +928,9 @@
         "Blast (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Kulve_Taroth_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Kulve_Taroth_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Kulve_Taroth_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Kulve_Taroth_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Kulve_Taroth_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Kulve_Taroth_HZV.png"
     }
   },
   {
@@ -998,9 +998,9 @@
         "Sleep (⭐)",
         "Paralysis (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Kushala_Daora_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Kushala_Daora_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Kushala_Daora_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Kushala_Daora_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Kushala_Daora_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Kushala_Daora_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -1069,9 +1069,9 @@
         "Blast (⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Lavasioth_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Lavasioth_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Lavasioth_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Lavasioth_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Lavasioth_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Lavasioth_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -1136,9 +1136,9 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Legiana_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Legiana_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Legiana_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Legiana_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Legiana_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Legiana_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -1205,9 +1205,9 @@
         "Sleep (⭐)",
         "Paralysis (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Lunastra_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Lunastra_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Lunastra_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Lunastra_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Lunastra_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Lunastra_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -1263,8 +1263,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Nergigante_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Nergigante_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Nergigante_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Nergigante_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -1332,9 +1332,9 @@
         "Stun (⭐⭐)",
         "Blast (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Odogaron_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Odogaron_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Odogaron_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Odogaron_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Odogaron_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Odogaron_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -1398,9 +1398,9 @@
         "Blast (⭐⭐⭐)",
         "Stun (⭐⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Paolumu_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Paolumu_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Paolumu_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Paolumu_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Paolumu_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Paolumu_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -1468,9 +1468,9 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Pukei-Pukei_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Pukei-Pukei_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Pukei-Pukei_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Pukei-Pukei_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Pukei-Pukei_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Pukei-Pukei_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -1535,9 +1535,9 @@
         "Paralysis (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Radobaan_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Radobaan_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Radobaan_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Radobaan_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Radobaan_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Radobaan_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -1606,9 +1606,9 @@
         "Paralysis (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Rathalos_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Rathalos_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Rathalos_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Rathalos_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Rathalos_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Rathalos_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -1677,9 +1677,9 @@
         "Sleep (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Azure_Rathalos_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Azure_Rathalos_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Azure_Rathalos_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Azure_Rathalos_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Azure_Rathalos_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Azure_Rathalos_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -1744,9 +1744,9 @@
         "Poison (⭐)",
         "Blast (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Rathian_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Rathian_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Rathian_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Rathian_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Rathian_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Rathian_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -1816,9 +1816,9 @@
         "Sleep (⭐⭐)",
         "Paralysis (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Pink_Rathian_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Pink_Rathian_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Pink_Rathian_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Pink_Rathian_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Pink_Rathian_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Pink_Rathian_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -1886,9 +1886,9 @@
         "Paralysis (⭐)",
         "Blast (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Teostra_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Teostra_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Teostra_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Teostra_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Teostra_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Teostra_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -1953,9 +1953,9 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Tobi-Kadachi_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Tobi-Kadachi_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Tobi-Kadachi_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Tobi-Kadachi_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Tobi-Kadachi_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Tobi-Kadachi_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -2020,9 +2020,9 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Tzitzi-Ya-Ku_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Tzitzi-Ya-Ku_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Tzitzi-Ya-Ku_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Tzitzi-Ya-Ku_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Tzitzi-Ya-Ku_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Tzitzi-Ya-Ku_HZV.png"
     }
   },
   {
@@ -2086,9 +2086,9 @@
         "Blast (⭐⭐)",
         "Sleep (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Uragaan_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Uragaan_HZV.png",
-      "hzv_filepath_hr": "assets/monster_hunter_world/img/HR_Uragaan_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Uragaan_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Uragaan_HZV.png",
+      "hzv_filepath_hr": "monster_hunter_world/img/HR_Uragaan_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -2142,8 +2142,8 @@
         "Sleep (⭐)",
         "Paralysis (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Vaal_Hazak_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Vaal_Hazak_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Vaal_Hazak_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Vaal_Hazak_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -2199,8 +2199,8 @@
         "Paralysis (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Xeno'jiiva_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Xeno'jiiva_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Xeno'jiiva_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Xeno'jiiva_HZV.png"
     }
   },
   {
@@ -2257,8 +2257,8 @@
         "Ice (⭐⭐)",
         "Thunder (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Zorah_Magdaros_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Zorah_Magdaros_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Zorah_Magdaros_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Zorah_Magdaros_HZV.png"
     }
   },
   {
@@ -2311,8 +2311,8 @@
         "Blast (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Ancient_Leshen_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Ancient_Leshen_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Ancient_Leshen_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Ancient_Leshen_HZV.png"
     }
   },
   {
@@ -2362,8 +2362,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Leshen_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Leshen_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Leshen_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Leshen_HZV.png"
     }
   },
   {
@@ -2437,8 +2437,8 @@
         "Paralysis (⭐⭐)",
         "Sleep (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Banbaro_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Banbaro_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Banbaro_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Banbaro_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -2491,8 +2491,8 @@
         "Poison (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Beotodus_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Beotodus_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Beotodus_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Beotodus_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -2549,8 +2549,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Nargacuga_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Nargacuga_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Nargacuga_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Nargacuga_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -2619,8 +2619,8 @@
       "resistances": [
         "Ice"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Velkhana_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Velkhana_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Velkhana_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Velkhana_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -2690,8 +2690,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Tigrex_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Tigrex_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Tigrex_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Tigrex_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -2747,8 +2747,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Shrieking_Legiana_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Shrieking_Legiana_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Shrieking_Legiana_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Shrieking_Legiana_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -2802,8 +2802,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Barioth_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Barioth_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Barioth_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Barioth_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -2864,8 +2864,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Glavenus_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Glavenus_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Glavenus_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Glavenus_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -2920,8 +2920,8 @@
         "Sleep (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Brachydios_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Brachydios_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Brachydios_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Brachydios_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -2997,8 +2997,8 @@
         "Sleep (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Fulgur_Anjanath_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Fulgur_Anjanath_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Fulgur_Anjanath_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Fulgur_Anjanath_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -3075,8 +3075,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Ebony_Odogaron_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Ebony_Odogaron_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Ebony_Odogaron_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Ebony_Odogaron_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -3134,8 +3134,8 @@
         "Paralysis (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Acidic_Glavenus_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Acidic_Glavenus_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Acidic_Glavenus_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Acidic_Glavenus_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -3212,8 +3212,8 @@
         "Paralysis (⭐⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Ruiner_Nergigante_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Ruiner_Nergigante_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Ruiner_Nergigante_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Ruiner_Nergigante_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -3272,8 +3272,8 @@
       "resistances": [
         "Water"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Viper_Tobi-Kadachi_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Viper_Tobi-Kadachi_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Viper_Tobi-Kadachi_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Viper_Tobi-Kadachi_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -3329,8 +3329,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Coral_Pukei-Pukei_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Coral_Pukei-Pukei_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Coral_Pukei-Pukei_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Coral_Pukei-Pukei_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -3387,8 +3387,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Nightshade_Paolumu_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Nightshade_Paolumu_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Nightshade_Paolumu_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Nightshade_Paolumu_HZV.png",
       "threat_level": "🔥"
     }
   },
@@ -3444,8 +3444,8 @@
         "Sleep (⭐)",
         "Paralysis (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Namielle_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Namielle_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Namielle_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Namielle_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -3500,8 +3500,8 @@
         "Poison (⭐)",
         "Sleep (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Yian_Garuga_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Yian_Garuga_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Yian_Garuga_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Yian_Garuga_HZV.png"
     }
   },
   {
@@ -3555,8 +3555,8 @@
         "Paralysis (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Shara_Ishvalda_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Shara_Ishvalda_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Shara_Ishvalda_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Shara_Ishvalda_HZV.png"
     }
   },
   {
@@ -3642,8 +3642,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Savage_Deviljho_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Savage_Deviljho_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Savage_Deviljho_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Savage_Deviljho_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -3699,8 +3699,8 @@
         "Sleep (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Blackveil_Vaal_Hazak_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Blackveil_Vaal_Hazak_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Blackveil_Vaal_Hazak_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Blackveil_Vaal_Hazak_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -3759,8 +3759,8 @@
         "Stun (⭐⭐)",
         "Blast (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Seething_Bazelgeuse_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Seething_Bazelgeuse_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Seething_Bazelgeuse_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Seething_Bazelgeuse_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -3816,8 +3816,8 @@
         "Poison (⭐)",
         "Sleep (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Scarred_Yian_Garuga_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Scarred_Yian_Garuga_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Scarred_Yian_Garuga_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Scarred_Yian_Garuga_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -3878,8 +3878,8 @@
         "Paralysis (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Gold_Rathian_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Gold_Rathian_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Gold_Rathian_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Gold_Rathian_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -3939,8 +3939,8 @@
         "Poison (⭐)",
         "Blast (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Silver_Rathalos_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Silver_Rathalos_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Silver_Rathalos_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Silver_Rathalos_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -3995,8 +3995,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Brute_Tigrex_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Brute_Tigrex_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Brute_Tigrex_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Brute_Tigrex_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -4054,8 +4054,8 @@
         "Stun (⭐⭐)",
         "Paralysis (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Zinogre_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Zinogre_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Zinogre_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Zinogre_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -4129,8 +4129,8 @@
         "Paralysis (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Rajang_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Rajang_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Rajang_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Rajang_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -4190,8 +4190,8 @@
         "Blast (⭐⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Stygian_Zinogre_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Stygian_Zinogre_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Stygian_Zinogre_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Stygian_Zinogre_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -4250,8 +4250,8 @@
         "Blast (⭐⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Safi'jiiva_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Safi'jiiva_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Safi'jiiva_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Safi'jiiva_HZV.png"
     }
   },
   {
@@ -4301,8 +4301,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Furious_Rajang_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Furious_Rajang_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Furious_Rajang_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Furious_Rajang_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -4357,8 +4357,8 @@
         "Blast (⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Raging_Brachydios_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Raging_Brachydios_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Raging_Brachydios_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Raging_Brachydios_HZV.png",
       "threat_level": "🔥🔥🔥"
     }
   },
@@ -4428,8 +4428,8 @@
         "Blast (⭐)",
         "Stun (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Alatreon_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Alatreon_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Alatreon_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Alatreon_HZV.png"
     }
   },
   {
@@ -4481,8 +4481,8 @@
         "Blast (⭐⭐)",
         "Stun (⭐⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Frostfang_Barioth_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Frostfang_Barioth_HZV.png",
+      "icon_filepath": "monster_hunter_world/img/icons/Frostfang_Barioth_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Frostfang_Barioth_HZV.png",
       "threat_level": "🔥🔥"
     }
   },
@@ -4534,8 +4534,8 @@
         "Paralysis (⭐)",
         "Blast (⭐)"
       ],
-      "icon_filepath": "assets/monster_hunter_world/img/icons/Fatalis_Icon.webp",
-      "hzv_filepath": "assets/monster_hunter_world/img/Fatalis_HZV.png"
+      "icon_filepath": "monster_hunter_world/img/icons/Fatalis_Icon.webp",
+      "hzv_filepath": "monster_hunter_world/img/Fatalis_HZV.png"
     }
   }
 ]

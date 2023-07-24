@@ -6,11 +6,9 @@ use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 use serenity::prelude::Context;
 
-use tokio::fs::File;
-
 use crate::color::Colors;
 use crate::commands::SlashSubCommand;
-use crate::database::Database;
+use crate::database::{Database, ASSETS_URL};
 use crate::interaction::{InteractionCustomGet, BetterResponse, AutocompleteCustomGet};
 use crate::Result;
 
@@ -74,18 +72,20 @@ impl SlashSubCommand for Hzv {
       (&monster.details.hzv, &monster.details.hzv_filepath)
     };
 
-    let thumbnail_file = File::open(&monster.details.icon_filepath).await?;
+    interaction.defer(&ctx.http).await?;
+
     let thumbnail_filename = format!("{}.webp", &monster.name.replace("'", "")); // Filter out characters that interferes
-    let thumbnail = AttachmentType::File {
-      file: &thumbnail_file,
+    let thumbnail_image_bytes = reqwest::get(format!("{}/{}", ASSETS_URL, monster.details.icon_filepath)).await?.bytes().await?;
+    let thumbnail = AttachmentType::Bytes {
+      data: std::borrow::Cow::Borrowed(&thumbnail_image_bytes),
       filename: thumbnail_filename.clone()
     };
 
-    let hzv_image_file = File::open(hzv_filepath).await?;
     let hzv_image_filename = format!("{}_hzv.png", &monster.name.replace("'", ""));
-    let hzv_image = AttachmentType::File {
-      file: &hzv_image_file,
-      filename: hzv_image_filename.replace("'", "")
+    let hzv_image_bytes = reqwest::get(format!("{}/{}", ASSETS_URL, hzv_filepath)).await?.bytes().await?;
+    let hzv_image = AttachmentType::Bytes {
+      data: std::borrow::Cow::Borrowed(&hzv_image_bytes),
+      filename: hzv_image_filename.clone()
     };
 
     let threat_level = if let Some(level) = &monster.details.threat_level {
@@ -110,7 +110,7 @@ impl SlashSubCommand for Hzv {
         )      
       ]);
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed).files([thumbnail, hzv_image])).await?;
+    interaction.create_followup_message(&ctx.http, |msg| msg.set_embed(embed).files([thumbnail, hzv_image])).await?;
     Ok(())
   }
 

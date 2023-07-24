@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use serde::Deserialize;
-use tokio::fs::File;
 
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
@@ -13,7 +12,7 @@ use serenity::prelude::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashSubCommand;
-use crate::database::Database;
+use crate::database::{ASSETS_URL, Database};
 use crate::interaction::{BetterResponse, InteractionCustomGet, AutocompleteCustomGet};
 use crate::Result;
 
@@ -23,17 +22,11 @@ struct QuoteData {
   file: String
 }
 
-pub struct Quote {
-  quote_map: HashMap<String, String>
-}
+pub struct Quote;
 
 impl Default for Quote {
-  fn default() -> Self {
-    let quotes_json = include_str!("../../../assets/dungeon_defenders/quotes/quotemap.json");
-    let quotes: Vec<QuoteData> = serde_json::from_str(quotes_json).expect("JSON was not well formatted");
-    let quote_map = quotes.iter().map(|quote| (quote.name.clone(), quote.file.clone())).collect::<HashMap<_, _>>();
-    
-    Self { quote_map }
+  fn default() -> Self {    
+    Self
   }
 }
 
@@ -54,9 +47,13 @@ impl SlashSubCommand for Quote {
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
+    let quotes_json = include_str!("../../../assets/dungeon_defenders/quotes/quotemap.json");
+    let quotes: Vec<QuoteData> = serde_json::from_str(quotes_json).expect("JSON was not well formatted");
+    let quote_map = quotes.iter().map(|quote| (quote.name.clone(), quote.file.clone())).collect::<HashMap<_, _>>();
+    
     let key = interaction.get_string("quote").unwrap();
-
-    if !self.quote_map.contains_key(&key) {
+    
+    if !quote_map.contains_key(&key) {
       let mut embed = CreateEmbed::default();
       embed
         .color(Colors::Red)
@@ -67,24 +64,30 @@ impl SlashSubCommand for Quote {
       return Ok(());
     }
 
-    let quote_name = self.quote_map.get(&key).unwrap();
-    let quote = File::open(format!("assets/dungeondefenders/quotes/img/{}", quote_name)).await?;
-    let image = AttachmentType::File {
-      file: &quote,
+    interaction.defer(&ctx.http).await?;
+    
+    let quote_name = quote_map.get(&key).unwrap();
+    let image_bytes = reqwest::get(format!("{}/dungeon_defenders/quotes/img/{}", ASSETS_URL, &quote_name)).await?.bytes().await?;
+    let image = AttachmentType::Bytes {
+      data: std::borrow::Cow::Borrowed(&image_bytes),
       filename: quote_name.into()
     };
 
-    interaction.reply(&ctx.http, |msg| msg.add_file(image)).await?;
+    interaction.create_followup_message(&ctx.http, |msg| msg.add_file(image)).await?;
     Ok(())
   }
 
   async fn autocomplete(&self, ctx: &Context, interaction: &AutocompleteInteraction, _: &Database) -> Result<()> {
+    let quotes_json = include_str!("../../../assets/dungeon_defenders/quotes/quotemap.json");
+    let quotes: Vec<QuoteData> = serde_json::from_str(quotes_json).expect("JSON was not well formatted");
+    let quote_map = quotes.iter().map(|quote| (quote.name.clone(), quote.file.clone())).collect::<HashMap<_, _>>();
+    
     let focused_value = if let Some(value) = interaction.get_focused_option().value {
       value.as_str().unwrap_or("").to_ascii_lowercase().replace(' ', "")
     } else { "".to_string() };
 
     interaction.create_autocomplete_response(&ctx.http, |response| {
-      let mut keys = self.quote_map.keys().collect::<Vec<_>>();
+      let mut keys = quote_map.keys().collect::<Vec<_>>();
       keys.sort();
 
       for &key in keys.iter() {
