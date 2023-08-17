@@ -8,7 +8,7 @@ mod timezone;
 pub fn commands() -> NamedSubCommands {
   vec![
     ("convert", Box::<convert::Convert>::default()),
-    ("timezone", Box::<timezone::Timezone>::default())
+    ("timezone", Box::<timezone::Timezone>::default()),
   ]
 }
 
@@ -20,6 +20,6 @@ fn timezones() -> HashMap<&'static str, &'static str> {
     ("ACDT", "+10:30"),
     ("ADST", "+09:30")
   ];
-  
+
   HashMap::from(timezones)
 }

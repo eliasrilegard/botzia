@@ -4,42 +4,33 @@ use serenity::model::application::interaction::autocomplete::AutocompleteInterac
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 use serenity::prelude::Context;
 
-use crate::commands::dd;
-use crate::commands::SlashCommand;
+use crate::commands::{dd, SlashCommand};
 use crate::database::Database;
-use crate::interaction::AutocompleteCustomGet;
-use crate::interaction::InteractionCustomGet;
+use crate::interaction::{AutocompleteCustomGet, InteractionCustomGet};
 use crate::Result;
 
+#[derive(Default)]
 pub struct DD;
-
-impl Default for DD {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashCommand for DD {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) ->  &'a mut CreateApplicationCommand {
+  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
     let subcommands = dd::commands();
     for (_, subcommand) in subcommands {
       command.create_option(|option| subcommand.register(option));
     }
 
-    command
-      .name("dd")
-      .description("Dungeon Defenders")
+    command.name("dd").description("Dungeon Defenders")
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
     let subcommands = dd::commands();
 
     let subcommand_name = interaction.get_subcommand().unwrap().name;
-    
+
     let (_, subcommand) = subcommands.iter().find(|pair| pair.0 == subcommand_name).unwrap();
     subcommand.execute(ctx, interaction, db).await?;
-    
+
     Ok(())
   }
 
@@ -48,10 +39,10 @@ impl SlashCommand for DD {
     let subcommands = dd::commands();
 
     let subcommand_name = interaction.get_subcommand().unwrap().name;
-    
+
     let (_, subcommand) = subcommands.iter().find(|pair| pair.0 == subcommand_name).unwrap();
     subcommand.autocomplete(ctx, interaction, db).await?;
-    
+
     Ok(())
   }
 }

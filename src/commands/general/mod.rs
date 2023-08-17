@@ -16,6 +16,6 @@ pub fn commands() -> NamedCommands {
     ("remindme", Box::<remindme::RemindMe>::default()),
     ("snowflake", Box::<snowflake::Snowflake>::default()),
     ("spongetext", Box::<spongetext::SpongeText>::default()),
-    ("trivia", Box::<trivia::Trivia>::default())
+    ("trivia", Box::<trivia::Trivia>::default()),
   ]
 }

@@ -1,25 +1,24 @@
 use std::time::Duration;
 
 use async_recursion::async_recursion;
-use base64::engine::Engine as _;
 use base64::engine::general_purpose::STANDARD;
+use base64::engine::Engine as _;
 use chrono::Utc;
-use rand::Rng;
 use rand::seq::SliceRandom;
+use rand::Rng;
 use serde::Deserialize;
-
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommand, CreateEmbed};
 use serenity::futures::StreamExt;
-use serenity::model::prelude::ReactionType;
 use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::model::prelude::ReactionType;
 use serenity::prelude::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::database::Database;
-use crate::interaction::{InteractionCustomGet, BetterResponse};
+use crate::interaction::{BetterResponse, InteractionCustomGet};
 use crate::Result;
 
 #[derive(Deserialize)]
@@ -39,61 +38,62 @@ struct TriviaQuestion {
   incorrect_answers: Vec<String>
 }
 
+#[derive(Default)]
 pub struct Trivia;
-
-impl Default for Trivia {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashCommand for Trivia {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) ->  &'a mut CreateApplicationCommand {
+  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
     command
       .name("trivia")
       .description("Trivia command using OTDB")
-      .create_option(|option| option
-        .kind(CommandOptionType::SubCommand)
-        .name("play")
-        .description("Play a round of trivia")
-        .create_sub_option(|option| option
-          .kind(CommandOptionType::String)
-          .name("category")
-          .description("Request a question from a specific category")
-        )
-      )
-      .create_option(|option| option
-        .kind(CommandOptionType::SubCommand)
-        .name("categories")
-        .description("List all categories")
-      )
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::SubCommand)
+          .name("play")
+          .description("Play a round of trivia")
+          .create_sub_option(|option| {
+            option
+              .kind(CommandOptionType::String)
+              .name("category")
+              .description("Request a question from a specific category")
+          })
+      })
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::SubCommand)
+          .name("categories")
+          .description("List all categories")
+      })
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
     let trivia_categories = db.get_trivia_categories().await?;
 
     if interaction.get_subcommand().unwrap().name == "categories" {
-      let mut categories = trivia_categories.iter().map(|category| category.name.clone()).collect::<Vec<_>>();
+      let mut categories = trivia_categories
+        .iter()
+        .map(|category| category.name.clone())
+        .collect::<Vec<_>>();
       categories.sort();
-      
+
       let (left, right) = categories.split_at((categories.len() + 1) / 2);
 
       let mut embed = CreateEmbed::default();
-      embed
-        .color(Colors::Blue)
-        .title("All categories")
-        .fields([
-          ("Here's a list of all categories", left.join("\n"), true),
-          ("\u{200b}", right.join("\n"), true)
-        ]);
-      
+      embed.color(Colors::Blue).title("All categories").fields([
+        ("Here's a list of all categories", left.join("\n"), true),
+        ("\u{200b}", right.join("\n"), true)
+      ]);
+
       interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
       return Ok(());
     }
 
     let category_id = if let Some(input) = interaction.get_string("category") {
-      let available = trivia_categories.iter().filter(|category| category.name.contains(&input)).collect::<Vec<_>>();
+      let available = trivia_categories
+        .iter()
+        .filter(|category| category.name.contains(&input))
+        .collect::<Vec<_>>();
       if available.is_empty() {
         None
       } else {
@@ -113,7 +113,7 @@ impl SlashCommand for Trivia {
           .title("Encountered an error")
           .description("Could not retrieve a question")
           .field("Error message", why.to_string(), false);
-    
+
         interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
         return Ok(());
       }
@@ -140,7 +140,13 @@ impl SlashCommand for Trivia {
       _ => unreachable!()
     }
 
-    let mut emotes: Vec<ReactionType> = ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍒', '🥭', '🍍', '🥥', '🥝', '🍅', '🥑', '🥦', '🥬', '🌶', '🌽', '🥕'].iter().map(|&emote| emote.into()).collect::<Vec<_>>();
+    let mut emotes: Vec<ReactionType> = [
+      '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍒', '🥭', '🍍', '🥥', '🥝', '🍅', '🥑', '🥦', '🥬', '🌶', '🌽',
+      '🥕'
+    ]
+    .iter()
+    .map(|&emote| emote.into())
+    .collect::<Vec<_>>();
     emotes.shuffle(&mut rand::thread_rng());
     emotes.truncate(answers.len());
 
@@ -148,8 +154,11 @@ impl SlashCommand for Trivia {
     for i in 0..answers.len() {
       choices.push(format!("{} - {}", emotes[i], answers[i]))
     }
-    
-    let correct_index = answers.iter().position(|answer| answer == &question.correct_answer).unwrap();
+
+    let correct_index = answers
+      .iter()
+      .position(|answer| answer == &question.correct_answer)
+      .unwrap();
     let correct_emote = emotes[correct_index].clone();
 
     let user_name = if let Some(member) = &interaction.member {
@@ -177,7 +186,8 @@ impl SlashCommand for Trivia {
       message.react(&ctx.http, emote.clone()).await?;
     }
 
-    let mut collector = message.await_reactions(ctx)
+    let mut collector = message
+      .await_reactions(ctx)
       .author_id(interaction.user.id)
       .collect_limit(1)
       .filter(move |reaction| emotes.contains(&reaction.emoji))
@@ -195,24 +205,33 @@ impl SlashCommand for Trivia {
         embed
           .color(Colors::Red)
           .title("Incorrect answer")
-          .description(format!("Sorry, but that's incorrect.\nThe correct answer was {}.", question.correct_answer))
+          .description(format!(
+            "Sorry, but that's incorrect.\nThe correct answer was {}.",
+            question.correct_answer
+          ))
           .footer(|footer| footer.text("Better luck next time!"));
       }
     } else {
       message.delete_reactions(&ctx.http).await?;
-      embed
-        .color(Colors::Orange)
-        .title("Time's up!")
-        .description(format!("You ran out of time!\nThe correct answer was {}.", question.correct_answer));
+      embed.color(Colors::Orange).title("Time's up!").description(format!(
+        "You ran out of time!\nThe correct answer was {}.",
+        question.correct_answer
+      ));
     }
 
-    interaction.create_followup_message(&ctx.http, |msg| msg.set_embed(embed)).await?;
+    interaction
+      .create_followup_message(&ctx.http, |msg| msg.set_embed(embed))
+      .await?;
     Ok(())
   }
 }
 
 #[async_recursion]
-async fn get_question(interaction: &ApplicationCommandInteraction, category_id: Option<i32>, db: &Database) -> Result<TriviaQuestion> {
+async fn get_question(
+  interaction: &ApplicationCommandInteraction,
+  category_id: Option<i32>,
+  db: &Database
+) -> Result<TriviaQuestion> {
   let token = db.get_server_token(interaction.guild_id.unwrap_or_default().0).await?;
   let id = if let Some(id) = category_id {
     format!("&category={}", id)
@@ -220,7 +239,10 @@ async fn get_question(interaction: &ApplicationCommandInteraction, category_id: 
     "".to_string()
   };
 
-  let url = format!("https://opentdb.com/api.php?amount=1{}&encode=base64&token={}", id, token);
+  let url = format!(
+    "https://opentdb.com/api.php?amount=1{}&encode=base64&token={}",
+    id, token
+  );
   let response = reqwest::get(url).await?;
   let data = response.json::<TriviaResponse>().await?;
 
@@ -231,21 +253,27 @@ async fn get_question(interaction: &ApplicationCommandInteraction, category_id: 
     3 | 4 => {
       // 3: Token not found
       // 4: Questions exhausted
-      db.regenerate_server_token(interaction.guild_id.unwrap_or_default().0).await?;
+      db.regenerate_server_token(interaction.guild_id.unwrap_or_default().0)
+        .await?;
       get_question(interaction, category_id, db).await
-    },
+    }
     _ => unreachable!()
   }
 }
 
-fn decode_question(question: TriviaQuestion) -> TriviaQuestion { // This could be an impl
+fn decode_question(question: TriviaQuestion) -> TriviaQuestion {
+  // This could be an impl
   TriviaQuestion {
     category: b64_decode(question.category),
     kind: b64_decode(question.kind),
     difficulty: b64_decode(question.difficulty),
     question: b64_decode(question.question),
     correct_answer: b64_decode(question.correct_answer),
-    incorrect_answers: question.incorrect_answers.iter().map(|ans| b64_decode(ans.clone())).collect::<Vec<_>>()
+    incorrect_answers: question
+      .incorrect_answers
+      .iter()
+      .map(|ans| b64_decode(ans.clone()))
+      .collect::<Vec<_>>()
   }
 }
 

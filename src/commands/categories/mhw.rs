@@ -4,42 +4,34 @@ use serenity::model::application::interaction::autocomplete::AutocompleteInterac
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 use serenity::prelude::Context;
 
-use crate::commands::mhw;
-use crate::commands::SlashCommand;
+use crate::commands::{mhw, SlashCommand};
 use crate::database::Database;
-use crate::interaction::AutocompleteCustomGet;
-use crate::interaction::InteractionCustomGet;
+use crate::interaction::{AutocompleteCustomGet, InteractionCustomGet};
 use crate::Result;
 
+#[derive(Default)]
 pub struct Mhw;
 
-impl Default for Mhw {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashCommand for Mhw {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) ->  &'a mut CreateApplicationCommand {
+  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
     let subcommands = mhw::commands();
     for (_, subcommand) in subcommands {
       command.create_option(|option| subcommand.register(option));
     }
 
-    command
-      .name("mhw")
-      .description("Monster Hunter World: Iceborne")
+    command.name("mhw").description("Monster Hunter World: Iceborne")
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
     let subcommands = mhw::commands();
 
     let subcommand_name = interaction.get_subcommand().unwrap().name;
-    
+
     let (_, subcommand) = subcommands.iter().find(|pair| pair.0 == subcommand_name).unwrap();
     subcommand.execute(ctx, interaction, db).await?;
-    
+
     Ok(())
   }
 
@@ -47,10 +39,10 @@ impl SlashCommand for Mhw {
     let subcommands = mhw::commands();
 
     let subcommand_name = interaction.get_subcommand().unwrap().name;
-    
+
     let (_, subcommand) = subcommands.iter().find(|pair| pair.0 == subcommand_name).unwrap();
     subcommand.autocomplete(ctx, interaction, db).await?;
-    
+
     Ok(())
   }
 }

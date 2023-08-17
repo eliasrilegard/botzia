@@ -1,9 +1,7 @@
 use std::collections::HashMap;
 
 use chrono::{DateTime, Utc};
-
 use regex::Regex;
-
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
 use serenity::model::prelude::command::CommandOptionType;
@@ -13,7 +11,7 @@ use serenity::prelude::Context;
 use crate::color::Colors;
 use crate::commands::SlashSubCommand;
 use crate::database::Database;
-use crate::interaction::{InteractionCustomGet, BetterResponse};
+use crate::interaction::{BetterResponse, InteractionCustomGet};
 use crate::Result;
 
 pub struct Convert {
@@ -35,12 +33,13 @@ impl SlashSubCommand for Convert {
       .kind(CommandOptionType::SubCommand)
       .name("convert")
       .description("Convert a timestamp to Discord's dynamic format")
-      .create_sub_option(|option| option
-        .kind(CommandOptionType::String)
-        .name("timestamp")
-        .description("The date (can be omitted) and time of the timestamp: YYYY-MM-DD HH:MM")
-        .required(true)
-      )
+      .create_sub_option(|option| {
+        option
+          .kind(CommandOptionType::String)
+          .name("timestamp")
+          .description("The date (can be omitted) and time of the timestamp: YYYY-MM-DD HH:MM")
+          .required(true)
+      })
       .create_sub_option(|option| {
         for (&name, &value) in &self.timezones {
           option.add_string_choice(name, value);
@@ -50,11 +49,12 @@ impl SlashSubCommand for Convert {
           .name("timezone-name")
           .description("Name of timezone (mutually exclusive with utc-offset)")
       })
-      .create_sub_option(|option| option
-        .kind(CommandOptionType::String)
-        .name("utc-offset")
-        .description("Offset from UTC: ±XX:XX (mutually exlusive with timezone-name)")
-      )
+      .create_sub_option(|option| {
+        option
+          .kind(CommandOptionType::String)
+          .name("utc-offset")
+          .description("Offset from UTC: ±XX:XX (mutually exlusive with timezone-name)")
+      })
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
@@ -77,16 +77,15 @@ impl SlashSubCommand for Convert {
       interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
       return Ok(());
     }
-    
+
     let utc_offset = if let Some(key) = timezone_name {
       Some(self.timezones.get(key.as_str()).unwrap().to_string())
     } else if let Some(utc_offset) = offset {
       if !Regex::new(r"[+-]\d{2}:\d{2}").unwrap().is_match(utc_offset.as_str()) {
         let mut embed = CreateEmbed::default();
-        embed
-          .color(Colors::Red)
-          .title("Invalid format")
-          .description("Specify the offset either using `timezone-name` or with `utc-offset` matching the pattern `±HH:MM`.");
+        embed.color(Colors::Red).title("Invalid format").description(
+          "Specify the offset either using `timezone-name` or with `utc-offset` matching the pattern `±HH:MM`."
+        );
 
         interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
         return Ok(());
@@ -110,7 +109,7 @@ impl SlashSubCommand for Convert {
     } else {
       None
     };
-    
+
     let today = Utc::now().date_naive().to_string();
 
     let caps = re.captures(timestamp.as_str()).unwrap();
@@ -130,19 +129,17 @@ impl SlashSubCommand for Convert {
       let suffix = if date_specified { 'f' } else { 't' };
       let formatted = format!("<t:{}:{}>", timestamp, suffix);
 
-      embed
-        .color(Colors::Blue)
-        .fields([
-          ("Display", &formatted, false),
-          ("Raw", &format!("`{}`", &formatted), false)
-        ]);
+      embed.color(Colors::Blue).fields([
+        ("Display", &formatted, false),
+        ("Raw", &format!("`{}`", &formatted), false)
+      ]);
     } else {
       embed
         .color(Colors::Red)
         .title("Something went wrong")
-        .description("Couldn't convert the passed arguments. Did you format everything correctly?");      
+        .description("Couldn't convert the passed arguments. Did you format everything correctly?");
     }
-      
+
     interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
     Ok(())
   }

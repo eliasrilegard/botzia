@@ -12,6 +12,6 @@ pub fn commands() -> NamedSubCommands {
     ("levelinfo", Box::<levelinfo::LevelInfo>::default()),
     ("ltrange", Box::<ltrange::LTRange>::default()),
     ("quote", Box::<quote::Quote>::default()),
-    ("res", Box::<res::Res>::default())
+    ("res", Box::<res::Res>::default()),
   ]
 }

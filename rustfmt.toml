@@ -1,0 +1,9 @@
+blank_lines_upper_bound = 2
+group_imports = "StdExternalCrate"
+imports_granularity = "Module"
+imports_layout = "HorizontalVertical"
+max_width = 120
+overflow_delimited_expr = true
+trailing_comma = "Never"
+tab_spaces = 2
+use_field_init_shorthand = true

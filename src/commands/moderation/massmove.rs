@@ -1,24 +1,19 @@
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommand, CreateEmbed};
-use serenity::model::Permissions;
-use serenity::model::prelude::ChannelType;
 use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::model::prelude::ChannelType;
+use serenity::model::Permissions;
 use serenity::prelude::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::database::Database;
-use crate::interaction::{InteractionCustomGet, BetterResponse};
+use crate::interaction::{BetterResponse, InteractionCustomGet};
 use crate::Result;
 
+#[derive(Default)]
 pub struct MassMove;
-
-impl Default for MassMove {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashCommand for MassMove {
@@ -29,19 +24,21 @@ impl SlashCommand for MassMove {
       .description("Move all members to a specified channel")
       .dm_permission(false)
       .default_member_permissions(Permissions::MOVE_MEMBERS)
-      .create_option(|option| option
-        .kind(CommandOptionType::Channel)
-        .name("target-channel")
-        .description("The channel to move everybody to")
-        .channel_types(&channel_types)
-        .required(true)
-      )
-      .create_option(|option| option
-        .kind(CommandOptionType::Channel)
-        .name("source-channel")
-        .description("The channel to move everybody from")
-        .channel_types(&channel_types)
-      )
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::Channel)
+          .name("target-channel")
+          .description("The channel to move everybody to")
+          .channel_types(&channel_types)
+          .required(true)
+      })
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::Channel)
+          .name("source-channel")
+          .description("The channel to move everybody from")
+          .channel_types(&channel_types)
+      })
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
@@ -65,7 +62,7 @@ impl SlashCommand for MassMove {
           .color(Colors::Red)
           .title("Insuficcient permissions")
           .description("I don't have permission to move members in this server");
-        
+
         interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
         return Ok(());
       }
@@ -73,7 +70,8 @@ impl SlashCommand for MassMove {
 
     if origin_id.is_none() {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::Red)
+      embed
+        .color(Colors::Red)
         .title("Unknown base channel")
         .description("Unless you're in a voice channel, you need to specify both the base and target channels.");
 
@@ -85,7 +83,8 @@ impl SlashCommand for MassMove {
 
     if origin_id == destination.id {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::Red)
+      embed
+        .color(Colors::Red)
         .title("Nothing to move")
         .description("I can't move members from and to the same channel.");
 
@@ -99,7 +98,8 @@ impl SlashCommand for MassMove {
 
     if members.is_empty() {
       let mut embed = CreateEmbed::default();
-      embed.color(Colors::Red)
+      embed
+        .color(Colors::Red)
         .title("Nobody to move")
         .description("There is nobody in the channel to move from.");
 
@@ -113,7 +113,8 @@ impl SlashCommand for MassMove {
     }
 
     let mut embed = CreateEmbed::default();
-    embed.color(Colors::Green)
+    embed
+      .color(Colors::Green)
       .title("Success")
       .description(format!("Successfully moved everybody to {}", destination.name.unwrap()));
 

@@ -2,7 +2,6 @@ use std::fmt;
 
 use chrono::{Duration, Utc};
 use regex::Regex;
-
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommand, CreateEmbed};
 use serenity::model::prelude::application_command::ApplicationCommandInteraction;
@@ -12,40 +11,40 @@ use serenity::prelude::Context;
 use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::database::Database;
+use crate::interaction::{BetterResponse, InteractionCustomGet};
 use crate::Result;
-use crate::interaction::{InteractionCustomGet, BetterResponse};
 
+#[derive(Default)]
 pub struct RemindMe;
-
-impl Default for RemindMe {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashCommand for RemindMe {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) ->  &'a mut CreateApplicationCommand {
+  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
     command
       .name("remindme")
       .description("Remind you of something after a given time")
-      .create_option(|option| option
-        .kind(CommandOptionType::String)
-        .name("timer")
-        .description("How long (in days/hours/minutes) until the reminder triggers. Example: 2d, 1 hour, 15 mins")
-        .required(true)
-      )
-      .create_option(|option| option
-        .kind(CommandOptionType::String)
-        .name("message")
-        .description("Any message to go along with the reminder")
-      )
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::String)
+          .name("timer")
+          .description("How long (in days/hours/minutes) until the reminder triggers. Example: 2d, 1 hour, 15 mins")
+          .required(true)
+      })
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::String)
+          .name("message")
+          .description("Any message to go along with the reminder")
+      })
   }
-  
+
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
     let time_args = interaction.get_string("timer").unwrap().to_ascii_lowercase();
 
-    let full_test = Regex::new(r"^(\d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?)[\s,]+)*(\d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?))$").unwrap(); // Help, pattern is \d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?)
+    let full_test = Regex::new(
+      r"^(\d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?)[\s,]+)*(\d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?))$"
+    )
+    .unwrap(); // Help, pattern is \d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?)
     if !full_test.is_match(time_args.trim()) {
       let mut embed = CreateEmbed::default();
       embed
@@ -56,7 +55,9 @@ impl SlashCommand for RemindMe {
           ("Units", "**Days\nHours\nMinutes**", true),
           ("Abbreviations", "d, day(s)\nh, hour(s)\nm, min(s), minute(s)", true)
         ]);
-      interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
+      interaction
+        .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
+        .await?;
       return Ok(());
     }
 
@@ -85,11 +86,12 @@ impl SlashCommand for RemindMe {
     } else {
       None
     };
-    
+
     interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
     let ok_message = interaction.get_interaction_response(&ctx.http).await?;
-    
-    db.create_reminder(due_dt, interaction.channel_id, ok_message.id, mentions, message).await?;
+
+    db.create_reminder(due_dt, interaction.channel_id, ok_message.id, mentions, message)
+      .await?;
     Ok(())
   }
 }
@@ -104,18 +106,21 @@ struct Time {
 impl Time {
   fn from_args(args: String) -> Self {
     let re = Regex::new(r"(?<amount>\d+)\s?(?<unit>(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?))").unwrap();
-    let extracted = re.captures_iter(&args)
-      .map(|cap| {(
-        cap.name("amount").unwrap().as_str().parse::<i32>().unwrap(),
-        cap.name("unit").unwrap().as_str()
-      )})
+    let extracted = re
+      .captures_iter(&args)
+      .map(|cap| {
+        (
+          cap.name("amount").unwrap().as_str().parse::<i32>().unwrap(),
+          cap.name("unit").unwrap().as_str()
+        )
+      })
       .collect::<Vec<_>>();
 
     let mut time = Self::default();
     for (amount, unit) in extracted {
       time.add_time(amount, unit);
     }
-    
+
     time
   }
 
@@ -139,7 +144,10 @@ impl fmt::Display for Time {
       formatter(self.days, "days"),
       formatter(self.hours, "hours"),
       formatter(self.minutes, "minutes")
-    ].into_iter().flatten().collect();
+    ]
+    .into_iter()
+    .flatten()
+    .collect();
 
     let re = Regex::new(r"(.*), (.*)").unwrap();
     let joined = units.join(", "); // Warn: Blank if all 0

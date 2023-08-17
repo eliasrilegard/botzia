@@ -8,7 +8,7 @@ pub mod trivia;
 pub const ASSETS_URL: &str = "https://raw.githubusercontent.com/eliasrilegard/botzia/rust/assets";
 
 pub struct Database {
-  pub(in crate::database) pool: PgPool
+  pub(self) pool: PgPool
 }
 
 impl Database {

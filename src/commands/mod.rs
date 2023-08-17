@@ -33,7 +33,7 @@ pub trait SlashCommand {
 #[async_trait]
 pub trait SlashSubCommand {
   fn register<'a>(&self, subcommand: &'a mut CreateApplicationCommandOption) -> &'a mut CreateApplicationCommandOption;
-  
+
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()>;
 
   async fn autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
@@ -43,7 +43,8 @@ pub trait SlashSubCommand {
 
 impl Handler {
   pub fn load_commands(mut self) -> Self {
-    let commands = categories::commands().into_iter()
+    let commands = categories::commands()
+      .into_iter()
       .chain(general::commands())
       .chain(moderation::commands());
 

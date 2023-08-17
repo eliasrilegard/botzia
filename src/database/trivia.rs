@@ -1,8 +1,8 @@
 use serde::Deserialize;
 use sqlx::Row;
 
-use crate::Result;
 use super::Database;
+use crate::Result;
 
 #[derive(Deserialize)]
 struct RequestTokenResponse {
@@ -21,11 +21,12 @@ pub struct TriviaCategory {
   pub id: i32
 }
 
-#[allow(dead_code)]
 #[derive(Deserialize)]
 struct GenerateTokenResponse {
-  response_code: String,
-  reponse_message: String,
+  #[serde(rename = "response_code")]
+  _response_code: String,
+  #[serde(rename = "response_message")]
+  _reponse_message: String,
   reponse_token: String
 }
 
@@ -56,7 +57,7 @@ impl Database {
       }
     }
   }
-  
+
   pub async fn get_trivia_categories(&self) -> Result<Vec<TriviaCategory>> {
     let rows = sqlx::query("SELECT * FROM trivia_categories")
       .fetch_all(&self.pool)
@@ -70,7 +71,7 @@ impl Database {
           id: row.get::<i32, _>("category_id")
         })
         .collect::<Vec<_>>();
-    
+
       Ok(categories)
     } else {
       // Fetch and store
@@ -78,19 +79,19 @@ impl Database {
       let data = response.json::<RequestCategoriesReponse>().await?;
       let mut ids: Vec<i32> = vec![];
       let mut names: Vec<String> = vec![];
-  
+
       for category in &data.trivia_categories {
         ids.push(category.id);
         names.push(category.name.clone());
       }
-  
+
       // https://github.com/launchbadge/sqlx/issues/294#issuecomment-716149160
       sqlx::query("INSERT INTO trivia_categories SELECT * FROM UNNEST($1, $2)")
         .bind(ids)
         .bind(names)
         .execute(&self.pool)
         .await?;
-      
+
       Ok(data.trivia_categories)
     }
   }
@@ -106,7 +107,7 @@ impl Database {
       .bind(id as i64)
       .execute(&self.pool)
       .await?;
-    
+
     Ok(())
   }
 }

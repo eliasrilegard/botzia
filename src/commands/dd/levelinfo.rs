@@ -1,5 +1,4 @@
 use serde::Deserialize;
-
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
 use serenity::model::prelude::command::CommandOptionType;
@@ -25,13 +24,8 @@ struct Levels {
   weapons: i32
 }
 
+#[derive(Default)]
 pub struct LevelInfo;
-
-impl Default for LevelInfo {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashSubCommand for LevelInfo {
@@ -46,8 +40,13 @@ impl SlashSubCommand for LevelInfo {
     let file = include_str!("../../../assets/dungeon_defenders/leveldata.json");
     let qualities: Vec<Quality> = serde_json::from_str(file).expect("JSON was not well formatted.");
 
-    let desc = [padder("Name", "Weapons", "Armor", "Pets"), "".into()].into_iter()
-      .chain(qualities.iter().map(|q| padder(&q.name, q.levels.weapons, q.levels.armor, q.levels.pets)))
+    let desc = [padder("Name", "Weapons", "Armor", "Pets"), "".into()]
+      .into_iter()
+      .chain(
+        qualities
+          .iter()
+          .map(|q| padder(&q.name, q.levels.weapons, q.levels.armor, q.levels.pets))
+      )
       .collect::<Vec<_>>();
 
     let mut embed = CreateEmbed::default();
@@ -62,7 +61,15 @@ impl SlashSubCommand for LevelInfo {
 }
 
 fn padder<N, T>(name: N, weapon: T, armor: T, pet: T) -> String
-  where N: ToString, T: ToString
+where
+  N: ToString,
+  T: ToString
 {
-  format!("{: <14}{: <9}{: <9}{: <5}", name.to_string(), weapon.to_string(), armor.to_string(), pet.to_string())
+  format!(
+    "{: <14}{: <9}{: <9}{: <5}",
+    name.to_string(),
+    weapon.to_string(),
+    armor.to_string(),
+    pet.to_string()
+  )
 }

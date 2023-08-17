@@ -1,58 +1,55 @@
 use rand::seq::SliceRandom;
-
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommand, CreateEmbed, CreateEmbedAuthor, CreateEmbedFooter};
-use serenity::model::{Permissions, Timestamp};
-use serenity::model::prelude::{ChannelType, ReactionType, EmojiId};
 use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::model::prelude::{ChannelType, EmojiId, ReactionType};
+use serenity::model::{Permissions, Timestamp};
 use serenity::prelude::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::database::Database;
-use crate::interaction::{InteractionCustomGet, BetterResponse};
+use crate::interaction::{BetterResponse, InteractionCustomGet};
 use crate::Result;
 
+#[derive(Default)]
 pub struct Poll;
-
-impl Default for Poll {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashCommand for Poll {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) ->  &'a mut CreateApplicationCommand {
+  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
     command
       .name("poll")
       .description("Make a poll about something")
-      .create_option(|option| option
-        .kind(CommandOptionType::String)
-        .name("title")
-        .description("The title of the poll")
-        .required(true)
-      )
-      .create_option(|option| option
-        .kind(CommandOptionType::String)
-        .name("options")
-        .description("The options to vote on, separated by ;")
-        .required(true)
-      )
-      .create_option(|option| option
-        .kind(CommandOptionType::Channel)
-        .name("channel")
-        .description("The channel to post the poll in")
-        .channel_types(&[ChannelType::Text])
-      )
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::String)
+          .name("title")
+          .description("The title of the poll")
+          .required(true)
+      })
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::String)
+          .name("options")
+          .description("The options to vote on, separated by ;")
+          .required(true)
+      })
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::Channel)
+          .name("channel")
+          .description("The channel to post the poll in")
+          .channel_types(&[ChannelType::Text])
+      })
       .dm_permission(false)
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
     let question = interaction.get_string("title").unwrap();
     let options_raw = interaction.get_string("options").unwrap();
-        
+
     let channel_id = if let Some(partial_channel) = interaction.get_channel("channel") {
       partial_channel.id
     } else {
@@ -68,8 +65,10 @@ impl SlashCommand for Poll {
           .color(Colors::Red)
           .title("Insuficcient permissions")
           .description(format!("I cannot send messages in {}", guild_channel));
-        
-        interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
+
+        interaction
+          .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
+          .await?;
         return Ok(());
       }
     }
@@ -82,7 +81,9 @@ impl SlashCommand for Poll {
           .title("Insufficient permissions")
           .description(format!("You cannot send messages in {}", guild_channel));
 
-        interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
+        interaction
+          .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
+          .await?;
         return Ok(());
       }
     }
@@ -95,11 +96,19 @@ impl SlashCommand for Poll {
         .title("Check arguments")
         .description("A poll needs at least 2 and at most 20 options.");
 
-      interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
+      interaction
+        .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
+        .await?;
       return Ok(());
     }
 
-    let mut emotes: Vec<ReactionType> = vec!['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍒', '🥭', '🍍', '🥥', '🥝', '🍅', '🥑', '🥦', '🥬', '🌶', '🌽', '🥕'].iter().map(|&emote| emote.into()).collect::<Vec<_>>();
+    let mut emotes: Vec<ReactionType> = vec![
+      '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍒', '🥭', '🍍', '🥥', '🥝', '🍅', '🥑', '🥦', '🥬', '🌶', '🌽',
+      '🥕',
+    ]
+    .iter()
+    .map(|&emote| emote.into())
+    .collect::<Vec<_>>();
     if rand::random::<f32>() < 0.05_f32 {
       emotes.push(ReactionType::Custom {
         name: Some("kekw".to_string()),
@@ -120,17 +129,19 @@ impl SlashCommand for Poll {
       .title("Success")
       .description(format!("Posting the poll in {}", guild_channel));
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(response).ephemeral(true)).await?;
+    interaction
+      .reply(&ctx.http, |msg| msg.set_embed(response).ephemeral(true))
+      .await?;
 
     let member = interaction.member.as_ref().unwrap();
     let mut author = CreateEmbedAuthor::default();
     author
       .name(format!("{} created a poll", member.display_name()))
       .icon_url(member.face()); // .face() has fallback functionality built in
-        
+
     let mut footer = CreateEmbedFooter::default();
     footer.text("React with your vote below!");
-    
+
     let mut embed = CreateEmbed::default();
     embed
       .color(Colors::Blue)
@@ -139,13 +150,13 @@ impl SlashCommand for Poll {
       .field("Choices", choices.join("\n"), false)
       .set_footer(footer)
       .timestamp(Timestamp::now());
-    
+
     if let Ok(poll_msg) = guild_channel.send_message(&ctx.http, |msg| msg.set_embed(embed)).await {
       for emote in emotes.iter().take(options.len()) {
         let _ = poll_msg.react(&ctx.http, emote.clone()).await;
       }
     }
-    
+
     Ok(())
   }
 }

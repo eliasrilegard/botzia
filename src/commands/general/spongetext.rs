@@ -1,5 +1,4 @@
 use regex::Regex;
-
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommand, CreateEmbed};
 use serenity::model::prelude::command::CommandOptionType;
@@ -9,30 +8,26 @@ use serenity::prelude::Context;
 use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::database::Database;
-use crate::interaction::{InteractionCustomGet, BetterResponse};
+use crate::interaction::{BetterResponse, InteractionCustomGet};
 use crate::Result;
 
+#[derive(Default)]
 pub struct SpongeText;
-
-impl Default for SpongeText {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashCommand for SpongeText {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) ->  &'a mut CreateApplicationCommand {
+  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
     let random_case = randomize_case("sponge case".to_string());
     command
       .name("spongetext")
       .description(format!("Convert text into {}", random_case))
-      .create_option(|option| option
-        .kind(CommandOptionType::String)
-        .name("text")
-        .description("The text to convert")
-        .required(true)
-      )
+      .create_option(|option| {
+        option
+          .kind(CommandOptionType::String)
+          .name("text")
+          .description("The text to convert")
+          .required(true)
+      })
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
@@ -40,11 +35,14 @@ impl SlashCommand for SpongeText {
     let output = randomize_case(input);
 
     let mut embed = CreateEmbed::default();
-    embed.color(Colors::Blue)
+    embed
+      .color(Colors::Blue)
       .title("Here's your converted text")
       .description(output);
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true)).await?;
+    interaction
+      .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
+      .await?;
     Ok(())
   }
 }
@@ -77,7 +75,11 @@ fn randomize_case(input: String) -> String {
       output.push(' ');
       continue;
     }
-    output.push(if is_capitalized[j] { ch.to_ascii_uppercase() } else { ch.to_ascii_lowercase() });
+    output.push(if is_capitalized[j] {
+      ch.to_ascii_uppercase()
+    } else {
+      ch.to_ascii_lowercase()
+    });
     j += 1; // Increase only when used
   }
 

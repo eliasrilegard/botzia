@@ -1,8 +1,8 @@
 use serenity::model::prelude::UserId;
 use sqlx::Row;
 
-use crate::Result;
 use super::Database;
+use crate::Result;
 
 impl Database {
   pub async fn get_user_timezone(&self, user_id: UserId) -> Result<String> {
@@ -17,15 +17,17 @@ impl Database {
   }
 
   pub async fn set_user_timezone(&self, user_id: UserId, offset: String) -> Result<()> {
-    sqlx::query("
+    sqlx::query(
+      "
       INSERT INTO user_timezones VALUES ($1, $2)
       ON CONFLICT (user_snowflake) DO
         UPDATE SET utc_offset = EXCLUDED.utc_offset
-    ")
-      .bind(user_id.0 as i64)
-      .bind(offset)
-      .execute(&self.pool)
-      .await?;
+    "
+    )
+    .bind(user_id.0 as i64)
+    .bind(offset)
+    .execute(&self.pool)
+    .await?;
 
     Ok(())
   }

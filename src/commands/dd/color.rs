@@ -1,7 +1,6 @@
 use std::borrow::Cow;
 
-use regex::{Regex, Match};
-
+use regex::{Match, Regex};
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
 use serenity::model::prelude::command::CommandOptionType;
@@ -11,16 +10,11 @@ use serenity::prelude::Context;
 use crate::color::Colors;
 use crate::commands::SlashSubCommand;
 use crate::database::Database;
-use crate::interaction::{InteractionCustomGet, BetterResponse};
+use crate::interaction::{BetterResponse, InteractionCustomGet};
 use crate::Result;
 
+#[derive(Default)]
 pub struct Color;
-
-impl Default for Color {
-  fn default() -> Self {
-    Self
-  }
-}
 
 #[async_trait]
 impl SlashSubCommand for Color {
@@ -29,34 +23,45 @@ impl SlashSubCommand for Color {
       .kind(CommandOptionType::SubCommand)
       .name("color")
       .description("Emulate the forge color mechanic")
-      .create_sub_option(|option| option
-        .kind(CommandOptionType::String)
-        .name("color-string")
-        .description("The color string (the text between <color: and >)")
-        .required(true)
-      )
+      .create_sub_option(|option| {
+        option
+          .kind(CommandOptionType::String)
+          .name("color-string")
+          .description("The color string (the text between <color: and >)")
+          .required(true)
+      })
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
     let color_string = interaction.get_string("color-string").unwrap();
 
-    let re = Regex::new(r"^[,\s]*(?<red>-?\d{1,3})([,\s]*,[,\s]*(?<green>-?\d{1,3}))?([,\s]*,[,\s]*(?<blue>-?\d{1,3}))?[,\s]*$").unwrap();
+    let re = Regex::new(
+      r"^[,\s]*(?<red>-?\d{1,3})([,\s]*,[,\s]*(?<green>-?\d{1,3}))?([,\s]*,[,\s]*(?<blue>-?\d{1,3}))?[,\s]*$"
+    )
+    .unwrap();
 
     if !re.is_match(&color_string) {
       let mut embed = CreateEmbed::default();
-      embed
-        .color(Colors::Red)
-        .title("Invalid format")
-        .description("Take your character name, remove `<color:` and `>` so you're only entering the numbers and commas.");
-      
+      embed.color(Colors::Red).title("Invalid format").description(
+        "Take your character name, remove `<color:` and `>` so you're only entering the numbers and commas."
+      );
+
       interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
       return Ok(());
     }
 
     let caps = re.captures(&color_string).unwrap();
     let red = caps.name("red").map(|m| into_constrained(m, 256)).unwrap();
-    let green = if let Some(cap) = caps.name("green") { into_constrained(cap, 256) } else { 255 };
-    let blue = if let Some(cap) = caps.name("blue") { into_constrained(cap, 256) } else { 255 };
+    let green = if let Some(cap) = caps.name("green") {
+      into_constrained(cap, 256)
+    } else {
+      255
+    };
+    let blue = if let Some(cap) = caps.name("blue") {
+      into_constrained(cap, 256)
+    } else {
+      255
+    };
 
     let hex = hexify(red, green, blue);
     let url = format!("https://singlecolorimage.com/get/{:0>6x}/300x200", hex);
@@ -71,11 +76,19 @@ impl SlashSubCommand for Color {
     embed
       .color(hex)
       .title("Resulting color")
-      .description(format!("`<color:{}>` is equivalent to `<color:{},{},{}>`", caps.get(0).unwrap().as_str(), red, green, blue))
+      .description(format!(
+        "`<color:{}>` is equivalent to `<color:{},{},{}>`",
+        caps.get(0).unwrap().as_str(),
+        red,
+        green,
+        blue
+      ))
       .attachment("color.png")
       .footer(|footer| footer.text(format!("Hex: {:0>6x}", hex)));
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed).add_file(image)).await?;
+    interaction
+      .reply(&ctx.http, |msg| msg.set_embed(embed).add_file(image))
+      .await?;
     Ok(())
   }
 }

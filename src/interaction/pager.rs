@@ -3,15 +3,14 @@ use std::time::Duration;
 use serenity::async_trait;
 use serenity::builder::CreateEmbed;
 use serenity::futures::StreamExt;
-use serenity::model::Permissions;
-use serenity::model::prelude::ReactionType;
 use serenity::model::prelude::application_command::ApplicationCommandInteraction;
+use serenity::model::prelude::ReactionType;
+use serenity::model::Permissions;
 use serenity::prelude::Context;
 
-use crate::Result;
-use crate::color::Colors;
-
 use super::BetterResponse;
+use crate::color::Colors;
+use crate::Result;
 
 #[async_trait]
 pub(crate) trait InteractiveMenu {
@@ -37,7 +36,9 @@ impl InteractiveMenu for ApplicationCommandInteraction {
             .title("Insufficient permissions")
             .description("I don't have permissions to **MANAGE MESSAGES** and/or **ADD REACTIONS**!");
 
-          self.reply(&ctx.http, |msg| msg.set_embeds(vec![embeds[0].clone(), embed])).await?;
+          self
+            .reply(&ctx.http, |msg| msg.set_embeds(vec![embeds[0].clone(), embed]))
+            .await?;
           return Ok(());
         }
       }
@@ -46,12 +47,16 @@ impl InteractiveMenu for ApplicationCommandInteraction {
     self.reply(&ctx.http, |msg| msg.set_embed(embeds[0].clone())).await?;
     let mut message = self.get_interaction_response(&ctx.http).await?;
 
-    let reactions = ["⏪", "◀️", "▶️", "⏩", "⏹️"].iter().map(|r| ReactionType::Unicode(r.to_string())).collect::<Vec<_>>();
+    let reactions = ["⏪", "◀️", "▶️", "⏩", "⏹️"]
+      .iter()
+      .map(|r| ReactionType::Unicode(r.to_string()))
+      .collect::<Vec<_>>();
     for reaction in reactions {
       message.react(&ctx.http, reaction).await?;
     }
 
-    let mut collector = message.await_reactions(ctx)
+    let mut collector = message
+      .await_reactions(ctx)
       .author_id(self.user.id)
       .timeout(Duration::from_secs(120))
       .build();
@@ -64,24 +69,32 @@ impl InteractiveMenu for ApplicationCommandInteraction {
       match emote.as_str() {
         "⏪" => {
           page = 0;
-          message.edit(&ctx.http, |msg| msg.set_embed(embeds[page].clone())).await?;
-        },
+          message
+            .edit(&ctx.http, |msg| msg.set_embed(embeds[page].clone()))
+            .await?;
+        }
         "◀️" => {
           page = (page - 1).max(0);
-          message.edit(&ctx.http, |msg| msg.set_embed(embeds[page].clone())).await?;
-        },
+          message
+            .edit(&ctx.http, |msg| msg.set_embed(embeds[page].clone()))
+            .await?;
+        }
         "▶️" => {
           page = (page + 1).min(embeds_count - 1);
-          message.edit(&ctx.http, |msg| msg.set_embed(embeds[page].clone())).await?;
-        },
+          message
+            .edit(&ctx.http, |msg| msg.set_embed(embeds[page].clone()))
+            .await?;
+        }
         "⏩" => {
           page = embeds_count - 1;
-          message.edit(&ctx.http, |msg| msg.set_embed(embeds[page].clone())).await?;
-        },
+          message
+            .edit(&ctx.http, |msg| msg.set_embed(embeds[page].clone()))
+            .await?;
+        }
         "⏹️" => {
           message.delete_reactions(&ctx.http).await?;
           break;
-        },
+        }
         _ => ()
       }
 

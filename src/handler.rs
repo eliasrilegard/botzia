@@ -6,13 +6,12 @@ use serenity::model::prelude::command::Command;
 use serenity::model::prelude::interaction::Interaction;
 use serenity::model::prelude::Ready;
 use serenity::prelude::{Context, EventHandler};
-
 use tracing::{error, info};
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
 use crate::database::Database;
-use crate::interaction::{InteractionCustomGet, BetterResponse};
+use crate::interaction::{BetterResponse, InteractionCustomGet};
 
 pub struct Handler {
   pub commands: HashMap<String, Box<dyn SlashCommand + Send + Sync>>,
@@ -53,7 +52,10 @@ impl EventHandler for Handler {
             full_name.push(subcommand.name)
           }
 
-          let _ = self.database.increment_command_usage(full_name.join(" "), interaction.guild_id, interaction.user.id).await;
+          let _ = self
+            .database
+            .increment_command_usage(full_name.join(" "), interaction.guild_id, interaction.user.id)
+            .await;
         }
       }
 
@@ -71,13 +73,15 @@ impl EventHandler for Handler {
 
   async fn ready(&self, ctx: Context, ready: Ready) {
     info!("Registering commands...");
-    
+
     if let Err(why) = Command::set_global_application_commands(&ctx.http, |commands| {
       for command in self.commands.values() {
         commands.create_application_command(|builder| command.register(builder));
       }
       commands
-    }).await {
+    })
+    .await
+    {
       error!("Command registration failed:\n{:?}", why);
     }
 

@@ -10,6 +10,6 @@ pub fn commands() -> NamedCommands {
     ("dd", Box::<dd::DD>::default()),
     ("mhw", Box::<mhw::Mhw>::default()),
     ("probability", Box::<probability::Probability>::default()),
-    ("time", Box::<time::Time>::default())
+    ("time", Box::<time::Time>::default()),
   ]
 }

@@ -1,19 +1,17 @@
 use std::thread;
 use std::time::Duration;
 
-use chrono::{DateTime,Utc};
-use sqlx::{PgPool, Row, FromRow};
+use chrono::{DateTime, Utc};
+use serenity::builder::{CreateEmbed, CreateMessage};
+use serenity::http::Http;
+use serenity::model::prelude::{Channel, ChannelId, Message, MessageId, UserId};
+use serenity::Error;
+use sqlx::{FromRow, PgPool, Row};
 use tracing::error;
 
-use serenity::Error;
-use serenity::builder::{CreateEmbed, CreateMessage};
-use serenity::model::prelude::{Channel, ChannelId, MessageId, UserId, Message};
-use serenity::http::Http;
-
-use crate::Result;
-use crate::color::Colors;
-
 use super::Database;
+use crate::color::Colors;
+use crate::Result;
 
 struct Reminder {
   id: i32,
@@ -57,13 +55,17 @@ impl Reminder {
     match self.channel_id.to_channel(&http).await {
       Ok(Channel::Guild(channel)) => {
         let reference = channel.message(&http, self.message_id).await;
-        channel.send_message(&http, |msg| self.construct_response(msg, reference.ok())).await?;
+        channel
+          .send_message(&http, |msg| self.construct_response(msg, reference.ok()))
+          .await?;
         Ok(())
       }
-      
+
       Ok(Channel::Private(channel)) => {
         let reference = channel.message(&http, self.message_id).await;
-        channel.send_message(&http, |msg| self.construct_response(msg, reference.ok())).await?;
+        channel
+          .send_message(&http, |msg| self.construct_response(msg, reference.ok()))
+          .await?;
         Ok(())
       }
 
@@ -72,26 +74,32 @@ impl Reminder {
     }
   }
 
-  fn construct_response<'a,'b>(&self, msg: &'a mut CreateMessage<'b>, reference: Option<Message>) -> &'a mut CreateMessage<'b> {
+  fn construct_response<'a, 'b>(
+    &self,
+    msg: &'a mut CreateMessage<'b>,
+    reference: Option<Message>
+  ) -> &'a mut CreateMessage<'b> {
     let mut embed = CreateEmbed::default();
     embed
       .color(Colors::Green)
       .title("Ding, here's your reminder!")
       .timestamp(self.created_dt_utc);
-    
+
     if let Some(message) = &self.message {
       embed.field("Message", message, false);
     }
 
-    let mentions = self.mentions.iter().map(|user_id| user_id.0.to_string()).collect::<Vec<_>>();
+    let mentions = self
+      .mentions
+      .iter()
+      .map(|user_id| user_id.0.to_string())
+      .collect::<Vec<_>>();
 
     if let Some(message) = reference {
       msg.reference_message(&message);
     }
 
-    msg
-      .content(format!("<@{}>", mentions.join("> <@")))
-      .set_embed(embed)
+    msg.content(format!("<@{}>", mentions.join("> <@"))).set_embed(embed)
   }
 }
 
@@ -131,20 +139,29 @@ impl Database {
     Ok(())
   }
 
-  pub async fn create_reminder(&self, due_dt: DateTime<Utc>, channel_id: ChannelId, message_id: MessageId, mentions: Vec<UserId>, message: Option<String>) -> Result<()> {
-    let reminder_id = sqlx::query("
+  pub async fn create_reminder(
+    &self,
+    due_dt: DateTime<Utc>,
+    channel_id: ChannelId,
+    message_id: MessageId,
+    mentions: Vec<UserId>,
+    message: Option<String>
+  ) -> Result<()> {
+    let reminder_id = sqlx::query(
+      "
       INSERT INTO reminders (due_at, created_at, channel_snowflake, message_snowflake, reminder_message)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING reminder_id
-    ")
-      .bind(due_dt)
-      .bind(Utc::now())
-      .bind(channel_id.0 as i64)
-      .bind(message_id.0 as i64)
-      .bind(message)
-      .fetch_one(&self.pool)
-      .await?
-      .get::<i32, _>("reminder_id");
+    "
+    )
+    .bind(due_dt)
+    .bind(Utc::now())
+    .bind(channel_id.0 as i64)
+    .bind(message_id.0 as i64)
+    .bind(message)
+    .fetch_one(&self.pool)
+    .await?
+    .get::<i32, _>("reminder_id");
 
     for mention in mentions {
       sqlx::query("INSERT INTO reminders_mentions VALUES ($1, $2)")
@@ -160,13 +177,15 @@ impl Database {
 
 
 async fn get_reminders(pool: &PgPool) -> Result<Vec<Reminder>> {
-  let partial_reminders = sqlx::query_as::<_, PartialReminder>("
+  let partial_reminders = sqlx::query_as::<_, PartialReminder>(
+    "
     SELECT * FROM reminders WHERE
       due_at::DATE = NOW()::DATE AND
       due_at::TIME < NOW()::TIME + INTERVAL '1 minute'
-  ")
-    .fetch_all(pool)
-    .await?;
+  "
+  )
+  .fetch_all(pool)
+  .await?;
 
   let mut reminders: Vec<Reminder> = vec![];
 
@@ -178,7 +197,7 @@ async fn get_reminders(pool: &PgPool) -> Result<Vec<Reminder>> {
       .iter()
       .map(|row| row.get::<i64, _>("user_snowflake"))
       .collect::<Vec<_>>();
-    
+
     reminders.push(Reminder::from_partial_components(partial_reminder, user_ids));
   }
 
