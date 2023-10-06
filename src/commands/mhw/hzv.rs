@@ -78,7 +78,7 @@ impl SlashSubCommand for Hzv {
 
     interaction.defer(&ctx.http).await?;
 
-    let thumbnail_filename = format!("{}.webp", &monster.name.replace("'", "")); // Filter out characters that interferes
+    let thumbnail_filename = format!("{}.webp", &monster.name.replace('\'', "")); // Filter out characters that interferes
     let thumbnail_image_bytes = reqwest::get(format!("{}/{}", ASSETS_URL, monster.details.icon_filepath))
       .await?
       .bytes()
@@ -88,7 +88,7 @@ impl SlashSubCommand for Hzv {
       filename: thumbnail_filename.clone()
     };
 
-    let hzv_image_filename = format!("{}_hzv.png", &monster.name.replace("'", ""));
+    let hzv_image_filename = format!("{}_hzv.png", &monster.name.replace('\'', ""));
     let hzv_image_bytes = reqwest::get(format!("{}/{}", ASSETS_URL, hzv_filepath))
       .await?
       .bytes()

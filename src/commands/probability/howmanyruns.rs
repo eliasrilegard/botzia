@@ -65,7 +65,7 @@ impl SlashSubCommand for HowManyRuns {
     }
     let probability = verified.unwrap();
 
-    let probabilities = vec![10, 25, 50, 75, 90, 95, 99];
+    let probabilities = [10, 25, 50, 75, 90, 95, 99];
 
     //
     // Probability p of getting at least 1 success in n runs
@@ -100,7 +100,7 @@ impl SlashSubCommand for HowManyRuns {
 
     if let Some(items) = items_per_run {
       description.push(format!(
-        "Runs: The number of runs required, assuming **${items}** items per run"
+        "Runs: The number of runs required, assuming **{items}** items per run"
       ));
       let mut runs_required = items_required
         .iter()
@@ -112,7 +112,7 @@ impl SlashSubCommand for HowManyRuns {
 
     if let Some(time) = time_per_run {
       description.push(format!(
-        "Hours: The number of hours spent farming, assuming one run takes **${time}** minutes"
+        "Hours: The number of hours spent farming, assuming one run takes **{time}** minutes"
       ));
       let mut time_required = items_required
         .iter()

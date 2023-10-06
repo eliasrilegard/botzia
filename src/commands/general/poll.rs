@@ -102,9 +102,9 @@ impl SlashCommand for Poll {
       return Ok(());
     }
 
-    let mut emotes: Vec<ReactionType> = vec![
+    let mut emotes: Vec<ReactionType> = [
       '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍒', '🥭', '🍍', '🥥', '🥝', '🍅', '🥑', '🥦', '🥬', '🌶', '🌽',
-      '🥕',
+      '🥕'
     ]
     .iter()
     .map(|&emote| emote.into())
