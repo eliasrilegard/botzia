@@ -104,6 +104,25 @@ impl SlashCommand for Purge {
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
     // Can bot delete messages?
+    if let Ok(perms) = ctx
+      .cache
+      .guild_channel(interaction.channel_id)
+      .unwrap()
+      .permissions_for_user(&ctx.cache, ctx.cache.current_user_id())
+    {
+      if !perms.contains(Permissions::MANAGE_MESSAGES) {
+        let mut embed = CreateEmbed::default();
+        embed
+          .color(Colors::Red)
+          .title("Insufficient permissions")
+          .description("I'm missing permissions to delete messages.");
+
+        interaction
+          .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
+          .await?;
+        return Ok(());
+      }
+    }
 
     let count = interaction.get_integer("count").unwrap() as usize;
 
