@@ -1,10 +1,10 @@
+use formato::{FormatOptions, Formato};
 use regex::Regex;
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
 use serenity::model::prelude::command::CommandOptionType;
 use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 use serenity::prelude::Context;
-use thousands::Separable;
 
 use crate::color::Colors;
 use crate::commands::SlashSubCommand;
@@ -39,16 +39,16 @@ impl SlashSubCommand for HowManyRuns {
       .create_sub_option(|option| {
         option
           .kind(CommandOptionType::Number)
-          .name("time-per-run")
-          .description("The time (in minutes) to complete a single run")
+          .name("minutes-per-run")
+          .description("The number of minutes to complete a single run")
           .min_number_value(0.01)
       })
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
-    let probability_input = interaction.get_string("probability").unwrap();
+    let probability_input = interaction.get_string("probability").unwrap().replace(" ", "");
     let items_per_run = interaction.get_integer("items-per-run");
-    let time_per_run = interaction.get_number("time-per-run");
+    let time_per_run = interaction.get_number("minutes-per-run");
 
     let verified = verify_probability(probability_input.as_str());
     if verified.is_none() {
@@ -83,53 +83,54 @@ impl SlashSubCommand for HowManyRuns {
     let mut probabilities_display = probabilities.iter().map(|p| format!("{p}%")).collect::<Vec<_>>();
     probabilities_display.insert(0, "Prob".to_string());
 
+    let format_pattern_integer = "#,###";
+    let format_pattern_decimal = "#,###.0";
+    let format_options = FormatOptions::default()
+      .with_thousands(" ")
+      .with_decimal(".");
+
     let mut items_display = items_required
       .iter()
-      .map(|n| n.separate_with_spaces())
+      .map(|n| n.formato_ops(format_pattern_integer, &format_options))
       .collect::<Vec<_>>();
     items_display.insert(0, "Items".to_string());
 
-    let minimum_width = 6;
     let mut data: Vec<Vec<String>> = vec![
-      pad_strings(&probabilities_display, 0),
-      pad_strings(&items_display, minimum_width),
+      pad_strings(&probabilities_display),
+      pad_strings(&items_display),
     ];
 
     let mut description =
-      vec!["Items: The total amount of items to have an X% chance of at least 1 rare drop".to_string()];
+      vec!["**Items**: The total amount of items to have an X% chance of at least 1 rare drop".to_string()];
 
     if let Some(items) = items_per_run {
       description.push(format!(
-        "Runs: The number of runs required, assuming **{items}** items per run"
+        "**Runs**: The amount of runs required, assuming **{items}** items per run"
       ));
       let mut runs_required = items_required
         .iter()
-        .map(|&n| ((n as f32 / items as f32).round() as i32).separate_with_spaces())
+        .map(|&n| ((n as f32 / items as f32).round() as i32).formato_ops(format_pattern_integer, &format_options))
         .collect::<Vec<_>>();
       runs_required.insert(0, "Runs".to_string());
-      data.push(pad_strings(&runs_required, minimum_width));
+      data.push(pad_strings(&runs_required));
     }
 
     if let Some(time) = time_per_run {
       description.push(format!(
-        "Hours: The number of hours spent farming, assuming one run takes **{time}** minutes"
+        "**Hours**: The time spent farming, assuming one run takes **{time}** minutes"
       ));
       let mut time_required = items_required
         .iter()
         .map(|&n| {
-          let formatted = format!(
-            "{:.1}",
-            (n as f32 * time as f32 / (60_f32 * items_per_run.unwrap_or(1) as f32))
-          );
-          let parsed = formatted.parse::<f32>().unwrap();
-          parsed.separate_with_spaces()
+          let time = n as f32 * time as f32 / (60_f32 * items_per_run.unwrap_or(1) as f32);
+          time.formato_ops(format_pattern_decimal, &format_options)
         })
         .collect::<Vec<_>>();
-      time_required.insert(0, "Time".to_string());
-      data.push(pad_strings(&time_required, minimum_width));
+      time_required.insert(0, "Hours".to_string());
+      data.push(pad_strings(&time_required));
     }
 
-    let mut prepared = transpose(data).iter().map(|row| row.join("")).collect::<Vec<_>>();
+    let mut prepared = transpose(data).iter().map(|row| row.join("  ")).collect::<Vec<_>>();
     prepared.insert(1, "".to_string()); // Spacer
     let content = format!("```{}```", prepared.join("\n"));
 
@@ -170,12 +171,24 @@ pub fn verify_probability(input: &str) -> Option<f32> {
   }
 }
 
-fn pad_strings<T: ToString>(array: &[T], min_length: usize) -> Vec<String> {
-  let length = min_length.max(longest_string(array) + 2);
+fn pad_strings<T: ToString>(array: &[T]) -> Vec<String> {
+  let length = longest_string(array) + 1;
+  // array
+  //   .iter()
+  //   .map(|e| format!("{: >1$}", e.to_string(), length))
+  //   .collect::<Vec<String>>()
+  
   array
     .iter()
-    .map(|e| format!("{: <1$}", e.to_string(), length))
-    .collect::<Vec<String>>()
+    .enumerate()
+    .map(|(index, e)| {
+      if index == 0 {
+        format!("{: <1$}", e.to_string(), length)
+      } else {
+        format!("{: >1$}", e.to_string(), length)
+      }
+    })
+    .collect::<Vec<_>>()
 }
 
 fn longest_string<T: ToString>(array: &[T]) -> usize {
