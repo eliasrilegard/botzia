@@ -171,7 +171,7 @@ pub fn verify_probability(input: &str) -> Option<f32> {
 }
 
 fn pad_strings<T: ToString>(array: &[T], min_length: usize) -> Vec<String> {
-  let length = min_length.max(longest_string(array) + 4);
+  let length = min_length.max(longest_string(array) + 2);
   array
     .iter()
     .map(|e| format!("{: <1$}", e.to_string(), length))
@@ -179,7 +179,7 @@ fn pad_strings<T: ToString>(array: &[T], min_length: usize) -> Vec<String> {
 }
 
 fn longest_string<T: ToString>(array: &[T]) -> usize {
-  array.iter().map(|e| e.to_string().len()).min().unwrap()
+  array.iter().map(|e| e.to_string().len()).max().unwrap()
 }
 
 fn transpose<T: Clone>(matrix: Vec<Vec<T>>) -> Vec<Vec<T>> {
