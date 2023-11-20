@@ -18,11 +18,9 @@ impl Database {
 
   pub async fn set_user_timezone(&self, user_id: UserId, offset: String) -> Result<()> {
     sqlx::query(
-      "
-      INSERT INTO user_timezones VALUES ($1, $2)
-      ON CONFLICT (user_snowflake) DO
-        UPDATE SET utc_offset = EXCLUDED.utc_offset
-    "
+      "INSERT INTO user_timezones VALUES ($1, $2)
+       ON CONFLICT (user_snowflake) DO
+        UPDATE SET utc_offset = EXCLUDED.utc_offset"
     )
     .bind(user_id.0 as i64)
     .bind(offset)

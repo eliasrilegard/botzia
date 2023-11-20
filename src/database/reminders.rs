@@ -148,11 +148,9 @@ impl Database {
     message: Option<String>
   ) -> Result<()> {
     let reminder_id = sqlx::query(
-      "
-      INSERT INTO reminders (due_at, created_at, channel_snowflake, message_snowflake, reminder_message)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING reminder_id
-    "
+      "INSERT INTO reminders (due_at, created_at, channel_snowflake, message_snowflake, reminder_message)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING reminder_id"
     )
     .bind(due_dt)
     .bind(Utc::now())
@@ -178,8 +176,7 @@ impl Database {
 
 async fn get_reminders(pool: &PgPool) -> Result<Vec<Reminder>> {
   let partial_reminders = sqlx::query_as::<_, PartialReminder>(
-    "
-    SELECT * FROM reminders WHERE
+    "SELECT * FROM reminders WHERE
       due_at::DATE = NOW()::DATE AND
       due_at::TIME < NOW()::TIME + INTERVAL '1 minute'
   "

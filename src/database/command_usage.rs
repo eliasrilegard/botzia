@@ -31,11 +31,9 @@ impl Database {
     user_id: UserId
   ) -> Result<()> {
     sqlx::query(
-      "
-      INSERT INTO command_stats VALUES ($1, $2, $3, 1)
-      ON CONFLICT (command_name, guild_snowflake, user_snowflake) DO UPDATE
-        SET usage_count = command_stats.usage_count + 1
-    "
+      "INSERT INTO command_stats VALUES ($1, $2, $3, 1)
+       ON CONFLICT (command_name, guild_snowflake, user_snowflake) DO
+        UPDATE SET usage_count = command_stats.usage_count + 1"
     )
     .bind(command_name)
     .bind(guild_id.unwrap_or_default().0 as i64)
