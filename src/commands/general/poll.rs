@@ -1,4 +1,4 @@
-use rand::seq::SliceRandom;
+use rand::Rng;
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommand, CreateEmbed, CreateEmbedAuthor, CreateEmbedFooter};
 use serenity::model::prelude::command::CommandOptionType;
@@ -109,14 +109,16 @@ impl SlashCommand for Poll {
     .iter()
     .map(|&emote| emote.into())
     .collect::<Vec<_>>();
-    if rand::random::<f32>() < 0.05_f32 {
-      emotes.push(ReactionType::Custom {
+
+    if rand::random::<f32>() < 0.05 {
+      let index = rand::thread_rng().gen_range(0..options.len());
+      emotes.insert(index, ReactionType::Custom {
         name: Some("kekw".to_string()),
         id: EmojiId(743962015411732510),
         animated: false
       });
     }
-    emotes.shuffle(&mut rand::thread_rng());
+    // emotes.shuffle(&mut rand::thread_rng());
 
     let mut choices: Vec<String> = vec![];
     for i in 0..options.len() {
