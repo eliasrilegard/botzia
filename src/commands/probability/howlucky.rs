@@ -80,7 +80,7 @@ impl SlashSubCommand for HowLucky {
     let display_probability = format!("{:.1$}", result * 100_f32, if result >= 0.01 { 2 } else { 1 });
 
     let inner_description = if success_count > 1 {
-      format!("**{}** drops", success_count)
+      format!("**{}** drops (or better)", success_count)
     } else {
       "a drop".to_string()
     };
@@ -90,7 +90,7 @@ impl SlashSubCommand for HowLucky {
       .color(Colors::Blue)
       .title("How lucky were you?")
       .description(format!(
-        "With a drop chance of **{}**, getting {} within **{}** tries\nhas a **{}%** chance of happening.",
+        "With a drop chance of **{}**, getting {} within **{}** tries has a **{}%** chance of happening.",
         probability_input, inner_description, try_count, display_probability
       ));
 

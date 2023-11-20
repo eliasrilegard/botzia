@@ -1,4 +1,3 @@
-use formato::{FormatOptions, Formato};
 use regex::Regex;
 use serenity::async_trait;
 use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
@@ -46,32 +45,33 @@ impl SlashSubCommand for HowManyRuns {
   }
 
   async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
-    let probability_input = interaction.get_string("probability").unwrap().replace(" ", "");
+    let probability_input = interaction.get_string("probability").unwrap().replace(' ', "");
     let items_per_run = interaction.get_integer("items-per-run");
     let time_per_run = interaction.get_number("minutes-per-run");
 
-    let verified = verify_probability(probability_input.as_str());
-    if verified.is_none() {
-      let mut embed = CreateEmbed::default();
-      embed
-        .color(Colors::Red)
-        .title("Invalid format")
-        .description("The argument `probability` must be a decimal number or a fraction, and be between 0 and 1.");
+    let probability = match verify_probability(probability_input.as_str()) {
+      Some(parsed) => parsed,
+      None => {
+        let mut embed = CreateEmbed::default();
+        embed
+          .color(Colors::Red)
+          .title("Invalid format")
+          .description("The argument `probability` must be a decimal number or a fraction, and be between 0 and 1.");
 
-      interaction
-        .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
-        .await?;
-      return Ok(());
-    }
-    let probability = verified.unwrap();
+        interaction
+          .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
+          .await?;
+        return Ok(());
+      }
+    };
 
     let probabilities = [10, 25, 50, 75, 90, 95, 99];
 
     //
     // Probability p of getting at least 1 success in n runs
     // p = 1 - (1 - probabilityOfSuccess) ^ n
+    //   =>
     // n = ln(1 - p) / ln(1 - probabilityOfSuccess)
-    // @returns n
     //
     let attempts_required = |p: f32| ((1_f32 - p).ln() / (1_f32 - probability).ln()).round() as i32;
 
@@ -83,22 +83,13 @@ impl SlashSubCommand for HowManyRuns {
     let mut probabilities_display = probabilities.iter().map(|p| format!("{p}%")).collect::<Vec<_>>();
     probabilities_display.insert(0, "Prob".to_string());
 
-    let format_pattern_integer = "#,###";
-    let format_pattern_decimal = "#,###.0";
-    let format_options = FormatOptions::default()
-      .with_thousands(" ")
-      .with_decimal(".");
-
     let mut items_display = items_required
       .iter()
-      .map(|n| n.formato_ops(format_pattern_integer, &format_options))
+      .map(|&n| format_float(n as f32, 0))
       .collect::<Vec<_>>();
     items_display.insert(0, "Items".to_string());
 
-    let mut data: Vec<Vec<String>> = vec![
-      pad_strings(&probabilities_display),
-      pad_strings(&items_display),
-    ];
+    let mut data = vec![pad_strings(&probabilities_display), pad_strings(&items_display)];
 
     let mut description =
       vec!["**Items**: The total amount of items to have an X% chance of at least 1 rare drop".to_string()];
@@ -109,7 +100,7 @@ impl SlashSubCommand for HowManyRuns {
       ));
       let mut runs_required = items_required
         .iter()
-        .map(|&n| ((n as f32 / items as f32).round() as i32).formato_ops(format_pattern_integer, &format_options))
+        .map(|&n| format_float(n as f32 / items as f32, 0))
         .collect::<Vec<_>>();
       runs_required.insert(0, "Runs".to_string());
       data.push(pad_strings(&runs_required));
@@ -117,20 +108,21 @@ impl SlashSubCommand for HowManyRuns {
 
     if let Some(time) = time_per_run {
       description.push(format!(
-        "**Hours**: The time spent farming, assuming one run takes **{time}** minutes"
+        "**Hours**: The time spent farming, assuming one run takes **{}** minutes",
+        time
       ));
       let mut time_required = items_required
         .iter()
         .map(|&n| {
           let time = n as f32 * time as f32 / (60_f32 * items_per_run.unwrap_or(1) as f32);
-          time.formato_ops(format_pattern_decimal, &format_options)
+          format_float(time, 1)
         })
         .collect::<Vec<_>>();
       time_required.insert(0, "Hours".to_string());
       data.push(pad_strings(&time_required));
     }
 
-    let mut prepared = transpose(data).iter().map(|row| row.join("  ")).collect::<Vec<_>>();
+    let mut prepared = transpose(data).iter().map(|row| row.join("   ")).collect::<Vec<_>>();
     prepared.insert(1, "".to_string()); // Spacer
     let content = format!("```{}```", prepared.join("\n"));
 
@@ -172,22 +164,11 @@ pub fn verify_probability(input: &str) -> Option<f32> {
 }
 
 fn pad_strings<T: ToString>(array: &[T]) -> Vec<String> {
-  let length = longest_string(array) + 1;
-  // array
-  //   .iter()
-  //   .map(|e| format!("{: >1$}", e.to_string(), length))
-  //   .collect::<Vec<String>>()
-  
+  let length = longest_string(array);
+
   array
     .iter()
-    .enumerate()
-    .map(|(index, e)| {
-      if index == 0 {
-        format!("{: <1$}", e.to_string(), length)
-      } else {
-        format!("{: >1$}", e.to_string(), length)
-      }
-    })
+    .map(|e| format!("{: >1$}", e.to_string(), length))
     .collect::<Vec<_>>()
 }
 
@@ -199,4 +180,28 @@ fn transpose<T: Clone>(matrix: Vec<Vec<T>>) -> Vec<Vec<T>> {
   (0..matrix[0].len())
     .map(|i| matrix.iter().map(|inner| inner[i].clone()).collect::<Vec<T>>())
     .collect()
+}
+
+/// Format a floating point number to a specific precision, spacing out every 3rd digit
+///
+/// Examples: (`31415.9265`, `2`) -> `"31 415.93"`
+fn format_float(input: f32, decimal_count: usize) -> String {
+  let scaled = input * 10_i32.pow(decimal_count as u32) as f32;
+  let literal = scaled.round().to_string();
+  let reversed = literal.chars().rev().collect::<String>();
+  let mut data = format!("{:0<1$}", reversed, decimal_count + 1);
+
+  let mut index = if decimal_count > 0 {
+    data.insert(decimal_count, '.');
+    decimal_count + 4
+  } else {
+    decimal_count + 3
+  };
+
+  while index < data.len() {
+    data.insert(index, ' ');
+    index += 4;
+  }
+
+  data.chars().rev().collect::<String>()
 }
