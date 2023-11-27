@@ -19,10 +19,10 @@ reqwest = "0.11"
 serde = "1.0"
 serde_json = "1.0"
 serenity = { version = "0.11.6", default-features = false, features = ["cache", "chrono", "client", "collector", "gateway", "model", "rustls_backend"] }
-shuttle-runtime = "0.33.0"
-shuttle-secrets = "0.33.0"
-shuttle-serenity = "0.33.0"
-shuttle-shared-db = { version = "0.33.0", features = ["postgres"] }
+shuttle-runtime = "0.34.0"
+shuttle-secrets = "0.34.0"
+shuttle-serenity = "0.34.0"
+shuttle-shared-db = { version = "0.34.0", features = ["postgres"] }
 sqlx = { version = "0.7.2", features = ["runtime-tokio-native-tls", "postgres", "chrono"] }
 tokio = "1.29.1"
 tracing = "0.1.37"
