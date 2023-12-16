@@ -1,9 +1,8 @@
 use regex::Regex;
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
-use serenity::prelude::Context;
+use serenity::builder::{CreateCommandOption, CreateEmbed};
+use serenity::client::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashSubCommand;
@@ -16,35 +15,39 @@ pub struct HowManyRuns;
 
 #[async_trait]
 impl SlashSubCommand for HowManyRuns {
-  fn register<'a>(&self, subcommand: &'a mut CreateApplicationCommandOption) -> &'a mut CreateApplicationCommandOption {
-    subcommand
-      .kind(CommandOptionType::SubCommand)
-      .name("howmanyruns")
-      .description("Calculate number of runs required to obtain an item with a given drop chance")
-      .create_sub_option(|option| {
-        option
-          .kind(CommandOptionType::String)
-          .name("probability")
-          .description("A decimal number or fraction between 0 and 1 (not inclusive)")
-          .required(true)
-      })
-      .create_sub_option(|option| {
-        option
-          .kind(CommandOptionType::Integer)
-          .name("items-per-run")
-          .description("The number of items you get in a single run")
-          .min_int_value(1)
-      })
-      .create_sub_option(|option| {
-        option
-          .kind(CommandOptionType::Number)
-          .name("minutes-per-run")
-          .description("The number of minutes to complete a single run")
-          .min_number_value(0.01)
-      })
+  fn register(&self) -> CreateCommandOption {
+    CreateCommandOption::new(
+      CommandOptionType::SubCommand,
+      "howmanyruns",
+      "Calculate number of runs required to obtain an item with a given drop chance"
+    )
+    .add_sub_option(
+      CreateCommandOption::new(
+        CommandOptionType::String,
+        "probability",
+        "A decimal number or fraction between 0 and 1 (not inclusive)"
+      )
+      .required(true)
+    )
+    .add_sub_option(
+      CreateCommandOption::new(
+        CommandOptionType::Integer,
+        "items-per-run",
+        "The number of items you get in a single run/attempt"
+      )
+      .min_int_value(1)
+    )
+    .add_sub_option(
+      CreateCommandOption::new(
+        CommandOptionType::Number,
+        "minutes-per-run",
+        "The number of minutes to complete a single run"
+      )
+      .min_number_value(0.01)
+    )
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, _: &Database) -> Result<()> {
     let probability_input = interaction.get_string("probability").unwrap().replace(' ', "");
     let items_per_run = interaction.get_integer("items-per-run");
     let time_per_run = interaction.get_number("minutes-per-run");
@@ -52,19 +55,17 @@ impl SlashSubCommand for HowManyRuns {
     let probability = match verify_probability(probability_input.as_str()) {
       Some(parsed) => parsed,
       None => {
-        let mut embed = CreateEmbed::default();
-        embed
+        let embed = CreateEmbed::new()
           .color(Colors::Red)
           .title("Invalid format")
           .description("The argument `probability` must be a decimal number or a fraction, and be between 0 and 1.");
 
-        interaction
-          .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
-          .await?;
+        interaction.reply_embed_ephemeral(ctx, embed).await?;
         return Ok(());
       }
     };
 
+    // TODO: Let user specify own set of sample percentages (basically customize this list)
     let probabilities = [10, 25, 50, 75, 90, 95, 99];
 
     //
@@ -126,8 +127,7 @@ impl SlashSubCommand for HowManyRuns {
     prepared.insert(1, "".to_string()); // Spacer
     let content = format!("```{}```", prepared.join("\n"));
 
-    let mut embed = CreateEmbed::default();
-    embed
+    let embed = CreateEmbed::new()
       .color(Colors::Blue)
       .title("Drop Chance Analysis")
       .description(description.join("\n"))
@@ -137,7 +137,7 @@ impl SlashSubCommand for HowManyRuns {
         false
       );
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+    interaction.reply_embed(ctx, embed).await?;
     Ok(())
   }
 }

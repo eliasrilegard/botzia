@@ -15,14 +15,14 @@ color-thief = "0.2"
 image = "0.24"
 rand = "0.8"
 regex = "1"
-reqwest = "0.11"
+reqwest = { version = "0.11", features = ["json"] }
 serde = "1.0"
 serde_json = "1.0"
-serenity = { version = "0.11.6", default-features = false, features = ["cache", "chrono", "client", "collector", "gateway", "model", "rustls_backend"] }
-shuttle-runtime = "0.34.0"
-shuttle-secrets = "0.34.0"
-shuttle-serenity = "0.34.0"
-shuttle-shared-db = { version = "0.34.0", features = ["postgres"] }
+serenity = { version = "0.12.0", default-features = false, features = ["cache", "chrono", "client", "collector", "gateway", "model", "rustls_backend"] }
+shuttle-runtime = "0.34.1"
+shuttle-secrets = "0.34.1"
+shuttle-serenity = { version = "0.34.1", default-features = false, features = ["serenity-0-12-rustls_backend"] }
+shuttle-shared-db = { version = "0.34.1", features = ["postgres"] }
 sqlx = { version = "0.7.2", features = ["runtime-tokio-native-tls", "postgres", "chrono"] }
 tokio = "1.29.1"
 tracing = "0.1.37"

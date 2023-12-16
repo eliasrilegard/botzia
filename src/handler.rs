@@ -1,11 +1,9 @@
 use std::collections::HashMap;
 
+use serenity::all::{Command, Interaction, Ready};
 use serenity::async_trait;
 use serenity::builder::CreateEmbed;
-use serenity::model::prelude::command::Command;
-use serenity::model::prelude::interaction::Interaction;
-use serenity::model::prelude::Ready;
-use serenity::prelude::{Context, EventHandler};
+use serenity::client::{Context, EventHandler};
 use tracing::{error, info};
 
 use crate::color::Colors;
@@ -13,15 +11,17 @@ use crate::commands::SlashCommand;
 use crate::database::Database;
 use crate::interaction::{BetterResponse, InteractionCustomGet};
 
+pub type CommandCollection = HashMap<&'static str, Box<dyn SlashCommand + Send + Sync>>;
+
 pub struct Handler {
-  pub commands: HashMap<String, Box<dyn SlashCommand + Send + Sync>>,
+  pub commands: CommandCollection,
   pub database: Database
 }
 
 impl Handler {
   pub fn new(database: Database) -> Self {
     Self {
-      commands: HashMap::new(),
+      commands: Handler::build_commands(), // Should this be on Handler or not?
       database
     }
   }
@@ -29,43 +29,45 @@ impl Handler {
 
 #[async_trait]
 impl EventHandler for Handler {
-  async fn interaction_create(&self, ctx: Context, base_interaction: Interaction) {
-    match base_interaction {
-      Interaction::ApplicationCommand(interaction) => {
-        if let Some(command) = self.commands.get(&interaction.data.name) {
-          if let Err(why) = command.execute(&ctx, &interaction, &self.database).await {
-            let mut embed = CreateEmbed::default();
-            embed
+  async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
+    match interaction {
+      Interaction::Command(command) => match self.commands.get(command.data.name.as_str()) {
+        Some(client_command) => {
+          if let Err(why) = client_command.execute(&ctx, &command, &self.database).await {
+            let embed = CreateEmbed::new()
               .color(Colors::Red)
               .title("Encountered an error while running command")
               .field("Error message", why.to_string(), false);
-            let _ = interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await;
 
-            error!("Encountered an error while executing a command:\n{:?}", why);
+            let _ = command.reply_embed(&ctx.http, embed).await;
+            error!("Encountered an error while executing command:\n{why:?}");
           }
 
-          let mut full_name = vec![interaction.data.name.clone()];
-          if let Some(subcommand_group) = interaction.get_subcommand_group() {
-            full_name.push(subcommand_group.name);
-          }
-          if let Some(subcommand) = interaction.get_subcommand() {
-            full_name.push(subcommand.name)
-          }
+          let command_name = vec![command.data.name.clone()]
+            .into_iter()
+            .chain(command.get_subcommand_group().map(|group| group.name))
+            .chain(command.get_subcommand().map(|subcommand| subcommand.name))
+            .collect::<Vec<_>>()
+            .join(" ");
 
           let _ = self
             .database
-            .increment_command_usage(full_name.join(" "), interaction.guild_id, interaction.user.id)
+            .increment_command_usage(command_name, command.guild_id, command.user.id)
             .await;
         }
-      }
 
-      Interaction::Autocomplete(interaction) => {
-        if let Some(command) = self.commands.get(&interaction.data.name) {
-          if let Err(why) = command.autocomplete(&ctx, &interaction, &self.database).await {
-            error!("Encountered an error while responding to autocomplete:\n{}", why);
+        None => error!("Unknown interaction:\n{command:?}")
+      },
+
+      Interaction::Autocomplete(autocomplete) => match self.commands.get(autocomplete.data.name.as_str()) {
+        Some(client_command) => {
+          if let Err(why) = client_command.autocomplete(&ctx, &autocomplete, &self.database).await {
+            error!("Encountered an error while responding to autocomplete:\n{why:?}");
           }
         }
-      }
+
+        None => error!("Unknown interaction:\n{autocomplete:?}")
+      },
 
       _ => ()
     }
@@ -74,17 +76,15 @@ impl EventHandler for Handler {
   async fn ready(&self, ctx: Context, ready: Ready) {
     info!("Registering commands...");
 
-    if let Err(why) = Command::set_global_application_commands(&ctx.http, |commands| {
-      for command in self.commands.values() {
-        commands.create_application_command(|builder| command.register(builder));
-      }
-      commands
-    })
-    .await
-    {
-      error!("Command registration failed:\n{:?}", why);
+    let commands = self
+      .commands
+      .values()
+      .map(|command| command.register())
+      .collect::<Vec<_>>();
+    if let Err(why) = Command::set_global_commands(&ctx.http, commands).await {
+      error!("Command registration failed:\n{why:?}");
     }
 
-    info!("Ready! Logged in as {}", ready.user.tag());
+    info!("Ready! Logged in as {}", ready.user.name);
   }
 }

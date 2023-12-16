@@ -2,11 +2,10 @@ use std::fmt;
 
 use chrono::{Duration, Utc};
 use regex::Regex;
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommand, CreateEmbed};
-use serenity::model::prelude::application_command::ApplicationCommandInteraction;
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::prelude::Context;
+use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed};
+use serenity::client::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
@@ -19,26 +18,25 @@ pub struct RemindMe;
 
 #[async_trait]
 impl SlashCommand for RemindMe {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
-    command
-      .name("remindme")
+  fn register(&self) -> CreateCommand {
+    CreateCommand::new("remindme")
       .description("Remind you of something after a given time")
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::String)
-          .name("timer")
-          .description("How long (in days/hours/minutes) until the reminder triggers. Example: 2d, 1 hour, 15 mins")
-          .required(true)
-      })
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::String)
-          .name("message")
-          .description("Any message to go along with the reminder")
-      })
+      .add_option(
+        CreateCommandOption::new(
+          CommandOptionType::String,
+          "timer",
+          "How long (in days/hours/minutes) until the reminder triggers. Example: 2d, 1 hour, 15 mins"
+        )
+        .required(true)
+      )
+      .add_option(CreateCommandOption::new(
+        CommandOptionType::String,
+        "message",
+        "Any message to go along with the reminder"
+      ))
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, db: &Database) -> Result<()> {
     let time_args = interaction.get_string("timer").unwrap().to_ascii_lowercase();
 
     let full_test = Regex::new(
@@ -46,8 +44,7 @@ impl SlashCommand for RemindMe {
     )
     .unwrap(); // Help, pattern is \d+\s?(d(ays?)?|h(ours?)?|m(in(s|utes?)?)?)
     if !full_test.is_match(time_args.trim()) {
-      let mut embed = CreateEmbed::default();
-      embed
+      let embed = CreateEmbed::new()
         .color(Colors::Red)
         .title("Invalid time")
         .description("Check your arguments and make sure everything is well formatted.")
@@ -55,9 +52,7 @@ impl SlashCommand for RemindMe {
           ("Units", "**Days\nHours\nMinutes**", true),
           ("Abbreviations", "d, day(s)\nh, hour(s)\nm, min(s), minute(s)", true)
         ]);
-      interaction
-        .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
-        .await?;
+      interaction.reply_embed_ephemeral(ctx, embed).await?;
       return Ok(());
     }
 
@@ -65,8 +60,7 @@ impl SlashCommand for RemindMe {
     let now = Utc::now();
     let due_dt = now + time.duration_secs();
 
-    let mut embed = CreateEmbed::default();
-    embed
+    let mut embed = CreateEmbed::new()
       .color(Colors::Green)
       .title("Reminder created")
       .description(format!("Got it, I will remind you in {}.", time))
@@ -74,7 +68,7 @@ impl SlashCommand for RemindMe {
 
     let mut mentions = vec![interaction.user.id];
     let message = if let Some(message) = interaction.get_string("message") {
-      embed.field("Message", &message, false);
+      embed = embed.field("Message", &message, false);
 
       let re = Regex::new(r"<@!?(?<id>\d{18,19})>").unwrap();
       for cap in re.captures_iter(&message) {
@@ -87,8 +81,8 @@ impl SlashCommand for RemindMe {
       None
     };
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
-    let ok_message = interaction.get_interaction_response(&ctx.http).await?;
+    interaction.reply_embed(ctx, embed).await?;
+    let ok_message = interaction.get_response(ctx).await?;
 
     db.create_reminder(due_dt, interaction.channel_id, ok_message.id, mentions, message)
       .await?;

@@ -7,13 +7,18 @@ use chrono::Utc;
 use rand::seq::SliceRandom;
 use rand::Rng;
 use serde::Deserialize;
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommand, CreateEmbed};
+use serenity::builder::{
+  CreateCommand,
+  CreateCommandOption,
+  CreateEmbed,
+  CreateEmbedFooter,
+  CreateInteractionResponseFollowup
+};
+use serenity::client::Context;
 use serenity::futures::StreamExt;
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
 use serenity::model::prelude::ReactionType;
-use serenity::prelude::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
@@ -43,31 +48,26 @@ pub struct Trivia;
 
 #[async_trait]
 impl SlashCommand for Trivia {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
-    command
-      .name("trivia")
+  fn register(&self) -> CreateCommand {
+    CreateCommand::new("trivia")
       .description("Trivia command using OTDB")
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::SubCommand)
-          .name("play")
-          .description("Play a round of trivia")
-          .create_sub_option(|option| {
-            option
-              .kind(CommandOptionType::String)
-              .name("category")
-              .description("Request a question from a specific category")
-          })
-      })
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::SubCommand)
-          .name("categories")
-          .description("List all categories")
-      })
+      .add_option(
+        CreateCommandOption::new(CommandOptionType::SubCommand, "play", "Play a round of trivia").add_sub_option(
+          CreateCommandOption::new(
+            CommandOptionType::String,
+            "category",
+            "Request a question from a specific category"
+          )
+        )
+      )
+      .add_option(CreateCommandOption::new(
+        CommandOptionType::SubCommand,
+        "categories",
+        "List all categories"
+      ))
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, db: &Database) -> Result<()> {
     let trivia_categories = db.get_trivia_categories().await?;
 
     if interaction.get_subcommand().unwrap().name == "categories" {
@@ -79,42 +79,38 @@ impl SlashCommand for Trivia {
 
       let (left, right) = categories.split_at((categories.len() + 1) / 2);
 
-      let mut embed = CreateEmbed::default();
-      embed.color(Colors::Blue).title("All categories").fields([
+      let embed = CreateEmbed::new().color(Colors::Blue).title("All categories").fields([
         ("Here's a list of all categories", left.join("\n"), true),
         ("\u{200b}", right.join("\n"), true)
       ]);
 
-      interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+      interaction.reply_embed(ctx, embed).await?;
       return Ok(());
     }
 
-    let category_id = if let Some(input) = interaction.get_string("category") {
+    let category_id = interaction.get_string("category").and_then(|input| {
       let available = trivia_categories
         .iter()
         .filter(|category| category.name.contains(&input))
         .collect::<Vec<_>>();
-      if available.is_empty() {
-        None
-      } else {
+      if !available.is_empty() {
         let random_index = rand::thread_rng().gen_range(0..available.len());
         Some(available[random_index].id)
+      } else {
+        None
       }
-    } else {
-      None
-    };
+    });
 
     let question = match get_question(interaction, category_id, db).await {
       Ok(question) => decode_question(question),
       Err(why) => {
-        let mut embed = CreateEmbed::default();
-        embed
+        let embed = CreateEmbed::new()
           .color(Colors::Red)
           .title("Encountered an error")
           .description("Could not retrieve a question")
           .field("Error message", why.to_string(), false);
 
-        interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+        interaction.reply_embed(ctx, embed).await?;
         return Ok(());
       }
     };
@@ -125,7 +121,7 @@ impl SlashCommand for Trivia {
       "hard" => ("A Hard", Colors::Red),
       _ => unreachable!()
     };
-    let description = format!("{} one from the category {}.", difficulty, question.category);
+    let description = format!("{difficulty} one from the category {}.", question.category);
 
     let mut answers = question.incorrect_answers.clone();
     answers.push(question.correct_answer.clone());
@@ -140,14 +136,11 @@ impl SlashCommand for Trivia {
       _ => unreachable!()
     }
 
-    let mut emotes: Vec<ReactionType> = [
-      '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍒', '🥭', '🍍', '🥥', '🥝', '🍅', '🥑', '🥦', '🥬', '🌶', '🌽',
-      '🥕'
-    ]
-    .iter()
-    .map(|&emote| emote.into())
-    .collect::<Vec<_>>();
-    emotes.shuffle(&mut rand::thread_rng());
+    let mut emotes: Vec<ReactionType> = ['🍎', '🍐', '🍊', '🍋']
+      .iter()
+      .map(|&emote| emote.into())
+      .collect::<Vec<_>>();
+    // emotes.shuffle(&mut rand::thread_rng());
     emotes.truncate(answers.len());
 
     let mut choices: Vec<String> = vec![];
@@ -167,84 +160,82 @@ impl SlashCommand for Trivia {
       interaction.user.name.clone()
     };
 
-    let mut embed = CreateEmbed::default();
-    embed
+    let embed = CreateEmbed::new()
       .color(color)
-      .title(format!("{}, here's a question!", user_name))
+      .title(format!("{user_name}, here's a question!"))
       .description(description)
       .fields([
         ("Question", question.question, false),
         ("Choices", choices.join("\n"), false)
       ])
-      .footer(|footer| footer.text("Answer by reacting to the corresponding emote"))
+      .footer(CreateEmbedFooter::new("Answer by reacting to the corresponding emote"))
       .timestamp(Utc::now());
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
-    let message = interaction.get_interaction_response(&ctx.http).await?;
+    interaction.reply_embed(ctx, embed).await?;
+    let message = interaction.get_response(ctx).await?;
 
     for emote in &emotes {
-      message.react(&ctx.http, emote.clone()).await?;
+      message.react(ctx, emote.clone()).await?;
     }
 
     let mut collector = message
       .await_reactions(ctx)
       .author_id(interaction.user.id)
-      .collect_limit(1)
       .filter(move |reaction| emotes.contains(&reaction.emoji))
       .timeout(Duration::from_secs(25))
-      .build();
+      .stream();
 
-    let mut embed = CreateEmbed::default();
-    if let Some(action) = collector.next().await {
-      if action.as_inner_ref().emoji == correct_emote {
-        embed
+    let embed = if let Some(reaction) = collector.next().await {
+      if reaction.emoji == correct_emote {
+        CreateEmbed::new()
           .color(Colors::Green)
           .title("Correct answer!")
-          .description("That's correct, well done!");
+          .description("That's correct, well done!")
       } else {
-        embed
+        CreateEmbed::new()
           .color(Colors::Red)
           .title("Incorrect answer")
           .description(format!(
             "Sorry, but that's incorrect.\nThe correct answer was {}.",
             question.correct_answer
           ))
-          .footer(|footer| footer.text("Better luck next time!"));
+          .footer(CreateEmbedFooter::new("Better luck next time!"))
       }
     } else {
-      message.delete_reactions(&ctx.http).await?;
-      embed.color(Colors::Orange).title("Time's up!").description(format!(
-        "You ran out of time!\nThe correct answer was {}.",
-        question.correct_answer
-      ));
-    }
+      message.delete_reactions(ctx).await?;
+      CreateEmbed::new()
+        .color(Colors::Orange)
+        .title("Time's up!")
+        .description(format!(
+          "You ran out of time!\nThe correct answer was {}.",
+          question.correct_answer
+        ))
+    };
 
-    interaction
-      .create_followup_message(&ctx.http, |msg| msg.set_embed(embed))
-      .await?;
+    let builder = CreateInteractionResponseFollowup::new().embed(embed);
+    interaction.create_followup(ctx, builder).await?;
+
     Ok(())
   }
 }
 
 #[async_recursion]
 async fn get_question(
-  interaction: &ApplicationCommandInteraction,
+  interaction: &CommandInteraction,
   category_id: Option<i32>,
   db: &Database
 ) -> Result<TriviaQuestion> {
-  let token = db.get_server_token(interaction.guild_id.unwrap_or_default().0).await?;
-  let id = if let Some(id) = category_id {
-    format!("&category={}", id)
-  } else {
-    "".to_string()
-  };
+  let token = db
+    .get_server_token(interaction.guild_id.unwrap_or_default().get())
+    .await?;
+  let id = category_id.map_or(String::default(), |id| format!("&category={id}"));
 
-  let url = format!(
-    "https://opentdb.com/api.php?amount=1{}&encode=base64&token={}",
-    id, token
-  );
+  let url = format!("https://opentdb.com/api.php?amount=1{id}&encode=base64&token={token}");
   let response = reqwest::get(url).await?;
   let data = response.json::<TriviaResponse>().await?;
+  // FIXME:
+  // error decoding response body: missing field results at line 1 column 31
+  // error decoding response body: invalid type: integer 0, expected a string at line 1 column 18
 
   match data.response_code {
     0 => Ok(data.results[0].clone()),
@@ -253,7 +244,7 @@ async fn get_question(
     3 | 4 => {
       // 3: Token not found
       // 4: Questions exhausted
-      db.regenerate_server_token(interaction.guild_id.unwrap_or_default().0)
+      db.regenerate_server_token(interaction.guild_id.unwrap_or_default().get())
         .await?;
       get_question(interaction, category_id, db).await
     }
@@ -262,7 +253,7 @@ async fn get_question(
 }
 
 fn decode_question(question: TriviaQuestion) -> TriviaQuestion {
-  // This could be an impl
+  // TODO: This could be an impl
   TriviaQuestion {
     category: b64_decode(question.category),
     kind: b64_decode(question.kind),

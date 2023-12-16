@@ -1,9 +1,7 @@
+use serenity::all::{CommandInteraction, CommandOptionType, Context};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommand, CreateEmbed};
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed, CreateEmbedAuthor, CreateMessage};
 use serenity::model::{Permissions, Timestamp};
-use serenity::prelude::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
@@ -16,165 +14,138 @@ pub struct Kick;
 
 #[async_trait]
 impl SlashCommand for Kick {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
-    command
-      .name("kick")
+  fn register(&self) -> CreateCommand {
+    CreateCommand::new("kick")
       .description("Kick a member")
       .dm_permission(false)
       .default_member_permissions(Permissions::KICK_MEMBERS)
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::User)
-          .name("member")
-          .description("The member to kick")
-          .required(true)
-      })
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::String)
-          .name("reason")
-          .description("The reason for kicking")
-      })
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::String)
-          .name("notification")
-          .description("A notification message to be sent to the user")
-      })
+      .add_option(CreateCommandOption::new(CommandOptionType::User, "member", "The member to kick").required(true))
+      .add_option(CreateCommandOption::new(
+        CommandOptionType::String,
+        "reason",
+        "The reason for kicking. Gets displayed on message and in the audit log."
+      ))
+      .add_option(CreateCommandOption::new(
+        CommandOptionType::String,
+        "notification",
+        "A notification message to be sent to the user"
+      ))
+      .add_option(CreateCommandOption::new(
+        CommandOptionType::String,
+        "audit-reason",
+        "Override the reason in the audit log"
+      ))
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
-    let (user, _) = interaction.get_user("member").unwrap();
-    let reason = interaction.get_string("reason");
-    let notification = interaction.get_string("notification");
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, _: &Database) -> Result<()> {
+    let user_id = interaction.get_user_id("member").unwrap();
 
-    let guild = interaction.guild_id.unwrap().to_guild_cached(&ctx.cache).unwrap();
+    let guild_id = interaction.guild_id.unwrap();
 
+    let bot_member = guild_id.current_user_member(ctx).await?;
+    if !bot_member.permissions(ctx).unwrap().contains(Permissions::KICK_MEMBERS) {
+      let embed = CreateEmbed::new()
+        .color(Colors::Red)
+        .title("Insuficcient permissions")
+        .description("I don't have permission to kick members in this server");
 
-    // Guards
-
-    let bot_id = ctx.cache.current_user_id();
-    if let Ok(permissions) = guild.member_permissions(&ctx.http, bot_id).await {
-      if !permissions.contains(Permissions::KICK_MEMBERS) {
-        let mut embed = CreateEmbed::default();
-        embed
-          .color(Colors::Red)
-          .title("Insuficcient permissions")
-          .description("I don't have permission to kick members in this server");
-
-        interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
-        return Ok(());
-      }
+      interaction.reply_embed_ephemeral(ctx, embed).await?;
+      return Ok(());
     }
 
-    let member = if let Ok(member) = guild.member(&ctx.http, user.id).await {
-      member
-    } else {
-      // Member not in the guild
-      let mut embed = CreateEmbed::default();
-      embed
-        .color(Colors::Red)
-        .title("Member not found")
-        .description(format!("{} wasn't found in the server", user)); // I assume this will do the ping thing?
+    let member = match guild_id.member(ctx, user_id).await {
+      Ok(member) => member,
+      Err(_) => {
+        // Member not in the guild
+        let user = user_id.to_user(ctx).await?;
+        let embed = CreateEmbed::new()
+          .color(Colors::Red)
+          .title("Member not found")
+          .description(format!("{} wasn't found in the server", user.name)); // I assume this will do the ping thing?
 
-      interaction
-        .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
-        .await?;
-      return Ok(());
+        interaction.reply_embed_ephemeral(ctx, embed).await?;
+        return Ok(());
+      }
     };
 
-    if member.user.id == bot_id {
+    if member.user.id == ctx.cache.current_user().id {
       // I can't kick myself
-      let mut embed = CreateEmbed::default();
-      embed.color(Colors::Red).title("I can't kick myself");
+      let embed = CreateEmbed::new().color(Colors::Red).title("I can't ban myself");
 
-      interaction
-        .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
-        .await?;
+      interaction.reply_embed_ephemeral(ctx, embed).await?;
       return Ok(());
     }
 
     if let Some(permissions) = member.permissions {
       if permissions.contains(Permissions::KICK_MEMBERS | Permissions::ADMINISTRATOR) {
         // Member is a moderator, don't kick
-        let mut embed = CreateEmbed::default();
-        embed
+        let embed = CreateEmbed::new()
           .color(Colors::Red)
           .title("Can't kick moderators")
           .description("Cannot kick moderators of the server");
 
-        interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+        interaction.reply_embed_ephemeral(&ctx.http, embed).await?;
         return Ok(());
       }
     }
 
 
-    if let Some(message) = notification {
-      let mut embed = CreateEmbed::default();
-      embed
+    if let Some(message) = interaction.get_string("notification") {
+      let partial_guild = guild_id.to_partial_guild(ctx).await?;
+      let mut author = CreateEmbedAuthor::new(format!("You have been kicked from {}", partial_guild.name));
+      if let Some(icon_url) = partial_guild.icon_url() {
+        author = author.icon_url(icon_url); // There's gotta be a better way of doing this
+      }
+
+      let embed = CreateEmbed::new()
         .color(Colors::Red)
-        .author(|author| {
-          if let Some(url) = guild.icon_url() {
-            author.icon_url(url);
-          }
-          author.name(format!("You have been kicked from {}", guild.name))
-        })
+        .author(author)
         .field("Message", message, false);
 
-      if let Ok(dm_channel) = user.create_dm_channel(&ctx.http).await {
-        let _ = dm_channel.send_message(&ctx.http, |msg| msg.set_embed(embed)).await;
+      if let Ok(dm) = user_id.create_dm_channel(ctx).await {
+        dm.send_message(ctx, CreateMessage::new().embed(embed)).await?;
       }
     }
 
-    let audit_reason = if let Some(kick_reason) = reason.clone() {
-      // Clone because we need to use it twice and I'm lazy
-      format!("{} [Issued by {}]", kick_reason, interaction.user.tag())
-    } else {
-      format!("[Issued by {}]", interaction.user.tag())
+    let audit_reason = {
+      let mut builder = vec![format!("[Issued by {}]", interaction.user.name)];
+      if let Some(reason) = interaction
+        .get_string("audit-reason")
+        .or(interaction.get_string("reason"))
+      {
+        builder.push(reason);
+      }
+      builder.reverse();
+      builder.join(" ")
     };
 
-    match guild
-      .kick_with_reason(&ctx.http, member.user.id, audit_reason.as_str())
-      .await
-    {
+    match guild_id.kick_with_reason(ctx, user_id, &audit_reason).await {
       Ok(_) => {
-        let mut embed = CreateEmbed::default();
-        embed
+        let mut embed = CreateEmbed::new()
           .color(Colors::Orange)
-          .author(|author| {
-            author
-              .name(format!("{} kicked", member.user.tag()))
-              .icon_url(member.face())
-          })
+          .author(CreateEmbedAuthor::new(format!("{} kicked", member.user.name)).icon_url(member.face()))
           .timestamp(Timestamp::now());
 
-        if let Some(kick_reason) = reason {
-          embed.field("Reason", kick_reason, false);
+        if let Some(kick_reason) = interaction.get_string("reason") {
+          embed = embed.field("Reason", kick_reason, false); // Someone help me
         }
 
-        let _ = interaction
-          .channel_id
-          .send_message(&ctx.http, |msg| msg.set_embed(embed))
-          .await;
-
-        let mut response = CreateEmbed::default();
-        response.color(Colors::Green).title("Kick successful");
-
         interaction
-          .reply(&ctx.http, |msg| msg.set_embed(response).ephemeral(true))
+          .channel_id
+          .send_message(ctx, CreateMessage::new().embed(embed))
           .await?;
+
+        let confirmation = CreateEmbed::new().color(Colors::Green).title("Ban successful");
+        interaction.reply_embed_ephemeral(ctx, confirmation).await?;
       }
 
       Err(why) => {
-        let mut embed = CreateEmbed::default();
-        embed
+        let embed = CreateEmbed::new()
           .color(Colors::Red)
           .title("Could not perform kick")
-          .field("Error", why, false);
+          .field("Error", why.to_string(), false);
 
-        interaction
-          .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
-          .await?;
+        interaction.reply_embed_ephemeral(ctx, embed).await?;
       }
     }
 

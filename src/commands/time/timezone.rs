@@ -1,10 +1,9 @@
 use std::collections::HashMap;
 
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
-use serenity::prelude::Context;
+use serenity::builder::{CreateCommandOption, CreateEmbed};
+use serenity::client::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashSubCommand;
@@ -26,68 +25,64 @@ impl Default for Timezone {
 
 #[async_trait]
 impl SlashSubCommand for Timezone {
-  fn register<'a>(&self, subcommand: &'a mut CreateApplicationCommandOption) -> &'a mut CreateApplicationCommandOption {
-    subcommand
-      .kind(CommandOptionType::SubCommandGroup)
-      .name("timezone")
-      .description("Manage default timezone")
-      .create_sub_option(|option| {
-        option
-          .kind(CommandOptionType::SubCommand)
-          .name("list")
-          .description("List all supported timezones")
+  fn register(&self) -> CreateCommandOption {
+    CreateCommandOption::new(
+      CommandOptionType::SubCommandGroup,
+      "timezone",
+      "Manage default timezone"
+    )
+    .add_sub_option(CreateCommandOption::new(
+      CommandOptionType::SubCommand,
+      "list",
+      "List all supported timezones"
+    ))
+    .add_sub_option(CreateCommandOption::new(
+      CommandOptionType::SubCommand,
+      "get",
+      "See what your current set timezone is"
+    ))
+    .add_sub_option(
+      CreateCommandOption::new(CommandOptionType::SubCommand, "set", "Set a custom default timezone").add_sub_option({
+        let mut option = CreateCommandOption::new(
+          CommandOptionType::String,
+          "timezone",
+          "The abbreviation of the timezone to set"
+        )
+        .required(true);
+        for &key in self.timezones.keys() {
+          option = option.add_string_choice(key, key);
+        }
+        option // To hell with this implementation
       })
-      .create_sub_option(|option| {
-        option
-          .kind(CommandOptionType::SubCommand)
-          .name("get")
-          .description("See what your current default timezone is")
-      })
-      .create_sub_option(|option| {
-        option
-          .kind(CommandOptionType::SubCommand)
-          .name("set")
-          .description("Set a custom default timezone")
-          .create_sub_option(|option| {
-            // Might want to rework this option, if using API
-            for &key in self.timezones.keys() {
-              option.add_string_choice(key, key);
-            }
-            option
-              .kind(CommandOptionType::String)
-              .name("timezone")
-              .description("The abbreviation of the timezone to set")
-              .required(true)
-          })
-      })
-      .create_sub_option(|option| {
-        option
-          .kind(CommandOptionType::SubCommand)
-          .name("reset")
-          .description("Reset your default timezone")
-      })
+    )
+    .add_sub_option(CreateCommandOption::new(
+      CommandOptionType::SubCommand,
+      "reset",
+      "Reset your set timezone"
+    ))
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()> {
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, db: &Database) -> Result<()> {
     let subcommand_name = interaction.get_subcommand().unwrap().name;
 
-    let mut embed = CreateEmbed::default();
-
-    match subcommand_name.as_str() {
+    let embed = match subcommand_name.as_str() {
       "list" => {
         // TODO: Sort by offset
-        embed.color(Colors::Blue).title("Supported timezones").fields([
-          (
-            "Name",
-            self.timezones.keys().copied().collect::<Vec<_>>().join("\n"),
-            true
-          ),
-          (
-            "UTC Offset",
-            self.timezones.values().copied().collect::<Vec<_>>().join("\n"),
-            true
-          )
-        ]);
+        CreateEmbed::new()
+          .color(Colors::Blue)
+          .title("Supported timezones")
+          .fields([
+            (
+              "Name",
+              self.timezones.keys().copied().collect::<Vec<_>>().join("\n"),
+              true
+            ),
+            (
+              "UTC Offset",
+              self.timezones.values().copied().collect::<Vec<_>>().join("\n"),
+              true
+            )
+          ])
       }
 
       "get" => {
@@ -96,10 +91,10 @@ impl SlashSubCommand for Timezone {
           .await
           .unwrap_or("".to_string());
 
-        embed
+        CreateEmbed::new()
           .color(Colors::Blue)
           .title("Current timezone")
-          .description(format!("Your current set timezone is UTC{}.", user_timezone));
+          .description(format!("Your current set timezone is UTC{}.", user_timezone))
       }
 
       "set" => {
@@ -109,25 +104,25 @@ impl SlashSubCommand for Timezone {
         db.set_user_timezone(interaction.user.id, utc_offset.to_string())
           .await?;
 
-        embed
+        CreateEmbed::new()
           .color(Colors::Green)
           .title("Timezone set")
-          .description(format!("Your offset is now UTC{}.", utc_offset));
+          .description(format!("Your offset is now UTC{}.", utc_offset))
       }
 
       "reset" => {
         db.remove_user_timezone(interaction.user.id).await?;
 
-        embed
+        CreateEmbed::new()
           .color(Colors::Green)
           .title("Timezone reset")
-          .description("Your default timezone has been reset to UTC.");
+          .description("Your default timezone has been reset to UTC.")
       }
 
       _ => unreachable!()
-    }
+    };
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+    interaction.reply_embed(ctx, embed).await?;
 
     Ok(())
   }

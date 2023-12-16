@@ -5,7 +5,7 @@ pub enum Colors {
   Red = 0xcc0000
 }
 
-use serenity::utils::Color as SerenityColor;
+use serenity::model::Color as SerenityColor;
 
 impl From<Colors> for SerenityColor {
   fn from(val: Colors) -> Self {

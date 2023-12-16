@@ -1,8 +1,7 @@
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
-use serenity::prelude::Context;
+use serenity::builder::{CreateCommandOption, CreateEmbed};
+use serenity::client::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashSubCommand;
@@ -15,23 +14,21 @@ pub struct LTRange;
 
 #[async_trait]
 impl SlashSubCommand for LTRange {
-  fn register<'a>(&self, subcommand: &'a mut CreateApplicationCommandOption) -> &'a mut CreateApplicationCommandOption {
-    subcommand
-      .kind(CommandOptionType::SubCommand)
-      .name("ltrange")
-      .description("Find the closest LT breakpoints to your current range")
-      .create_sub_option(|option| {
-        option
-          .kind(CommandOptionType::Integer)
-          .name("range")
-          .description("Your current range")
-          .min_int_value(0)
-          .max_int_value(9999)
-          .required(true)
-      })
+  fn register(&self) -> CreateCommandOption {
+    CreateCommandOption::new(
+      CommandOptionType::SubCommand,
+      "ltrange",
+      "Find the closest LT breakpoints to your current range"
+    )
+    .add_sub_option(
+      CreateCommandOption::new(CommandOptionType::Integer, "range", "Your current range")
+        .min_int_value(0)
+        .max_int_value(9999)
+        .required(true)
+    )
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, _: &Database) -> Result<()> {
     // These offsets are taken from https://quarplet.com/chaintargets_breakpoints.txt
     // Since we're storing the breakpoints in an array, we need to offset the index by some value
     let normal: Vec<i32> = vec![
@@ -57,8 +54,7 @@ impl SlashSubCommand for LTRange {
     let index_normal = closest_breakpoint(&current_range, &normal, displayed_values / 2);
     let index_upped = closest_breakpoint(&current_range, &upped, displayed_values / 2);
 
-    let mut embed = CreateEmbed::default();
-    embed
+    let embed = CreateEmbed::new()
       .color(Colors::Blue)
       .title("Closest breakpoints")
       .description(format!(
@@ -70,7 +66,7 @@ impl SlashSubCommand for LTRange {
         ("Upgraded", formatter(&upped, index_upped, &displayed_values, 17), true)
       ]);
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+    interaction.reply_embed(ctx, embed).await?;
     Ok(())
   }
 }

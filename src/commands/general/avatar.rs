@@ -1,10 +1,9 @@
 use color_thief::ColorFormat;
 use image::DynamicImage;
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommand, CreateEmbed};
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
-use serenity::prelude::Context;
+use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed, CreateEmbedAuthor};
+use serenity::client::Context;
 
 use crate::commands::SlashCommand;
 use crate::database::Database;
@@ -16,27 +15,19 @@ pub struct Avatar;
 
 #[async_trait]
 impl SlashCommand for Avatar {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
-    command
-      .name("avatar")
+  fn register(&self) -> CreateCommand {
+    CreateCommand::new("avatar")
       .description("Get the avatar of a user")
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::User)
-          .name("user")
-          .description("The user of interest")
-          .required(true)
-      })
+      .add_option(CreateCommandOption::new(CommandOptionType::User, "user", "The user of interest").required(true))
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
-    let (user, _) = interaction.get_user("user").unwrap();
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, _: &Database) -> Result<()> {
+    let user_id = interaction.get_user_id("user").unwrap();
+    let user = user_id.to_user(ctx).await?;
 
-    let guild = interaction.guild_id.unwrap().to_guild_cached(&ctx.cache).unwrap();
-    let avatar_url = if let Ok(member) = guild.member(&ctx.http, user.id).await {
-      member.face()
-    } else {
-      user.face()
+    let avatar_url = match interaction.guild_id {
+      Some(id) => id.member(ctx, user_id).await?.face(),
+      None => user.face()
     };
 
     let request_url = avatar_url.replace(".webp", ".png");
@@ -53,14 +44,13 @@ impl SlashCommand for Avatar {
     let palette = color_thief::get_palette(image.as_bytes(), color_format, 1, 5).unwrap();
     let dominant_color = hexify(palette[0].r, palette[0].g, palette[0].b);
 
-    let mut embed = CreateEmbed::default();
-    embed
+    let embed = CreateEmbed::new()
       .color(dominant_color)
-      .description(format!("Dominant color: #{:0>6x}", dominant_color))
-      .author(|author| author.name(user.tag()).icon_url(&display_url))
+      .description(format!("Dominant Color: #{dominant_color:0>6x}"))
+      .author(CreateEmbedAuthor::new(user.name).icon_url(&display_url))
       .image(&display_url);
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+    interaction.reply_embed(ctx, embed).await?;
     Ok(())
   }
 }

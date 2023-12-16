@@ -1,14 +1,13 @@
+use serenity::all::CommandInteraction;
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommand, CreateApplicationCommandOption};
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
-use serenity::model::prelude::interaction::autocomplete::AutocompleteInteraction;
-use serenity::prelude::Context;
+use serenity::builder::{CreateCommand, CreateCommandOption};
+use serenity::client::Context;
 
 use crate::database::Database;
-use crate::handler::Handler;
+use crate::handler::{CommandCollection, Handler};
 use crate::Result;
 
-mod categories;
+mod category;
 mod dd;
 mod general;
 mod mhw;
@@ -21,37 +20,33 @@ type NamedSubCommands = Vec<(&'static str, Box<dyn SlashSubCommand + Send + Sync
 
 #[async_trait]
 pub trait SlashCommand {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand;
+  fn register(&self) -> CreateCommand;
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()>;
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, db: &Database) -> Result<()>;
 
-  async fn autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
+  // Needs to be implemented for any category command that has any subcommand with autocomplete enabled
+  async fn autocomplete(&self, _ctx: &Context, _interaction: &CommandInteraction, _db: &Database) -> Result<()> {
     Err("This command doesn't have any parameters with autocomplete enabled.".into())
   }
 }
 
 #[async_trait]
 pub trait SlashSubCommand {
-  fn register<'a>(&self, subcommand: &'a mut CreateApplicationCommandOption) -> &'a mut CreateApplicationCommandOption;
+  fn register(&self) -> CreateCommandOption;
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, db: &Database) -> Result<()>;
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, db: &Database) -> Result<()>;
 
-  async fn autocomplete(&self, _ctx: &Context, _interaction: &AutocompleteInteraction, _db: &Database) -> Result<()> {
+  async fn autocomplete(&self, _ctx: &Context, _interaction: &CommandInteraction, _db: &Database) -> Result<()> {
     Err("This command doesn't have any parameters with autocomplete enabled.".into())
   }
 }
 
 impl Handler {
-  pub fn load_commands(mut self) -> Self {
-    let commands = categories::commands()
+  pub fn build_commands() -> CommandCollection {
+    category::commands()
       .into_iter()
       .chain(general::commands())
-      .chain(moderation::commands());
-
-    for (name, command) in commands {
-      self.commands.insert(name.to_string(), command);
-    }
-
-    self
+      .chain(moderation::commands())
+      .collect()
   }
 }

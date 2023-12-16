@@ -1,8 +1,7 @@
 use regex::Regex;
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommand, CreateEmbed};
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed};
 use serenity::prelude::Context;
 
 use crate::color::Colors;
@@ -16,33 +15,25 @@ pub struct SpongeText;
 
 #[async_trait]
 impl SlashCommand for SpongeText {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
-    let random_case = randomize_case("sponge case".to_string());
-    command
-      .name("spongetext")
-      .description(format!("Convert text into {}", random_case))
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::String)
-          .name("text")
-          .description("The text to convert")
-          .required(true)
-      })
+  fn register(&self) -> CreateCommand {
+    CreateCommand::new("spongetext")
+      .description(format!(
+        "Convert text into {}",
+        randomize_case("sponge case".to_string())
+      ))
+      .add_option(CreateCommandOption::new(CommandOptionType::String, "text", "The text to convert").required(true))
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, _: &Database) -> Result<()> {
     let input = interaction.get_string("text").unwrap();
     let output = randomize_case(input);
 
-    let mut embed = CreateEmbed::default();
-    embed
+    let embed = CreateEmbed::new()
       .color(Colors::Blue)
       .title("Here's your converted text")
       .description(output);
 
-    interaction
-      .reply(&ctx.http, |msg| msg.set_embed(embed).ephemeral(true))
-      .await?;
+    interaction.reply_embed_ephemeral(&ctx.http, embed).await?;
     Ok(())
   }
 }

@@ -40,10 +40,10 @@ impl Reminder {
       id: partial.reminder_id,
       due_at_utc: partial.due_at,
       created_dt_utc: partial.created_at,
-      channel_id: ChannelId(partial.channel_snowflake as u64),
-      message_id: MessageId(partial.message_snowflake as u64),
+      channel_id: ChannelId::new(partial.channel_snowflake as u64),
+      message_id: MessageId::new(partial.message_snowflake as u64),
       message: partial.reminder_message,
-      mentions: user_ids.iter().map(|&id| UserId(id as u64)).collect()
+      mentions: user_ids.iter().map(|&id| UserId::new(id as u64)).collect()
     }
   }
 
@@ -55,17 +55,15 @@ impl Reminder {
     match self.channel_id.to_channel(&http).await {
       Ok(Channel::Guild(channel)) => {
         let reference = channel.message(&http, self.message_id).await;
-        channel
-          .send_message(&http, |msg| self.construct_response(msg, reference.ok()))
-          .await?;
+        let builder = self.construct_response(reference.ok());
+        channel.send_message(http, builder).await?;
         Ok(())
       }
 
       Ok(Channel::Private(channel)) => {
         let reference = channel.message(&http, self.message_id).await;
-        channel
-          .send_message(&http, |msg| self.construct_response(msg, reference.ok()))
-          .await?;
+        let builder = self.construct_response(reference.ok());
+        channel.send_message(http, builder).await?;
         Ok(())
       }
 
@@ -74,32 +72,30 @@ impl Reminder {
     }
   }
 
-  fn construct_response<'a, 'b>(
-    &self,
-    msg: &'a mut CreateMessage<'b>,
-    reference: Option<Message>
-  ) -> &'a mut CreateMessage<'b> {
-    let mut embed = CreateEmbed::default();
-    embed
+  fn construct_response(&self, reference: Option<Message>) -> CreateMessage {
+    let mut embed = CreateEmbed::new()
       .color(Colors::Green)
-      .title("Ding, here's your reminder!")
+      .title("Ding! Here's your reminder")
       .timestamp(self.created_dt_utc);
 
     if let Some(message) = &self.message {
-      embed.field("Message", message, false);
+      embed = embed.field("Message", message, false); // TODO: Fix reassigning
     }
 
     let mentions = self
       .mentions
       .iter()
-      .map(|user_id| user_id.0.to_string())
+      .map(|user_id| user_id.get().to_string())
       .collect::<Vec<_>>();
+    let mut message = CreateMessage::new()
+      .embed(embed)
+      .content(format!("<@{}>", mentions.join("> <@")));
 
-    if let Some(message) = reference {
-      msg.reference_message(&message);
+    if let Some(source) = reference {
+      message = message.reference_message(&source);
     }
 
-    msg.content(format!("<@{}>", mentions.join("> <@"))).set_embed(embed)
+    message
   }
 }
 
@@ -154,8 +150,8 @@ impl Database {
     )
     .bind(due_dt)
     .bind(Utc::now())
-    .bind(channel_id.0 as i64)
-    .bind(message_id.0 as i64)
+    .bind(channel_id.get() as i64)
+    .bind(message_id.get() as i64)
     .bind(message)
     .fetch_one(&self.pool)
     .await?
@@ -164,7 +160,7 @@ impl Database {
     for mention in mentions {
       sqlx::query("INSERT INTO reminders_mentions VALUES ($1, $2)")
         .bind(reminder_id)
-        .bind(mention.0 as i64)
+        .bind(mention.get() as i64)
         .execute(&self.pool)
         .await?;
     }

@@ -23,10 +23,6 @@ pub struct TriviaCategory {
 
 #[derive(Deserialize)]
 struct GenerateTokenResponse {
-  #[serde(rename = "response_code")]
-  _response_code: String,
-  #[serde(rename = "response_message")]
-  _reponse_message: String,
   reponse_token: String
 }
 

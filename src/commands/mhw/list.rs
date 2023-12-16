@@ -1,8 +1,7 @@
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommandOption, CreateEmbed};
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
-use serenity::prelude::Context;
+use serenity::builder::{CreateCommandOption, CreateEmbed};
+use serenity::client::Context;
 
 use super::MonsterInfo;
 use crate::color::Colors;
@@ -16,14 +15,11 @@ pub struct List;
 
 #[async_trait]
 impl SlashSubCommand for List {
-  fn register<'a>(&self, subcommand: &'a mut CreateApplicationCommandOption) -> &'a mut CreateApplicationCommandOption {
-    subcommand
-      .kind(CommandOptionType::SubCommand)
-      .name("list")
-      .description("View a list of all monsters")
+  fn register(&self) -> CreateCommandOption {
+    CreateCommandOption::new(CommandOptionType::SubCommand, "list", "View a list of all monsters")
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, _: &Database) -> Result<()> {
     let monsters_json = include_str!("../../../assets/monster_hunter_world/monster_data.json");
     let monsters: Vec<MonsterInfo> = serde_json::from_str(monsters_json).expect("JSON was not well formatted");
 
@@ -36,13 +32,10 @@ impl SlashSubCommand for List {
     let embeds = monster_names
       .chunks(20)
       .map(|chunk| {
-        let mut embed = CreateEmbed::default();
-        embed
+        CreateEmbed::new()
           .color(Colors::Blue)
           .title("All Monsters")
-          .description(chunk.join("\n"));
-
-        embed
+          .description(chunk.join("\n"))
       })
       .collect::<Vec<_>>();
 

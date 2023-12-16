@@ -1,10 +1,9 @@
+use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
-use serenity::builder::{CreateApplicationCommand, CreateEmbed};
-use serenity::model::prelude::command::CommandOptionType;
-use serenity::model::prelude::interaction::application_command::ApplicationCommandInteraction;
+use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed};
+use serenity::client::Context;
 use serenity::model::prelude::ChannelType;
 use serenity::model::Permissions;
-use serenity::prelude::Context;
 
 use crate::color::Colors;
 use crate::commands::SlashCommand;
@@ -17,108 +16,101 @@ pub struct MassMove;
 
 #[async_trait]
 impl SlashCommand for MassMove {
-  fn register<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
-    let channel_types = [ChannelType::Voice, ChannelType::Stage];
-    command
-      .name("massmove")
+  fn register(&self) -> CreateCommand {
+    CreateCommand::new("massmove")
       .description("Move all members to a specified channel")
       .dm_permission(false)
       .default_member_permissions(Permissions::MOVE_MEMBERS)
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::Channel)
-          .name("target-channel")
-          .description("The channel to move everybody to")
-          .channel_types(&channel_types)
-          .required(true)
-      })
-      .create_option(|option| {
-        option
-          .kind(CommandOptionType::Channel)
-          .name("source-channel")
-          .description("The channel to move everybody from")
-          .channel_types(&channel_types)
-      })
+      .add_option(
+        CreateCommandOption::new(
+          CommandOptionType::Channel,
+          "target-channel",
+          "The channel to move everybody to"
+        )
+        .channel_types(vec![ChannelType::Voice, ChannelType::Stage])
+        .required(true)
+      )
+      .add_option(
+        CreateCommandOption::new(
+          CommandOptionType::Channel,
+          "source-channel",
+          "The channel to move everybody from"
+        )
+        .channel_types(vec![ChannelType::Voice, ChannelType::Stage])
+      )
   }
 
-  async fn execute(&self, ctx: &Context, interaction: &ApplicationCommandInteraction, _: &Database) -> Result<()> {
-    let destination = interaction.get_channel("target-channel").unwrap();
+  async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, _: &Database) -> Result<()> {
+    let destination_id = interaction.get_channel_id("target-channel").unwrap();
+    let guild_id = interaction.guild_id.unwrap();
 
-    let guild = interaction.guild_id.unwrap().to_guild_cached(&ctx.cache).unwrap();
-
-    // Try find the source channel, either from specified argument or through interaction author's current channel
-    let origin_id = if let Some(partial) = interaction.get_channel("source-channel") {
-      Some(partial.id)
-    } else if let Some(state) = guild.voice_states.get(&interaction.user.id) {
-      state.channel_id
-    } else {
-      None
-    };
-
-    if let Ok(permissions) = guild.member_permissions(&ctx.http, ctx.cache.current_user_id()).await {
-      if !permissions.contains(Permissions::MOVE_MEMBERS) {
-        let mut embed = CreateEmbed::default();
-        embed
+    let origin_id = match interaction.get_channel_id("source-channel").or({
+      let guild = guild_id.to_guild_cached(ctx).unwrap();
+      guild.voice_states.get(&interaction.user.id).and_then(|state| state.channel_id)
+    }) {
+      Some(channel_id) => channel_id,
+      None => {
+        let embed = CreateEmbed::new()
           .color(Colors::Red)
-          .title("Insuficcient permissions")
-          .description("I don't have permission to move members in this server");
+          .title("Unknown base channel")
+          .description("Unless you're in a voice channel, you need to specify both the base and target channels.");
 
-        interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+        interaction.reply_embed(&ctx.http, embed).await?;
         return Ok(());
       }
-    }
+    };
 
-    if origin_id.is_none() {
-      let mut embed = CreateEmbed::default();
-      embed
+    // Checks
+    let bot_member = guild_id.current_user_member(ctx).await?;
+    if !bot_member.permissions(ctx).unwrap().contains(Permissions::MOVE_MEMBERS) {
+      let embed = CreateEmbed::new()
         .color(Colors::Red)
-        .title("Unknown base channel")
-        .description("Unless you're in a voice channel, you need to specify both the base and target channels.");
+        .title("Insuficcient permissions")
+        .description("I don't have permission to move members in this server");
 
-      interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+      interaction.reply_embed_ephemeral(ctx, embed).await?;
       return Ok(());
     }
 
-    let origin_id = origin_id.unwrap();
-
-    if origin_id == destination.id {
-      let mut embed = CreateEmbed::default();
-      embed
+    if origin_id == destination_id {
+      let embed = CreateEmbed::new()
         .color(Colors::Red)
         .title("Nothing to move")
         .description("I can't move members from and to the same channel.");
 
-      interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+      interaction.reply_embed(&ctx.http, embed).await?;
       return Ok(());
     }
 
-    let origin_channel = guild.channels.get(&origin_id).unwrap().clone();
-    let guild_channel = origin_channel.guild().unwrap();
-    let members = guild_channel.members(&ctx.cache).await.unwrap();
+    let members = {
+      let guild = guild_id.to_guild_cached(ctx).unwrap();
+      let channel = guild.channels.get(&origin_id).unwrap();
+      channel.members(ctx).unwrap()
+    };
 
     if members.is_empty() {
-      let mut embed = CreateEmbed::default();
-      embed
+      let embed = CreateEmbed::new()
         .color(Colors::Red)
         .title("Nobody to move")
         .description("There is nobody in the channel to move from.");
 
-      interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+      interaction.reply_embed(&ctx.http, embed).await?;
       return Ok(());
     }
 
     for member in members {
-      // Interestingly enough this has to be awaited for it to work
-      let _ = member.move_to_voice_channel(&ctx.http, destination.id).await;
+      member.move_to_voice_channel(ctx, destination_id).await?;
     }
 
-    let mut embed = CreateEmbed::default();
-    embed
+    let embed = CreateEmbed::new()
       .color(Colors::Green)
       .title("Success")
-      .description(format!("Successfully moved everybody to {}", destination.name.unwrap()));
+      .description(format!(
+        "Successfully moved everybody to {}",
+        destination_id.name(ctx).await?
+      ));
 
-    interaction.reply(&ctx.http, |msg| msg.set_embed(embed)).await?;
+    interaction.reply_embed(&ctx.http, embed).await?;
     Ok(())
   }
 }
