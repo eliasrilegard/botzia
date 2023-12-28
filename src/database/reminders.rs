@@ -106,7 +106,7 @@ impl Database {
     let pool = self.pool.clone();
 
     tokio::spawn(async move {
-      thread::sleep(Duration::from_secs(10));
+      tokio::time::sleep(Duration::from_secs(10)).await;
       loop {
         let mut remainder_sleep = Duration::from_secs(60);
 
@@ -127,8 +127,8 @@ impl Database {
           }
           Err(why) => error!("Could not retrieve reminders:\n{}", why)
         }
-
-        thread::sleep(remainder_sleep);
+        
+        tokio::time::sleep(remainder_sleep).await;
       }
     });
 
