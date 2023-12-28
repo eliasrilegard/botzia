@@ -46,7 +46,10 @@ impl SlashCommand for MassMove {
 
     let origin_id = match interaction.get_channel_id("source-channel").or({
       let guild = guild_id.to_guild_cached(ctx).unwrap();
-      guild.voice_states.get(&interaction.user.id).and_then(|state| state.channel_id)
+      guild
+        .voice_states
+        .get(&interaction.user.id)
+        .and_then(|state| state.channel_id)
     }) {
       Some(channel_id) => channel_id,
       None => {

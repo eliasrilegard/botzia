@@ -127,7 +127,7 @@ impl Database {
           }
           Err(why) => error!("Could not retrieve reminders:\n{}", why)
         }
-        
+
         tokio::time::sleep(remainder_sleep).await;
       }
     });
@@ -174,8 +174,7 @@ async fn get_reminders(pool: &PgPool) -> Result<Vec<Reminder>> {
   let partial_reminders = sqlx::query_as::<_, PartialReminder>(
     "SELECT * FROM reminders WHERE
       due_at::DATE = NOW()::DATE AND
-      due_at::TIME < NOW()::TIME + INTERVAL '1 minute'
-  "
+      due_at::TIME < NOW()::TIME + INTERVAL '1 minute'"
   )
   .fetch_all(pool)
   .await?;
