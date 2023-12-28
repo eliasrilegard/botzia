@@ -24,11 +24,10 @@ impl BetterResponse for CommandInteraction {
   async fn reply(&self, http: impl CacheHttp, data: CreateInteractionResponseMessage) -> Result<()> {
     let builder = CreateInteractionResponse::Message(data);
 
-    if let Err(why) = self.create_response(http, builder).await {
-      error!("Encountered an error while responding:\n{why:?}");
+    match self.create_response(http, builder).await {
+      Ok(_) => Ok(()),
+      Err(why) => Err(why.into())
     }
-
-    Ok(())
   }
 
   async fn reply_embed(&self, http: impl CacheHttp, embed: CreateEmbed) -> Result<()> {
