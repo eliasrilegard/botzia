@@ -39,7 +39,7 @@ impl EventHandler for Handler {
               .title("Encountered an error while running command")
               .field("Error message", why.to_string(), false);
 
-            let _ = command.reply_embed(&ctx.http, embed).await;
+            let _ = command.reply_embed(ctx, embed).await;
             error!("Encountered an error while executing command:\n{why:?}");
           }
 
@@ -49,6 +49,11 @@ impl EventHandler for Handler {
             .chain(command.get_subcommand().map(|subcommand| subcommand.name))
             .collect::<Vec<_>>()
             .join(" ");
+
+          info!(
+            "{} ({}) executed command {}",
+            command.user.name, command.user.id, &command_name
+          );
 
           let _ = self
             .database
@@ -81,7 +86,7 @@ impl EventHandler for Handler {
       .values()
       .map(|command| command.register())
       .collect::<Vec<_>>();
-    if let Err(why) = Command::set_global_commands(&ctx.http, commands).await {
+    if let Err(why) = Command::set_global_commands(ctx, commands).await {
       error!("Command registration failed:\n{why:?}");
     }
 
