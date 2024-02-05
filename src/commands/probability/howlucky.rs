@@ -77,8 +77,8 @@ impl SlashSubCommand for HowLucky {
       result -=
         (choose(try_count as u64, k as u64) as f32) * probability.powi(k) * (1_f32 - probability).powi(try_count - k);
     }
-
-    let display_probability = format!("{:.1$}", result * 100_f32, if result >= 0.01 { 2 } else { 1 });
+    
+    let display_probability = custom_format(result * 100_f32); // Always keep two decimal places
 
     let inner_description = if success_count > 1 {
       format!("**{success_count}** drops (or better)")
@@ -112,4 +112,15 @@ fn choose(n: u64, k: u64) -> u64 {
     let range = 1..=k.min(n - k);
     range.fold(1, |acc, val| acc * (n - val + 1) / val)
   }
+}
+
+fn custom_format(input: f32) -> String {
+  let leading_digits = input.log10().ceil() as i32;
+  let trailing_digits = if leading_digits < 0 {
+    (2 - leading_digits).min(6) as usize
+  } else {
+    2
+  };
+
+  format!("{:.*}", trailing_digits, input)
 }
