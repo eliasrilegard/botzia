@@ -53,6 +53,16 @@ impl SlashSubCommand for HowLucky {
     let try_count = interaction.get_integer("try-count").unwrap() as i32;
     let success_count = interaction.get_integer("success-count").unwrap_or(1) as i32;
 
+    if success_count > try_count {
+      let embed = CreateEmbed::new()
+        .color(Colors::Red)
+        .title("Too many successes")
+        .description("`success-count` must be smaller than or equal to `try-count`");
+
+      interaction.reply_embed_ephemeral(&ctx.http, embed).await?;
+      return Ok(());
+    }
+
     let probability = match verify_probability(probability_input.as_str()) {
       Some(probability) => probability,
       None => {
