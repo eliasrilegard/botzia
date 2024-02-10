@@ -51,8 +51,8 @@ impl SlashSubCommand for HowLucky {
 
   async fn execute(&self, ctx: &Context, interaction: &CommandInteraction, _: &Database) -> Result<()> {
     let probability_input = interaction.get_string("probability").unwrap();
-    let try_count = interaction.get_integer("try-count").unwrap() as i32;
-    let success_count = interaction.get_integer("success-count").unwrap_or(1) as i32;
+    let try_count = interaction.get_integer("try-count").unwrap() as u64;
+    let success_count = interaction.get_integer("success-count").unwrap_or(1) as u64;
 
     if success_count > try_count {
       let embed = CreateEmbed::new()
@@ -83,7 +83,7 @@ impl SlashSubCommand for HowLucky {
     // here is written as  or P(X <= success_count - 1)
     let result = 1.0 - bin_dist.distribution((success_count - 1) as f64);
     
-    let display_probability = custom_format(result * 100_f64); // Always keep two decimal places
+    let display_probability = custom_format(result * 100_f64);
 
     let inner_description = if success_count > 1 {
       format!("**{success_count}** drops (or better)")
@@ -110,10 +110,11 @@ impl SlashSubCommand for HowLucky {
   }
 }
 
+// Always keep two decimal places (or significant figures, depending on what's relevant)
 fn custom_format(input: f64) -> String {
-  let leading_digits = input.log10().ceil() as i32;
-  let trailing_digits = if leading_digits < 0 {
-    (2 - leading_digits).min(8) as usize
+  let leading_digits = input.log10().ceil();
+  let trailing_digits = if leading_digits < 0.0 {
+    (2.0 - leading_digits).min(8.0) as usize
   } else {
     2
   };
