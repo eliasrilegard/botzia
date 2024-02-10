@@ -1,3 +1,4 @@
+use probability::distribution::{Binomial, Distribution};
 use serenity::all::{CommandInteraction, CommandOptionType};
 use serenity::async_trait;
 use serenity::builder::{CreateCommandOption, CreateEmbed};
@@ -76,19 +77,13 @@ impl SlashSubCommand for HowLucky {
       }
     };
 
-    // P(X >= m | n tries) =
-    // 1 - P(X < m | n tries) =
-    // 1 - \sum_{k = 0}^{m - 1} {n \choose k} p^k (1 - p)^{n - k}
-    //
-    // Here m = successCount; n = tryCount
-
-    let mut result = 1_f32;
-    for k in 0..success_count {
-      result -=
-        (choose(try_count as u64, k as u64) as f32) * probability.powi(k) * (1_f32 - probability).powi(try_count - k);
-    }
+    let bin_dist = Binomial::new(try_count as usize, probability as f64);
+    // .distribution computes the Cumulative Distribution Function (CDF): P(X <= success_count).
+    // To compute P(X >= success_count), we can do 1 - P(X < success_count), which
+    // here is written as  or P(X <= success_count - 1)
+    let result = 1.0 - bin_dist.distribution((success_count - 1) as f64);
     
-    let display_probability = custom_format(result * 100_f32); // Always keep two decimal places
+    let display_probability = custom_format(result * 100_f64); // Always keep two decimal places
 
     let inner_description = if success_count > 1 {
       format!("**{success_count}** drops (or better)")
@@ -115,19 +110,10 @@ impl SlashSubCommand for HowLucky {
   }
 }
 
-fn choose(n: u64, k: u64) -> u64 {
-  if k > n {
-    0
-  } else {
-    let range = 1..=k.min(n - k);
-    range.fold(1, |acc, val| acc * (n - val + 1) / val)
-  }
-}
-
-fn custom_format(input: f32) -> String {
+fn custom_format(input: f64) -> String {
   let leading_digits = input.log10().ceil() as i32;
   let trailing_digits = if leading_digits < 0 {
-    (2 - leading_digits).min(6) as usize
+    (2 - leading_digits).min(8) as usize
   } else {
     2
   };
